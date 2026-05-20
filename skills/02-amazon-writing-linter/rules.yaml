@@ -1,0 +1,73 @@
+# amazon-writing-linter — rule set
+# Used by the skill to classify and rewrite prose.
+
+reject:
+  vague_adjectives:
+    - significant
+    - substantial
+    - meaningful
+    - robust
+    - scalable
+    - best-in-class
+    - world-class
+    - cutting-edge
+    - seamless
+    - delightful
+    - magical
+    - frictionless
+    - next-generation
+  hedges_without_evidence:
+    - we believe
+    - we think
+    - we feel
+    - it seems
+    - we expect              # without a number
+    - likely                 # without a probability or evidence
+    - probably               # without a probability or evidence
+  passive_evasions:
+    - mistakes were made
+    - issues occurred
+    - the system experienced a degradation
+    - things broke
+    - got pushed back
+  unsupported_claims:
+    - customers love
+    - users prefer
+    - the market wants
+    - everyone agrees
+  banned_unqualified:
+    - simple                 # unless qualified with what makes it simple
+    - obvious                # unless qualified with to whom
+    - clear                  # unless qualified with what is clear
+    - easy                   # unless qualified with for whom
+
+require:
+  every_claim:
+    - tag: one of [fact, assumption, inference, open question]
+  every_metric:
+    - baseline
+    - target
+    - measurement_method
+    - time_to_evaluate
+  every_commitment:
+    - owner
+    - action
+    - date
+  every_comparative:
+    - baseline               # e.g., "30% faster than what?"
+  every_section:
+    - decision_relevance     # a "so what?" sentence
+
+style:
+  prefer:
+    - active voice
+    - concrete nouns
+    - specific numbers
+    - past tense for outcomes
+    - present tense for current state
+  cap:
+    sentence_length_soft: 30   # words
+    sentence_length_hard: 45   # words
+    paragraph_sentences_soft: 5
+    paragraph_sentences_hard: 8
+    jargon_density: "< 1 unexplained term per paragraph"

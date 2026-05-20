@@ -1,0 +1,142 @@
+# leadership-principles-reviewer — rubric
+# What each principle means for the purpose of evaluating a written artifact,
+# what evidence the reviewer looks for, and what counts as weak.
+# Amazon-style; not Amazon's official rubric. Used as one lens, not the only one.
+
+customer_obsession:
+  meaning_for_review: The proposal starts from a specific customer and a specific customer outcome, not from an internal capability.
+  evidence_strong:
+    - Named customer role with context (not "users")
+    - Customer outcome stated in customer terms, measurable
+    - Workaround the customer uses today is documented
+  evidence_weak:
+    - Customer is "users" or "the team"
+    - Customer outcome is internal ("we want to ship X")
+    - No workaround documented
+
+ownership:
+  meaning_for_review: The proposal names owners for actions, risks, and follow-up. The author takes responsibility for second-order effects.
+  evidence_strong:
+    - Every commitment has a named owner (individual, not team)
+    - Risks have owners
+    - Follow-up mechanism has an owner
+  evidence_weak:
+    - Team-level ownership ("the platform team")
+    - Action items with no owner
+    - "We will figure out who owns this" — the absence of ownership
+
+invent_and_simplify:
+  meaning_for_review: The proposal removes a step, eliminates a tool, or collapses complexity. Or it justifies new complexity with a specific cost benefit.
+  evidence_strong:
+    - Explicit list of what is being removed or simplified
+    - The MVP boundary excludes plausible scope, not just impossible scope
+  evidence_weak:
+    - New systems added without removing anything
+    - "And we will also do X" patterns
+
+are_right_a_lot:
+  meaning_for_review: The proposal seeks disconfirming evidence. The author has talked to people who disagree.
+  evidence_strong:
+    - Dissent section with named dissenters and their positions
+    - Alternatives considered, steel-manned, then rejected with reason
+    - Open questions explicitly listed
+  evidence_weak:
+    - No dissent
+    - Alternatives that are obvious straw men
+    - Open questions used as a hiding place for hard claims
+
+learn_and_be_curious:
+  meaning_for_review: The proposal cites prior art, prior incidents, what others tried, and what the team learned.
+  evidence_strong:
+    - References to prior memos, incidents, experiments
+    - Acknowledgement of what was tried before and why it failed
+  evidence_weak:
+    - "This is new" without confirming it
+    - No references to prior work in the same space
+
+insist_on_highest_standards:
+  meaning_for_review: The proposal raises the bar somewhere visible — a metric target, a deprecation, a quality gate.
+  evidence_strong:
+    - Targets are above current performance, not equal to it
+    - Quality gates have measurable pass criteria
+  evidence_weak:
+    - Targets equal to today's metrics labeled as "improvements"
+    - Vague "high quality" claims
+
+think_big:
+  meaning_for_review: The proposal articulates the long-arc outcome and shows how this work bends toward it, even if v1 is small.
+  evidence_strong:
+    - A clear v1 and a clear "where this goes"
+    - The MVP is small but legible as a step in a larger direction
+  evidence_weak:
+    - V1 with no articulated next step
+    - A grand vision with no plausible v1
+
+bias_for_action:
+  meaning_for_review: The proposal proposes the smallest reversible step that can be taken now. It does not wait for full certainty.
+  evidence_strong:
+    - A clear next step that can be taken this quarter
+    - Reversibility explicitly considered (one-way vs two-way door)
+  evidence_weak:
+    - "We will research more" as the next step
+    - Irreversible action proposed without weighing reversibility
+
+frugality:
+  meaning_for_review: The proposal accounts for cost — engineering, operational, opportunity — and justifies it.
+  evidence_strong:
+    - Engineering cost estimated
+    - Operational cost (ongoing) estimated
+    - Opportunity cost acknowledged
+  evidence_weak:
+    - Cost section absent or hand-waved
+    - "Resources" used without a number
+
+earn_trust:
+  meaning_for_review: The proposal is honest about uncertainty. It does not overclaim.
+  evidence_strong:
+    - Claims tagged with [fact], [assumption], [inference], [open question]
+    - Risks listed honestly, with severity and likelihood
+    - Failure mode for the proposal itself acknowledged
+  evidence_weak:
+    - Confident prose with no tagging
+    - Risks all rated low severity
+    - No "how would we know this failed?" section
+
+dive_deep:
+  meaning_for_review: The proposal goes into specifics — numbers, system behavior, edge cases — rather than staying at the strategy layer.
+  evidence_strong:
+    - Specific numbers, not "many" or "significant"
+    - Edge cases or failure modes named
+    - The author can defend specifics under questioning
+  evidence_weak:
+    - Strategy-layer prose with no operational specifics
+    - "Details TBD" in load-bearing sections
+
+have_backbone_disagree_and_commit:
+  meaning_for_review: The proposal takes a position. It does not hedge into ambiguity to keep all stakeholders happy.
+  evidence_strong:
+    - A clear recommendation
+    - Tradeoffs acknowledged; the author chose anyway
+    - Dissent recorded with the author's response
+  evidence_weak:
+    - Multiple recommendations presented as "options"
+    - Tradeoffs listed but no choice made
+
+deliver_results:
+  meaning_for_review: The proposal defines what shipping looks like and what failure looks like, with timeframes.
+  evidence_strong:
+    - Success metrics with baseline, target, time-to-evaluate
+    - Failure signals defined
+    - Rollout plan with stages
+  evidence_weak:
+    - Success defined as "launched"
+    - No failure signal
+    - No staged rollout
+
+# Cross-cutting checks: contradictions to actively hunt for
+contradictions_to_hunt_for:
+  - bias_for_action invoked to skip dive_deep
+  - customer_obsession invoked to skip frugality (over-investing in customer wins)
+  - think_big invoked to skip insist_on_highest_standards (vision without quality gates)
+  - have_backbone invoked to skip are_right_a_lot (commitment without rigor)
+  - deliver_results invoked to skip earn_trust (shipping at the cost of honesty about risk)

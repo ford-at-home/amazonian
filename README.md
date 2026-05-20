@@ -18,42 +18,42 @@ Most agent skills tell the model to "be thoughtful." That is not a mechanism; th
             Idea / Problem
                   │
                   ▼
-     working-backwards-prfaq          ← landed
+     working-backwards-prfaq
                   │
                   ▼
-     amazon-writing-linter            ← planned
+     amazon-writing-linter
                   │
                   ▼
- leadership-principles-reviewer       ← planned
+ leadership-principles-reviewer
                   │
                   ▼
-      mechanism-designer              ← planned
+      mechanism-designer
                   │
                   ▼
-       six-page-narrative             ← planned
+       six-page-narrative
                   │
                   ▼
             decision gate
                   │
                   ▼
-    weekly-business-review            ← planned
+    weekly-business-review
                   │
                   ▼
-     correction-of-errors             ← planned
+     correction-of-errors
    (when reality starts chewing furniture)
 ```
 
 ## Suite contents
 
-| # | Skill | Purpose | Status |
-|---|-------|---------|--------|
-| 01 | [`working-backwards-prfaq`](skills/01-working-backwards-prfaq/SKILL.md) | Turn an idea into a PRFAQ packet | landed |
-| 02 | `amazon-writing-linter` | Strip vague adjectives, unsupported claims, weasel words; surface decisions and owners | planned |
-| 03 | `six-page-narrative` | Convert a strategy or architecture into a decision memo with risks, alternatives, and dissent | planned |
-| 04 | `mechanism-designer` | Convert a goal into a recurring operational mechanism with cadence, inputs, inspection, and escalation | planned |
-| 05 | `weekly-business-review` | Generate a WBR from metrics with required variance analysis | planned |
-| 06 | `correction-of-errors` | Run a blameless post-incident review using Five Whys, with action items and owners | planned |
-| 07 | `leadership-principles-reviewer` | Evaluate a proposal against Amazon-style leadership principles, surfacing contradictions and hidden risk | planned |
+| # | Skill | Purpose |
+|---|-------|---------|
+| 01 | [`working-backwards-prfaq`](skills/01-working-backwards-prfaq/SKILL.md) | Turn an idea into a PRFAQ packet |
+| 02 | [`amazon-writing-linter`](skills/02-amazon-writing-linter/SKILL.md) | Strip vague adjectives, unsupported claims, weasel words; surface decisions and owners |
+| 03 | [`six-page-narrative`](skills/03-six-page-narrative/SKILL.md) | Convert a strategy or architecture into a decision memo with risks, alternatives, and dissent |
+| 04 | [`mechanism-designer`](skills/04-mechanism-designer/SKILL.md) | Convert a goal into a recurring operational mechanism with cadence, inputs, inspection, and escalation |
+| 05 | [`weekly-business-review`](skills/05-weekly-business-review/SKILL.md) | Generate a WBR from metrics with required variance analysis |
+| 06 | [`correction-of-errors`](skills/06-correction-of-errors/SKILL.md) | Run a blameless post-incident review using Five Whys, with action items and owners |
+| 07 | [`leadership-principles-reviewer`](skills/07-leadership-principles-reviewer/SKILL.md) | Evaluate a proposal against Amazon-style leadership principles, surfacing contradictions and hidden risk |
 
 Every skill in this suite conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md).
 
@@ -106,15 +106,33 @@ amazonian/
 ├── LICENSE
 ├── SKILL_DESIGN_PATTERN.md
 └── skills/
-    └── 01-working-backwards-prfaq/
+    ├── 01-working-backwards-prfaq/
+    │   ├── SKILL.md
+    │   ├── templates/prfaq-template.md
+    │   └── examples/example-prfaq.md
+    ├── 02-amazon-writing-linter/
+    │   ├── SKILL.md
+    │   └── rules.yaml
+    ├── 03-six-page-narrative/
+    │   ├── SKILL.md
+    │   └── template.md
+    ├── 04-mechanism-designer/
+    │   ├── SKILL.md
+    │   └── mechanism-template.md
+    ├── 05-weekly-business-review/
+    │   ├── SKILL.md
+    │   ├── wbr-template.md
+    │   └── examples/example-wbr.md
+    ├── 06-correction-of-errors/
+    │   ├── SKILL.md
+    │   ├── coe-template.md
+    │   └── examples/example-coe.md
+    └── 07-leadership-principles-reviewer/
         ├── SKILL.md
-        ├── templates/
-        │   └── prfaq-template.md
-        └── examples/
-            └── example-prfaq.md
+        └── rubric.yaml
 ```
 
-The remaining six skills land in a follow-up batch and will populate `skills/02-…` through `skills/07-…`.
+The three worked examples (`example-prfaq.md`, `example-wbr.md`, `example-coe.md`) share a common hypothetical product ("ChangeLens") so you can read them in sequence and see how the artifacts chain.
 
 ## Contributing
 
