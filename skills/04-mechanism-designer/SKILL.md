@@ -108,6 +108,20 @@ See [`mechanism-template.md`](mechanism-template.md) for the prose form.
 - When the mechanism fails, run `correction-of-errors` on the mechanism itself, not just on the underlying incident.
 - After 30 days, the trial review either confirms the mechanism (keep), revises it (modify), or kills it (retire). All three are valid outcomes; "ignore the trial" is not.
 
+## Handoffs
+
+**Consumes from**
+
+- `working-backwards-prfaq`: `success_metrics` → `inputs` (the metrics the mechanism inspects); one `success_metrics[].metric` → `goal`
+- `six-page-narrative`: "Proposed Mechanism" section → `desired_behavior`; "Metrics" → `inputs`
+
+**Feeds into**
+
+- `weekly-business-review`: `mechanism.inspection_method` defines the WBR's structure; `mechanism.outputs` + `mechanism.inputs` → `input_metrics` / `output_metrics`
+- `correction-of-errors`: when the mechanism itself fails, the mechanism spec is the artifact under review → `contributing_factors`
+
+Enums used: `metric_types`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
+
 ---
 
 This skill conforms to [`SKILL_DESIGN_PATTERN.md`](../../SKILL_DESIGN_PATTERN.md).

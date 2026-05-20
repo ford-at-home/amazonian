@@ -128,6 +128,22 @@ Once the PRFAQ is approved, the natural next artifacts are:
 
 This skill emits a decision packet, not an execution plan. The PRFAQ is a contract; the work that follows is the implementation of that contract.
 
+## Handoffs
+
+**Consumes from**
+
+- User inputs only. This skill is an entry point.
+
+**Feeds into**
+
+- `amazon-writing-linter`: `press_release` + FAQ Q&A prose → `draft`
+- `leadership-principles-reviewer`: the full packet → `proposal` (`proposal_type: prfaq`)
+- `mechanism-designer`: `success_metrics` → `inputs`; one of `success_metrics[].metric` → `goal`
+- `six-page-narrative`: `success_metrics`, `risks`, `mvp_boundary` → `metrics`, `risks`, `current_state` (context)
+- `weekly-business-review`: `success_metrics` → `input_metrics` / `output_metrics` (caller classifies leading vs lagging per [`GLOSSARY.md`](../../GLOSSARY.md#input-vs-output-metrics))
+
+Enums used: `decision_recommendation`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
+
 ---
 
 This skill conforms to [`SKILL_DESIGN_PATTERN.md`](../../SKILL_DESIGN_PATTERN.md).

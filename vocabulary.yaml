@@ -1,0 +1,75 @@
+# vocabulary.yaml
+# Canonical enums and labels used across the skills suite.
+# When a skill references one of these, it links here instead of restating.
+# Human-readable companion: GLOSSARY.md
+
+assumption_tags:
+  description: |
+    Every empirical claim a skill emits should be tagged with one of these.
+    Untagged claims are confident fog.
+  values:
+    - fact            # verifiable, with a source
+    - assumption      # believed true, untested
+    - inference       # derived from facts already established
+    - open question   # listed in an explicit Open Questions section
+  used_by:
+    - all-skills
+    - SKILL_DESIGN_PATTERN.md
+
+variance_classifications:
+  description: |
+    Every negative variance in a Weekly Business Review must map to exactly one.
+  values:
+    - known cause
+    - hypothesis
+    - unknown
+    - no action needed because…
+    - action item created
+  notes:
+    - "'unknown' is acceptable for one week. Two weeks of 'unknown' on the same metric is a process failure and should trigger correction-of-errors on the inspection mechanism itself."
+  used_by:
+    - 05-weekly-business-review
+
+metric_types:
+  description: |
+    Metrics in this suite are classified by what they measure.
+  values:
+    input_metric:
+      definition: leading indicator the team controls
+      example: number of customer interviews completed this week
+    output_metric:
+      definition: lagging indicator the customer experiences
+      example: customer-reported time-to-status
+  used_by:
+    - 04-mechanism-designer
+    - 05-weekly-business-review
+
+decision_recommendations:
+  description: |
+    Terminal recommendation emitted by an authoring skill (PRFAQ, six-pager).
+  values:
+    - proceed
+    - proceed_with_changes
+    - do_not_proceed
+    - needs_more_info
+  used_by:
+    - 01-working-backwards-prfaq
+    - 03-six-page-narrative
+
+principle_scores:
+  description: |
+    How each leadership principle is scored against a proposal under review.
+  values:
+    - strong          # cited evidence in the proposal
+    - weak            # mentioned without evidence, or evidence runs counter
+    - silent          # the proposal does not address this principle
+    - contradictory   # the proposal invokes this principle to skip another
+  used_by:
+    - 07-leadership-principles-reviewer
+
+severity_and_likelihood:
+  description: |
+    Risk severity and likelihood scales used by PRFAQ and six-page-narrative.
+  status: open_question
+  notes:
+    - "Both authoring skills ask for severity + likelihood on each risk, but neither defines the scale. Pick one consistently within a document and document the choice. Adopt a shared scale in a follow-up."

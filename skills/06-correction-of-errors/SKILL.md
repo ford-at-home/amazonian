@@ -139,6 +139,22 @@ See [`coe-template.md`](coe-template.md). See [`examples/example-coe.md`](exampl
 - Recurring incidents of the same class feed into `mechanism-designer` for a structural fix.
 - A pattern across multiple CoEs may feed into `working-backwards-prfaq` for a larger investment.
 
+## Handoffs
+
+**Consumes from**
+
+- Operational facts (logs, monitoring, human accounts).
+- `mechanism-designer`: when the failed artifact is a mechanism, the mechanism spec → `contributing_factors`
+- `weekly-business-review`: persistent variance on a metric → `prior_incidents` / `contributing_factors`
+
+**Feeds into**
+
+- `weekly-business-review`: `action_items` → next week's `action_items` (tracked until closed)
+- `mechanism-designer`: structural gaps → `goal` + `failure_mode_today` for a new mechanism
+- `working-backwards-prfaq`: pattern across multiple CoEs → new PRFAQ for a larger investment
+
+Enums used: `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml). See [`GLOSSARY.md`](../../GLOSSARY.md#blameless) for the definition of "blameless" used here.
+
 ---
 
 This skill conforms to [`SKILL_DESIGN_PATTERN.md`](../../SKILL_DESIGN_PATTERN.md).

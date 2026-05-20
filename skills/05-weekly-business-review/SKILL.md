@@ -133,6 +133,22 @@ See [`wbr-template.md`](wbr-template.md). See [`examples/example-wbr.md`](exampl
 - A new persistent pattern feeds into `working-backwards-prfaq` for a structural fix.
 - Decisions needed feed into `six-page-narrative` when significant enough.
 
+## Handoffs
+
+**Consumes from**
+
+- `working-backwards-prfaq`: `success_metrics` → `input_metrics` / `output_metrics` (caller classifies leading vs lagging)
+- `mechanism-designer`: `mechanism.outputs` + `mechanism.inputs` → `input_metrics` / `output_metrics`; `mechanism.inspection_method` defines the WBR's structure
+- Prior WBR: previous `action_items` → this week's `action_items` (with status)
+
+**Feeds into**
+
+- `correction-of-errors`: persistent negative variance on a metric → `contributing_factors` / `prior_incidents`
+- `working-backwards-prfaq`: pattern requiring a structural fix → new PRFAQ
+- `six-page-narrative`: a decision surfaced in "Decisions Needed" → `decision_needed`
+
+Enums used: `variance_classifications`, `metric_types`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
+
 ---
 
 This skill conforms to [`SKILL_DESIGN_PATTERN.md`](../../SKILL_DESIGN_PATTERN.md).

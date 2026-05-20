@@ -101,6 +101,22 @@ See [`template.md`](template.md) for the prose skeleton.
 - Metrics defined here feed into `weekly-business-review`.
 - Recurring operational pieces of the proposed mechanism feed into `mechanism-designer`.
 
+## Handoffs
+
+**Consumes from**
+
+- `working-backwards-prfaq` (optional): `success_metrics` → `metrics`; `risks` → `risks`; `mvp_boundary` → `current_state` context
+- User inputs.
+
+**Feeds into**
+
+- `amazon-writing-linter`: section prose → `draft` (mandatory pass before review)
+- `leadership-principles-reviewer`: full memo → `proposal` (`proposal_type: six_pager`)
+- `mechanism-designer`: "Proposed Mechanism" section → `goal` + `desired_behavior`
+- `weekly-business-review`: "Metrics" section → `input_metrics` / `output_metrics` (labeled per [`GLOSSARY.md`](../../GLOSSARY.md#input-vs-output-metrics))
+
+Enums used: `decision_recommendation`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
+
 ---
 
 This skill conforms to [`SKILL_DESIGN_PATTERN.md`](../../SKILL_DESIGN_PATTERN.md).

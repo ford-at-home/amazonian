@@ -60,3 +60,5 @@ Every claim a skill emits should be tagged with one of:
 - `[open question]` — listed in an explicit Open Questions section
 
 A skill that emits unlabeled claims is producing confident fog. Add the tags.
+
+Canonical definitions live in [`GLOSSARY.md`](GLOSSARY.md#assumption-tags); machine-readable form in [`vocabulary.yaml`](vocabulary.yaml).

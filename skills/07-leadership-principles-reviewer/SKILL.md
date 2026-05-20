@@ -124,6 +124,22 @@ Summary list:
 - Revisions feed back into `working-backwards-prfaq` or `six-page-narrative`.
 - If multiple proposals show the same weakness pattern, the pattern itself may feed into `mechanism-designer` for a structural improvement.
 
+## Handoffs
+
+**Consumes from**
+
+- `working-backwards-prfaq`: full packet → `proposal` (`proposal_type: prfaq`)
+- `six-page-narrative`: full memo → `proposal` (`proposal_type: six_pager`)
+- `amazon-writing-linter`: linted draft → `proposal` (prefer linting first when available)
+
+**Feeds into**
+
+- `working-backwards-prfaq`: `recommended_revisions` → author updates the PRFAQ
+- `six-page-narrative`: `recommended_revisions` → author updates the memo
+- `mechanism-designer`: cross-proposal weakness patterns → `goal` + `failure_mode_today`
+
+Enums used: `principle_scores`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
+
 ---
 
 This skill conforms to [`SKILL_DESIGN_PATTERN.md`](../../SKILL_DESIGN_PATTERN.md).

@@ -130,6 +130,21 @@ After rewriting, run a second pass that checks:
 - A linted six-page narrative feeds into the decision meeting.
 - Open Questions emitted by this skill should be assigned and tracked in the source document.
 
+## Handoffs
+
+**Consumes from**
+
+- `working-backwards-prfaq`: `press_release` + FAQ prose → `draft`
+- `six-page-narrative`: any section's prose → `draft`
+- Any authoring skill that emits prose.
+
+**Feeds into**
+
+- `leadership-principles-reviewer`: linted prose → `proposal`
+- The originating authoring skill: linted prose replaces the original section; Open Questions are assigned and tracked there.
+
+Enums used: `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
+
 ---
 
 This skill conforms to [`SKILL_DESIGN_PATTERN.md`](../../SKILL_DESIGN_PATTERN.md).
