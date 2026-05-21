@@ -311,6 +311,47 @@ dissent_perspective:
   used_by:
     - 12-dissent-before-commit
 
+portfolio_bet_recommendation:
+  description: |
+    Per-bet recommendation emitted by portfolio-review. Distinct from
+    bet_recommendations (which is tenets-review's per-bet thesis-validity
+    output); portfolio_bet_recommendation is a cross-bet allocation decision
+    informed by tenets-review but not equivalent to it.
+  values:
+    - continue                 # allocation stays as-is; survived zero-based check
+    - wind_down                # bet is killed or de-prioritized over the next period
+    - amplify                  # allocation grows; cited triggering evidence required
+    - hold                     # allocation stays as-is pending a near-term decision; carries an explicit decision_due date
+    - pivot                    # bet continues with revised hypothesis; triggers a new PRFAQ
+  notes:
+    - "'continue' requires the same evidentiary burden as 'wind_down' or 'amplify'; status-quo defense is not free."
+    - "'hold' is distinct from 'continue': hold names a forthcoming decision; continue is a current decision."
+  used_by:
+    - 13-portfolio-review
+
+candidate_decision:
+  description: |
+    Per-candidate-alternative decision emitted by portfolio-review for each item
+    in the candidate_alternatives backlog.
+  values:
+    - fund                     # candidate moves into the active portfolio; requires named opportunity_cost_against
+    - continue_to_park         # candidate stays in the backlog; permitted only if zero-based authoring would not include it and it has not aged out
+    - reject                   # candidate is removed from the backlog; rationale required
+  notes:
+    - "Candidates parked across multiple consecutive reviews trigger the 'quiet candidate parking' drift pattern; the skill must escalate."
+  used_by:
+    - 13-portfolio-review
+
+allocation_change_severity:
+  description: |
+    Severity of drift detected between actual portfolio and zero-based hypothetical.
+  values:
+    - blocking                 # zero-based check fails materially; portfolio must change this period
+    - significant              # drift is named and acknowledged; reallocation deferred to next period requires justification
+    - acceptable               # drift is within tolerance; documented but does not force change
+  used_by:
+    - 13-portfolio-review
+
 required_reviews:
   description: |
     Convention: authoring skills declare a `required_reviews` field in their

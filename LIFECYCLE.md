@@ -16,7 +16,7 @@ The suite's job is to make sure what enters Build is contracted (PRFAQ / six-pag
 | **Build** | Implementation | — | empty (deliberate) |
 | **Launch** | Release gating | `launch-readiness-review` | partial |
 | **Operate** | Run, inspect, escalate | `mechanism-designer`, `weekly-business-review` | dense |
-| **Learn** | Incident review, thesis re-examination, goal calibration | `correction-of-errors` (incident-driven), `tenets-review` (event-driven), `ambitious-goal-grading` (period-driven) | dense |
+| **Learn** | Incident review, thesis re-examination, goal calibration, cross-bet allocation | `correction-of-errors` (incident-driven), `tenets-review` (event-driven), `ambitious-goal-grading` (period-driven), `portfolio-review` (period-driven, cross-bet) | dense |
 
 † Cross-cutting reviewer passes; not phase-bound.
 
@@ -24,7 +24,7 @@ The suite's job is to make sure what enters Build is contracted (PRFAQ / six-pag
 
 - **Build phase.** Implementation happens in engineering tooling (Jira, Linear, CI/CD, feature flags). No skill in this suite manages sprints, branches, or deploys.
 - **Launch operations.** `launch-readiness-review` *gates* the launch; it does not orchestrate it. Release engineering — deploys, rollouts, canaries — is engineering's domain.
-- **Roadmap planning.** No portfolio-prioritization skill. The PRFAQ packet and tenets-review provide inputs to a portfolio decision; they do not make it.
+- **Roadmap planning at the proposal level.** No skill in this suite generates the initial list of candidate bets. `customer-interview-synthesis` surfaces what customers are signaling; `portfolio-review` allocates capacity across already-proposed bets; neither invents the proposal set.
 
 These omissions are the boundary. The suite is the *bookends*. Whether you fill the middle with engineering rigor is up to you and out of scope here.
 
@@ -43,7 +43,7 @@ The disqualifying rule each violates: a proposed skill must satisfy the spine in
 
 ## Constructive vs interrogative
 
-The suite has 12 skills — 5 constructive, 7 interrogative — split by epistemic posture:
+The suite has 13 skills — 5 constructive, 8 interrogative — split by epistemic posture:
 
 **Constructive** (produce an artifact):
 
@@ -59,9 +59,10 @@ The suite has 12 skills — 5 constructive, 7 interrogative — split by epistem
 - `amazon-writing-linter` — stress-tests prose for evidence and decision relevance
 - `leadership-principles-reviewer` — stress-tests proposals against principles
 - `launch-readiness-review` — stress-tests build state vs PRFAQ contract
-- `tenets-review` — stress-tests whether the original thesis is still worth pursuing
-- `ambitious-goal-grading` — stress-tests whether targets were set at honest difficulty, independent of outcome
+- `tenets-review` — stress-tests whether one bet's original thesis is still worth pursuing
+- `ambitious-goal-grading` — stress-tests whether one bet's targets were set at honest difficulty, independent of outcome
 - `dissent-before-commit` — stress-tests whether the strongest current case against firing a specific action has been addressed or accepted, not just acknowledged
+- `portfolio-review` — stress-tests whether the allocation **across** all current bets is coherent given current information, via zero-based reallocation
 
 Interrogative skills are the falsification layer. They produce no artifact of their own — they produce *revisions* to the artifacts other skills emit.
 
@@ -91,12 +92,13 @@ A typical bet runs through the suite roughly like this:
 4. **Build** — happens in your engineering process. The suite is silent here on purpose.
 5. **Launch** — `launch-readiness-review` gates the ship decision by diffing the build against the PRFAQ contract.
 6. **Operate** — `weekly-business-review` inspects the metrics on cadence; `correction-of-errors` fires on incidents.
-7. **Learn** — three skills, three questions:
+7. **Learn** — four skills, four questions:
    - `correction-of-errors` (incident-driven): *what broke?*
-   - `tenets-review` (event-driven): *was the bet right?*
-   - `ambitious-goal-grading` (period-driven): *were the targets set at honest difficulty?*
+   - `tenets-review` (event-driven, per-bet): *was the bet right?*
+   - `ambitious-goal-grading` (period-driven, per-bet): *were the targets set at honest difficulty?*
+   - `portfolio-review` (period-driven, cross-bet): *is the allocation across all bets coherent?*
 
-   These are deliberately separate. A team can pass two and fail the third — for example, hit sandbagged targets on a doomed bet that broke nothing. Each LEARN skill catches a failure mode the others miss.
+   These are deliberately separate. A team can pass three and fail the fourth — for example, individual bets each pass their per-bet checks while the collective portfolio drifts into incoherent marginal allocation. Each LEARN skill catches a failure mode the others miss. The per-bet skills feed `portfolio-review`; `portfolio-review` does not replace them.
 
 The chain is not strict. PRFAQs can run without interview synthesis (you accept the assumption tags). Six-pagers can run without a prior PRFAQ. Launch-readiness can run on an artifact whose PRFAQ has drifted (that drift is the point). What matters is that each artifact is contracted and inspectable.
 

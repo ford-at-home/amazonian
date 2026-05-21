@@ -177,6 +177,7 @@ After emitting, run a second pass that checks:
 - `working-backwards-prfaq`: `kill` or `pivot` recommendations → new PRFAQ for whatever replaces this bet (or a revised PRFAQ if `pivot`)
 - `mechanism-designer`: when the recommendation requires a new operating mechanism for a pivot
 - `weekly-business-review`: `metric_satisficing_warning: true` → the WBR's metric set itself needs revision; flag as a `decision needed`
+- `portfolio-review`: `current_recommendation` (continue / kill / pivot / escalate) → `latest_tenets_review` for this bet; chronic-pattern findings inform the cross-bet allocation decision
 
 Enums used: `tenet_status`, `bet_recommendations`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml). See [`GLOSSARY.md`](../../GLOSSARY.md#metric-satisficing) for the named failure mode this skill exists to catch.
 

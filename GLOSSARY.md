@@ -220,6 +220,22 @@ Borrowed from Bezos. Used by `dissent-before-commit` to control how strict the d
 
 The named failure mode `dissent-before-commit` exists to catch. The team points to authoring-time dissent (six-pager's gate, LP-reviewer's `are_right_a_lot`) as proof that concerns were heard, and proceeds with execution without checking what has changed between authoring and now. The dissent record was true at authoring time and may be stale now — state changes since authoring may have invalidated prior assessments or surfaced concerns that weren't visible then. The skill's `dissent_recanvassed` gate exists to force re-evaluation against current state. Analogous in structure to `metric satisficing` (tenets-review) and `sandbagging laundering` (ambitious-goal-grading) — each names a way a previously-honest signal goes stale while looking healthy.
 
+## Portfolio bet recommendation
+
+Per-bet recommendation emitted by `portfolio-review` for each currently-funded bet. One of `continue` | `wind_down` | `amplify` | `hold` | `pivot`. Distinct from `tenets-review`'s `bet_recommendations` (which is per-bet thesis validity); `portfolio_bet_recommendation` is a cross-bet allocation decision informed by tenets-review but not equivalent to it. `continue` requires the same evidentiary burden as `wind_down` or `amplify` — status-quo defense is not free.
+
+## Candidate decision
+
+Per-candidate-alternative decision emitted by `portfolio-review` for each item in the backlog of unfunded bets. One of `fund` | `continue_to_park` | `reject`. A `fund` decision requires a named `opportunity_cost_against` — which current bet's allocation gets drawn from to fund the candidate. Candidates parked across multiple consecutive reviews trigger the *quiet candidate parking* drift pattern; the skill escalates rather than letting candidates accumulate.
+
+## Allocation change severity
+
+How significant a drift between the actual portfolio and the zero-based hypothetical portfolio is, used in `portfolio-review`'s `drift_detected` output. `blocking` means the zero-based check fails materially and the portfolio must change this period; `significant` means drift is named and acknowledged; `acceptable` means drift is within tolerance and documented.
+
+## Portfolio drift
+
+The named failure mode `portfolio-review` exists to catch. The portfolio that exists now is the residue of accumulated past decisions, not the portfolio anyone would intentionally author today. Each bet was individually justified at some point; the collective allocation no longer is. The surface signal — stable composition, defensible per-bet stories, total spend consistent with last period, no bet killed in 6+ months — hides incoherent marginal allocation: bets that should be wound down continue because killing them is socially expensive; bets that should be amplified aren't because reallocation is operationally expensive; candidates sit parked indefinitely because deciding either way costs political capital. The skill's second-axis check is the **zero-based reallocation** — if you were authoring this portfolio from scratch today with the same total capacity, what would it look like? Bets that don't survive a zero-based authoring are portfolio drift candidates. Specific sub-patterns include halo allocation, sunk-cost drift, diversification theater, founder flagship protection, quiet candidate parking, scope creep as amplification, and kill-list theater; see [`skills/13-portfolio-review/allocation-patterns.yaml`](skills/13-portfolio-review/allocation-patterns.yaml). Analogous in structure to the other named failure modes in this index.
+
 ## Founder bias laundering
 
 The named failure mode `customer-interview-synthesis` exists to catch. The founder's prior is dressed up as customer signal by a panel that was selected, recruited, or questioned in ways that pre-loaded the answer. The surface signal — interview themes align with the founder's hypothesis — hides that the methodology made the alignment near-inevitable. The skill's second-axis check is the requirement that `evidence_against` for the founder's hypothesis be non-empty (its emptiness is itself flagged), combined with bias-pattern citations against `selection_method` and `interview_method` per [`skills/08-customer-interview-synthesis/bias-patterns.yaml`](skills/08-customer-interview-synthesis/bias-patterns.yaml). Specific sub-patterns include friend-panel blindness (cohort recruited from the founder's network), leading questions, attitudinal-only segments, solution-first framing, and synthesis as confirmation. Analogous in structure to `metric satisficing`, `sandbagging laundering`, `stale dissent reuse`, and `PRFAQ drift` — each names a way a previously-honest signal looks healthy while the underlying mechanism has stopped working (or, in this case, never produced honest signal to begin with).
@@ -243,6 +259,7 @@ Current instances:
 | [`tenets-review`](#metric-satisficing) | **metric satisficing** | output metrics within target | external context (market, competitor, regulatory shifts) |
 | [`ambitious-goal-grading`](#sandbagging-laundering) | **sandbagging laundering** | attainment hits at 100% | surprise evidence + stated difficulty intent |
 | [`dissent-before-commit`](#stale-dissent-reuse) | **stale dissent reuse** | authoring-time dissent record exists | re-canvass against `state_changes_since_authoring` |
+| [`portfolio-review`](#portfolio-drift) | **portfolio drift** | stable composition, defensible per-bet stories | zero-based reallocation — would the portfolio be re-authored today? |
 
 Interrogative skills that gate an artifact's *initial quality* (`amazon-writing-linter`, `leadership-principles-reviewer`) do not declare a named failure mode of this shape — their failures are local to the artifact under review, not products of time passing or methodological pre-loading.
 

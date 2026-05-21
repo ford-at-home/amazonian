@@ -88,7 +88,7 @@ The convention exists because reviewer cadence is the suite's leverage. A review
 Each skill belongs to one of two epistemic categories:
 
 - **Constructive** — produces an artifact (PRFAQ, six-pager, mechanism, WBR, CoE).
-- **Interrogative** — stress-tests an artifact or belief and produces revisions, not new artifacts (linter, LP-reviewer, customer-interview-synthesis, launch-readiness-review, tenets-review, ambitious-goal-grading, dissent-before-commit).
+- **Interrogative** — stress-tests an artifact or belief and produces revisions, not new artifacts (linter, LP-reviewer, customer-interview-synthesis, launch-readiness-review, tenets-review, ambitious-goal-grading, dissent-before-commit, portfolio-review).
 
 Interrogative skills are the falsification layer. They must refuse confirmatory invocation explicitly in their stop conditions. A reviewer asked to "confirm this is good" is being asked to fail at its job.
 
@@ -100,9 +100,12 @@ Interrogative skills that gate an artifact's **ongoing validity over time** must
 
 Current instances (see [`GLOSSARY.md#named-failure-modes-cross-reference`](GLOSSARY.md#named-failure-modes-cross-reference)):
 
+- `customer-interview-synthesis` → **founder bias laundering**
+- `launch-readiness-review` → **PRFAQ drift**
 - `tenets-review` → **metric satisficing**
 - `ambitious-goal-grading` → **sandbagging laundering**
 - `dissent-before-commit` → **stale dissent reuse**
+- `portfolio-review` → **portfolio drift**
 
 **The rule for new skills:**
 

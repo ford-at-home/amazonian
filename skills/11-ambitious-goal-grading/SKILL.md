@@ -212,6 +212,7 @@ After emitting, run a second pass that checks:
 - `tenets-review`: `tenet_violation_candidate: true` → `review_trigger: named_concern` + `trigger_detail` citing the chronic pattern
 - `correction-of-errors`: per-goal `routes_to: correction-of-errors` → individual CoE on execution failure
 - `mechanism-designer`: when `goalpost_moving` appears, the underlying goal-setting mechanism needs redesign → mechanism revision
+- `portfolio-review`: per-bet `attainment_score` + `calibration_assessment` + `pattern_assessment` → `latest_goal_grading` for this bet; chronic sandbagging is a signal the bet's `expected_return` may have been overstated
 
 Enums used: `calibration_assessment`, `attainment_score`, `pattern_assessment`, `goal_setting_context`, `metric_types`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml). See [`GLOSSARY.md`](../../GLOSSARY.md#sandbagging-laundering) for the named failure mode this skill exists to catch. See [`calibration-patterns.yaml`](calibration-patterns.yaml) for detection heuristics.
 

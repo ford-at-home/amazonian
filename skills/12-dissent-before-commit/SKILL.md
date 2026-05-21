@@ -217,6 +217,7 @@ The discipline is enforced by invocation, not by frontmatter: any team that sche
 - `launch-readiness-review`: `predicted_failure_modes` → `dissent_history` for launch actions
 - `correction-of-errors`: prior incidents on the same mechanism or adjacent systems → `state_changes_since_authoring`
 - `weekly-business-review`: recent variance or anomalies → `state_changes_since_authoring`
+- `portfolio-review`: reallocations crossing irreversibility threshold → `proposed_action`; `drift_detected` → `state_changes_since_authoring`
 
 **Feeds into**
 

@@ -10,7 +10,7 @@
 
 suite:
   name: amazonian
-  version: 0.4.1
+  version: 0.5.0
   positioning: governance layer around a product development lifecycle, not a PDLC itself
   phase_model: [discover, define, design, build, launch, operate, learn]
   named_failure_modes:                # see GLOSSARY.md#named-failure-modes-cross-reference
@@ -24,6 +24,8 @@ suite:
       mode: sandbagging laundering
     - skill: dissent-before-commit
       mode: stale dissent reuse
+    - skill: portfolio-review
+      mode: portfolio drift
 
 phases:
 
@@ -84,12 +86,13 @@ phases:
 
   - id: learn
     name: Learn
-    description: Incident review, thesis re-examination, goal calibration
+    description: Incident review, thesis re-examination, goal calibration, cross-bet allocation
     density: dense
     skills:
       - correction-of-errors      # incident-driven
-      - tenets-review             # event-driven
-      - ambitious-goal-grading    # period-driven (quarterly/annual)
+      - tenets-review             # event-driven, per-bet
+      - ambitious-goal-grading    # period-driven, per-bet
+      - portfolio-review          # period-driven, cross-bet
 
 skills:
 
@@ -284,6 +287,7 @@ skills:
       - launch-readiness-review           # predicted_failure_modes -> dissent_history
       - correction-of-errors              # prior incidents -> state_changes_since_authoring
       - weekly-business-review            # recent variance -> state_changes_since_authoring
+      - portfolio-review                  # reallocations crossing irreversibility threshold -> proposed_action
     feeds_into:
       - mechanism-designer                # proceed_with_changes -> mechanism revisions
       - launch-readiness-review           # pause/escalate on launch-adjacent actions
@@ -291,6 +295,24 @@ skills:
       - correction-of-errors              # cross-reference original dissent record post-execution
     enums_used: [dissent_recommendation, reversibility, dissent_perspective, assumption_tags]
     skill_md: skills/12-dissent-before-commit/SKILL.md
+
+  - name: portfolio-review
+    number: "13"
+    category: interrogative
+    primary_phase: learn
+    consumes_from:
+      - tenets-review                     # current_recommendation per bet -> latest_tenets_review
+      - ambitious-goal-grading            # attainment + calibration per bet -> latest_goal_grading
+      - weekly-business-review            # aggregated period variance per bet -> cumulative_wbr_variance
+      - working-backwards-prfaq           # original success_metrics, risks, mvp_boundary -> context
+      - portfolio-review                  # prior period output -> prior_portfolio_review (persistent drift escalates)
+    feeds_into:
+      - working-backwards-prfaq           # wind_down -> kill-decision PRFAQ; fund -> re-author candidate PRFAQ if stale
+      - mechanism-designer                # amplify / pivot -> new mechanism inputs
+      - dissent-before-commit             # reallocations crossing irreversibility threshold -> proposed_action
+      - tenets-review                     # wind_down resisted -> review_trigger: portfolio_review_kill_disputed
+    enums_used: [portfolio_bet_recommendation, candidate_decision, allocation_change_severity, assumption_tags]
+    skill_md: skills/13-portfolio-review/SKILL.md
 
 # Enforced ordering rules:
 # The only ordering the suite hard-enforces is via `required_reviews` in
@@ -307,3 +329,5 @@ ordering:
     - customer-interview-synthesis before working-backwards-prfaq when raw interview signal exists
     - launch-readiness-review before any ship of a PRFAQ-authorized artifact
     - tenets-review on external context shift or annually
+    - tenets-review per bet before portfolio-review (the latter consumes the former; a stale tenets-review fails the portfolio-review validation gate)
+    - portfolio-review at period boundaries (quarter / half / year); not synchronous with single-bet reviews
