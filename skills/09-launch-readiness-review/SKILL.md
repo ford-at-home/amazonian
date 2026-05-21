@@ -1,6 +1,6 @@
 ---
 name: launch-readiness-review
-description: Gate the launch of a feature, product, or initiative by diffing the current build state against the original PRFAQ contract. Emits one of go / no_go / conditional_go / defer with a PRFAQ drift report, predicted failure modes (pre-mortem), risk register delta, and rollback testability check. Use when an artifact authorized by a PRFAQ or six-page narrative is approaching launch; or when the user mentions "launch readiness", "go/no-go", "ship review", "pre-launch review", or "launch gate".
+description: Gate the launch of a feature, product, or initiative by diffing the current build state against the original PRFAQ contract. Emits one of go / no_go / conditional_go / defer with a PRFAQ drift report, predicted failure modes (pre-mortem), risk register delta, and rollback testability check. The named failure mode is PRFAQ drift — the gap between authoring-time promise and ship-time reality, where the surface signal (features shipped match the PRFAQ scope) hides that the customer outcome the PRFAQ promised is not being delivered. Use when an artifact authorized by a PRFAQ or six-page narrative is approaching launch; or when the user mentions "launch readiness", "go/no-go", "ship review", "pre-launch review", or "launch gate".
 category: interrogative
 ---
 
@@ -138,12 +138,18 @@ launch_narrative:               # 2-3 sentences leadership can use in the WBR
 
 ## Failure modes
 
-- **Scope-match satisficing.** Confirming features_shipped against mvp_boundary.in_scope and stopping there. The customer-outcome gate exists to prevent this.
+### Named failure mode (the one this skill exists to catch)
+
+- **PRFAQ drift.** The gap between what the PRFAQ promised at authoring time and what the build actually delivers at launch time. The surface signal — features shipped match the PRFAQ scope, the team is on the original timeline — hides that the planned features do not produce the promised customer outcome, or that scope crept silently, or that the risk register's mitigations have decayed. The skill's second-axis check is the `customer_outcome_assessment` gate: a scope match is not a customer-outcome match. See [`GLOSSARY.md#prfaq-drift`](../../GLOSSARY.md#prfaq-drift) for the cross-reference index. Specific sub-patterns of this failure mode — scope-match satisficing, narrative laundering, PRFAQ-as-stale-artifact rationalization — appear below.
+
+### Other failure modes
+
+- **Scope-match satisficing.** Confirming features_shipped against mvp_boundary.in_scope and stopping there. The customer-outcome gate exists to prevent this. (The canonical instance of PRFAQ drift.)
 - **Soft conditional_go.** Conditions like "we'll add monitoring next sprint" make the decision `go-with-risk`. Reject them as conditions; document them as accepted risk in the launch narrative or refuse to ship.
 - **Pre-mortem theater.** Generating predicted_failure_modes without leading indicators or owners. A failure mode no one is watching for is a failure mode that lands silently.
 - **Rollback hand-waving.** "We have feature flags" without evidence the rollback has been exercised. Untested rollback in production is the same as no rollback.
-- **Narrative laundering.** Writing a launch narrative that obscures `significant` drift. The narrative must surface drift; it does not erase it.
-- **PRFAQ-as-stale-artifact rationalization.** "The PRFAQ is six months old, requirements have changed." If the contract changed, the contract should be re-signed (re-run the PRFAQ skill), not silently ignored.
+- **Narrative laundering.** Writing a launch narrative that obscures `significant` drift. The narrative must surface drift; it does not erase it. (A specific instance of PRFAQ drift.)
+- **PRFAQ-as-stale-artifact rationalization.** "The PRFAQ is six months old, requirements have changed." If the contract changed, the contract should be re-signed (re-run the PRFAQ skill), not silently ignored. (A specific instance of PRFAQ drift.)
 
 ## Reviewer pass
 

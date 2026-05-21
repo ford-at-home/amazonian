@@ -1,6 +1,6 @@
 ---
 name: customer-interview-synthesis
-description: Convert raw customer interview transcripts, notes, and surveys into PRFAQ-ready structured inputs — customer segments, problem statement, current workarounds, evidence tags, and founder-bias flags. Distinguishes behavioral evidence from attitudinal evidence and refuses to synthesize PRFAQ-ready output from fewer than 8 interviews. Use when raw customer signal exists but is unstructured, before drafting a PRFAQ; or when the user mentions "interview synthesis", "user research", "discovery synthesis", "interview themes", or "customer signal".
+description: Convert raw customer interview transcripts, notes, and surveys into PRFAQ-ready structured inputs — customer segments, problem statement, current workarounds, evidence tags, and founder-bias flags. Distinguishes behavioral evidence from attitudinal evidence and refuses to synthesize PRFAQ-ready output from fewer than 8 interviews. The named failure mode is founder bias laundering — the founder's prior is dressed up as customer signal by a panel selected or framed to confirm it; surface signal (themes match the hypothesis) hides that the methodology pre-loaded the answer. Use when raw customer signal exists but is unstructured, before drafting a PRFAQ; or when the user mentions "interview synthesis", "user research", "discovery synthesis", "interview themes", or "customer signal".
 category: interrogative
 ---
 
@@ -145,11 +145,17 @@ Stop and ask the user. Do not invent.
 
 ## Failure modes
 
-- **Bias-flag theater.** Generating plausible-sounding bias flags without citations to back them. The citation gate is the only safeguard; do not soften it.
+### Named failure mode (the one this skill exists to catch)
+
+- **Founder bias laundering.** The founder's prior is dressed up as customer signal by a panel that was selected, recruited, or questioned in ways that pre-loaded the answer. The surface signal (interview themes align with the founder's hypothesis) hides that the methodology made the alignment near-inevitable. The skill's second-axis check is the requirement that `evidence_against` for the founder's hypothesis be non-empty (and its emptiness is itself flagged), combined with the bias-pattern citations against `selection_method` and `interview_method`. See [`GLOSSARY.md#founder-bias-laundering`](../../GLOSSARY.md#founder-bias-laundering) for the cross-reference index. Specific sub-patterns of this failure mode — friend-panel blindness, leading questions, attitudinal-only segments, synthesis as confirmation — appear below.
+
+### Other failure modes
+
+- **Bias-flag theater.** Generating plausible-sounding bias flags without citations to back them. The citation gate is the only safeguard; do not soften it. (Internal to this skill; not a research-process failure mode.)
 - **Theme washing.** Collapsing dissenting respondents into a majority theme. Segment heterogeneity is information; preserve conflicts in `conflict_with_segments`.
 - **Attitudinal laundering.** Repackaging stated preference as evidence of demand. If nobody behaved, nobody validated.
-- **Synthesis as confirmation.** Re-stating the founder's hypothesis back as "themes from the interviews." If `evidence_against` is empty, the synthesis is failing.
-- **Friend-panel blindness.** Cohort recruited from the founder's network produces ~uniformly positive signal. The skill must call this out per [`bias-patterns.yaml`](bias-patterns.yaml) — *with citations*.
+- **Synthesis as confirmation.** Re-stating the founder's hypothesis back as "themes from the interviews." If `evidence_against` is empty, the synthesis is failing. (A specific instance of founder bias laundering.)
+- **Friend-panel blindness.** Cohort recruited from the founder's network produces ~uniformly positive signal. The skill must call this out per [`bias-patterns.yaml`](bias-patterns.yaml) — *with citations*. (A specific instance of founder bias laundering.)
 - **Note-as-transcript.** Treating an interviewer's filtered summary as if it were verbatim. The schema distinguishes them for a reason.
 
 ## Reviewer pass

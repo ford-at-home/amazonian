@@ -10,9 +10,20 @@
 
 suite:
   name: amazonian
-  version: 0.4.0
+  version: 0.4.1
   positioning: governance layer around a product development lifecycle, not a PDLC itself
   phase_model: [discover, define, design, build, launch, operate, learn]
+  named_failure_modes:                # see GLOSSARY.md#named-failure-modes-cross-reference
+    - skill: customer-interview-synthesis
+      mode: founder bias laundering
+    - skill: launch-readiness-review
+      mode: PRFAQ drift
+    - skill: tenets-review
+      mode: metric satisficing
+    - skill: ambitious-goal-grading
+      mode: sandbagging laundering
+    - skill: dissent-before-commit
+      mode: stale dissent reuse
 
 phases:
 

@@ -220,6 +220,14 @@ Borrowed from Bezos. Used by `dissent-before-commit` to control how strict the d
 
 The named failure mode `dissent-before-commit` exists to catch. The team points to authoring-time dissent (six-pager's gate, LP-reviewer's `are_right_a_lot`) as proof that concerns were heard, and proceeds with execution without checking what has changed between authoring and now. The dissent record was true at authoring time and may be stale now — state changes since authoring may have invalidated prior assessments or surfaced concerns that weren't visible then. The skill's `dissent_recanvassed` gate exists to force re-evaluation against current state. Analogous in structure to `metric satisficing` (tenets-review) and `sandbagging laundering` (ambitious-goal-grading) — each names a way a previously-honest signal goes stale while looking healthy.
 
+## Founder bias laundering
+
+The named failure mode `customer-interview-synthesis` exists to catch. The founder's prior is dressed up as customer signal by a panel that was selected, recruited, or questioned in ways that pre-loaded the answer. The surface signal — interview themes align with the founder's hypothesis — hides that the methodology made the alignment near-inevitable. The skill's second-axis check is the requirement that `evidence_against` for the founder's hypothesis be non-empty (its emptiness is itself flagged), combined with bias-pattern citations against `selection_method` and `interview_method` per [`skills/08-customer-interview-synthesis/bias-patterns.yaml`](skills/08-customer-interview-synthesis/bias-patterns.yaml). Specific sub-patterns include friend-panel blindness (cohort recruited from the founder's network), leading questions, attitudinal-only segments, solution-first framing, and synthesis as confirmation. Analogous in structure to `metric satisficing`, `sandbagging laundering`, `stale dissent reuse`, and `PRFAQ drift` — each names a way a previously-honest signal looks healthy while the underlying mechanism has stopped working (or, in this case, never produced honest signal to begin with).
+
+## PRFAQ drift
+
+The named failure mode `launch-readiness-review` exists to catch. The gap between what the PRFAQ promised at authoring time and what the build actually delivers at launch time. The surface signal — features shipped match the PRFAQ scope, the team is on the original timeline, the contract was approved — hides that the planned features do not produce the promised customer outcome, or that scope crept silently between authoring and launch, or that the risk register's mitigations have decayed. The skill's second-axis check is the `customer_outcome_assessment` gate: a scope match is not a customer-outcome match. Specific sub-patterns include scope-match satisficing (the canonical instance — confirming features-shipped against features-promised and stopping there), narrative laundering (launch narrative obscures drift), and PRFAQ-as-stale-artifact rationalization (ignoring the contract because it is "old"). Analogous in structure to the other named failure modes in this index.
+
 ## Named failure modes (cross-reference)
 
 The suite has a signature architectural commitment: every interrogative skill that gates an artifact's *ongoing validity over time* declares a single named failure mode it exists to catch. Each instance has a specific name, but they share a shape:
@@ -230,15 +238,15 @@ Current instances:
 
 | Skill | Named failure mode | Surface signal | Second-axis check |
 |---|---|---|---|
+| [`customer-interview-synthesis`](#founder-bias-laundering) | **founder bias laundering** | interview themes align with founder's hypothesis | forced `evidence_against` + bias-pattern citations against selection/interview method |
+| [`launch-readiness-review`](#prfaq-drift) | **PRFAQ drift** | features shipped match PRFAQ scope | `customer_outcome_assessment` — scope match is not customer-outcome match |
 | [`tenets-review`](#metric-satisficing) | **metric satisficing** | output metrics within target | external context (market, competitor, regulatory shifts) |
 | [`ambitious-goal-grading`](#sandbagging-laundering) | **sandbagging laundering** | attainment hits at 100% | surprise evidence + stated difficulty intent |
 | [`dissent-before-commit`](#stale-dissent-reuse) | **stale dissent reuse** | authoring-time dissent record exists | re-canvass against `state_changes_since_authoring` |
 
-Interrogative skills that gate an artifact's *initial quality* (linter, leadership-principles-reviewer) do not declare a named failure mode of this shape — their failures are local to the artifact under review, not products of time passing.
+Interrogative skills that gate an artifact's *initial quality* (`amazon-writing-linter`, `leadership-principles-reviewer`) do not declare a named failure mode of this shape — their failures are local to the artifact under review, not products of time passing or methodological pre-loading.
 
-See [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md#named-failure-modes) for the rule that new ongoing-validity interrogative skills should declare one of these.
-
-Candidates for future elevation: `customer-interview-synthesis` likely has an analogous failure mode (`founder bias laundering` — panel selected to confirm the founder's hypothesis), and `launch-readiness-review` has one (`PRFAQ drift` — gap between authoring-time promise and ship-time reality). Both are already named in their respective skill docs but haven't been elevated to suite-level named failure modes. Deferred pending separate review.
+See [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md#named-failure-modes) for the rule that new ongoing-validity interrogative skills must declare one of these.
 
 ## Required reviews
 
