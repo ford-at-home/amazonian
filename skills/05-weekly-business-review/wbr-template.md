@@ -51,7 +51,9 @@
 
 ### Risks
 
-<Things that could harm metrics in the next 1–4 weeks. Each with severity, likelihood, mitigation, owner.>
+<Things that could harm metrics in the next 1–4 weeks. Each with severity, likelihood, mitigation, owner.
+Severity and likelihood use the canonical scales from `GLOSSARY.md#severity-and-likelihood`:
+severity = catastrophic | high | medium | low; likelihood = likely | possible | unlikely | speculative.>
 
 ### Issues
 

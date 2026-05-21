@@ -46,7 +46,7 @@ Weekly active EMs slipped from 73% to 64% — first week below the 70% target si
 
 ### Risks
 
-- If the blocked-PR false-positive rate stays elevated through next week, weekly active EMs may drop below the 50% cancel threshold for cohort week 3. Severity 4, likelihood 3. Mitigation: feature-flag rollback ready. Owner: Eng.
+- If the blocked-PR false-positive rate stays elevated through next week, weekly active EMs may drop below the 50% cancel threshold for cohort week 3. Severity: `high`. Likelihood: `possible`. Mitigation: feature-flag rollback ready. Owner: Eng.
 
 ### Issues
 

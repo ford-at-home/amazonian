@@ -107,9 +107,12 @@ A: <Reference the MVP boundary.>
 
 ## Risks
 
-| Risk | Severity (1–5) | Likelihood (1–5) | Mitigation | Owner |
-|------|----------------|------------------|------------|-------|
-|      |                |                  |            |       |
+> Severity and likelihood use the canonical scales from `GLOSSARY.md#severity-and-likelihood`.
+> Severity: `catastrophic` | `high` | `medium` | `low`. Likelihood: `likely` | `possible` | `unlikely` | `speculative`.
+
+| Risk | Severity | Likelihood | Mitigation | Owner |
+|------|----------|------------|------------|-------|
+|      |          |            |            |       |
 
 ---
 
@@ -117,7 +120,7 @@ A: <Reference the MVP boundary.>
 
 **Recommendation:** <proceed | proceed_with_changes | do_not_proceed | needs_more_info>
 
-**Rationale:** <Short paragraph. Reference the strongest evidence and the largest risk. A `proceed` recommendation with three high-severity unmitigated risks is incoherent; revise the recommendation or mitigate the risks before submission.>
+**Rationale:** <Short paragraph. Reference the strongest evidence and the largest risk. A `proceed` recommendation paired with any `catastrophic + likely` or `catastrophic + possible` risk that lacks a documented mitigation is incoherent; revise the recommendation or mitigate the risk before submission.>
 
 ---
 
