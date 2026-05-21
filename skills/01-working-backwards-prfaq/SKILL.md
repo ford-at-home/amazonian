@@ -83,6 +83,10 @@ mvp_boundary:
   out_of_scope:               # list (at least 3 items)
 success_metrics:              # list of {metric, baseline, target, measurement_method, time_to_evaluate}
 risks:                        # list of {risk, severity, likelihood, mitigation, owner}
+                              # severity + likelihood use the canonical scales in
+                              # vocabulary.yaml#severity_and_likelihood
+                              # (severity: catastrophic|high|medium|low;
+                              #  likelihood: likely|possible|unlikely|speculative)
 decision_recommendation:
   recommendation:             # one of: proceed | proceed_with_changes | do_not_proceed | needs_more_info
   rationale:                  # short paragraph; cites strongest evidence and largest risk
@@ -119,7 +123,7 @@ After the draft, run a second pass that checks:
 - Every claim has an assumption tag.
 - Every metric is measurable within 90 days.
 - The largest risk is named and has a mitigation with an owner.
-- The decision recommendation matches the evidence in the body. (A `proceed` recommendation with three high-severity unmitigated risks is incoherent.)
+- The decision recommendation matches the evidence in the body. A `proceed` recommendation paired with any `catastrophic + likely` or `catastrophic + possible` risk that lacks a documented mitigation is incoherent — reject it. See [`GLOSSARY.md#severity-and-likelihood`](../../GLOSSARY.md#severity-and-likelihood).
 
 If `amazon-writing-linter` is available, hand the press release section to it before final emit.
 

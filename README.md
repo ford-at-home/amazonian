@@ -11,11 +11,17 @@
 
 ---
 
-A small, opinionated suite of agent skills that translates Amazon operational mechanisms — PRFAQ, six-page narratives, Weekly Business Reviews, Correction of Errors, mechanism design, and Leadership Principles review — into composable, inspectable agent workflows.
+A small, opinionated suite of agent skills that translates **operational discipline** — originating in Amazon's mechanisms (PRFAQ, six-page narratives, Weekly Business Reviews, Correction of Errors, mechanism design, Leadership Principles review) and enriched with adjacent practices where they sharpen the bar — into composable, inspectable agent workflows.
 
 > Mechanisms make bad thinking expensive *before* bad execution becomes expensive.
 
-Most agent skills tell the model to "be thoughtful." That is not a mechanism; that is a vibe. The skills in this suite refuse to emit output if the inputs are vague, tag claims with `[assumption]` when evidence is thin, and hand off to the next skill in a deterministic chain.
+Most agent skills tell the model to "be thoughtful." That is not a mechanism; that is a vibe. The skills in this suite refuse to emit output if the inputs are vague, tag claims with `[assumption]` when evidence is thin, hand off to the next skill in a deterministic chain, and — for any skill that gates an artifact's ongoing validity over time — declare a [named failure mode](GLOSSARY.md#named-failure-modes-cross-reference) they exist to catch.
+
+## What this suite is
+
+This is the **governance layer** around a product development lifecycle — not a PDLC itself. It handles the entrance (Discover, Define) and the exit (Operate, Learn) of any significant bet. Build and most of Launch happen in your engineering tooling, deliberately out of scope here. The suite's value is in making the bookends load-bearing enough that the middle has somewhere honest to attach. See [`LIFECYCLE.md`](LIFECYCLE.md) for the phase map and the deliberate omissions.
+
+The suite is also opinionated about its own architecture. Skills split into **constructive** (produce an artifact) and **interrogative** (stress-test an artifact, produce revisions). Interrogative skills that gate ongoing validity declare a named failure mode — `metric satisficing`, `sandbagging laundering`, `stale dissent reuse`. Each names a way a previously-honest signal goes stale while looking healthy. That pattern is the suite's signature commitment, codified in [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md#named-failure-modes).
 
 ## Quick start
 
@@ -37,7 +43,7 @@ Use the working-backwards-prfaq skill to draft a PRFAQ for <idea>.
 
 ## The operating chain
 
-`amazon-writing-linter` and `leadership-principles-reviewer` are cross-cutting passes any authoring skill runs against its own draft. The other five form the operating loop.
+`amazon-writing-linter` and `leadership-principles-reviewer` are cross-cutting passes that any authoring skill runs against its own draft. The remaining skills compose into the operating loop — Discover → Define → Design → (Build, elsewhere) → Launch → Operate → Learn — with feedback edges where each phase's findings flow back to revise upstream artifacts.
 
 ```mermaid
 flowchart TD
@@ -96,8 +102,25 @@ Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). Th
 - A blanket endorsement of any particular company culture.
 - A magic productivity layer.
 - A replacement for talking to the actual customer.
+- A complete product development lifecycle. It governs the bookends; the middle happens in your engineering tooling.
 
 These are mechanisms for *thinking visibly in writing*. They make bad reasoning expensive in a forum where it is cheap to fix.
+
+## Influences
+
+The suite is Amazon-origin at its core. Where adjacent practices sharpen the discipline, they have been adopted with attribution:
+
+| Skill | Primary influence |
+|---|---|
+| `01` – `07` (PRFAQ, linter, six-pager, mechanism-designer, WBR, CoE, LP-reviewer) | Amazon's publicly described operational mechanisms |
+| `08` `customer-interview-synthesis` | Lean Startup / Steve Blank customer-development discipline; behavioral-vs-attitudinal evidence classification |
+| `09` `launch-readiness-review` | Amazon-style gating combined with pre-mortem (Kahneman / Klein) |
+| `10` `tenets-review` | Amazon tenets framing; `metric satisficing` is a suite-original name for a generic governance failure mode |
+| `11` `ambitious-goal-grading` | OKR convention (Google-origin) — 0.7 attainment as the honest-calibration norm — repurposed as an interrogative grading lens |
+| `12` `dissent-before-commit` | Bezos one-way / two-way door framing extended with execution-time re-canvass; `stale dissent reuse` is suite-original |
+| The named-failure-mode pattern itself | Suite-original; emergent across skills 10, 11, 12 |
+
+The suite's coherence comes from its **governance-layer architecture** more than from any single company's playbook. The name "Amazonian" describes origin, not identity.
 
 ## Repo layout
 
@@ -165,3 +188,5 @@ MIT. See [`LICENSE`](LICENSE).
 ## Disclaimer
 
 "Amazon", "AWS", "Working Backwards", and the Amazon Leadership Principles are property of Amazon.com, Inc. This project is an independent interpretation of publicly described practices and is not affiliated with, endorsed by, or sponsored by Amazon.
+
+OKR conventions referenced in `ambitious-goal-grading` are general industry practice popularized by Google; this project is not affiliated with or endorsed by Google. Other named techniques (e.g., pre-mortem, Lean Startup customer-development practices) are general industry practice cited as influences in [`Influences`](#influences) above.

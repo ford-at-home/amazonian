@@ -43,6 +43,10 @@ current_state:                # what exists today, including its failure modes
 proposed_mechanism:           # the proposed change
 alternatives_considered:      # at least 2, each with why-rejected
 risks:                        # known risks with severity, likelihood, mitigation, owner
+                              # severity + likelihood use the canonical scales in
+                              # vocabulary.yaml#severity_and_likelihood
+                              # (severity: catastrophic|high|medium|low;
+                              #  likelihood: likely|possible|unlikely|speculative)
 metrics:                      # how success and failure will be measured
 dissent:                      # named individuals who disagree, and why
 appendix:                     # supporting data, prior art, links

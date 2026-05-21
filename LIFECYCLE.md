@@ -28,9 +28,22 @@ The suite's job is to make sure what enters Build is contracted (PRFAQ / six-pag
 
 These omissions are the boundary. The suite is the *bookends*. Whether you fill the middle with engineering rigor is up to you and out of scope here.
 
+### Rejected skill categories
+
+Beyond the phase-level omissions above, the suite has explicitly rejected several proposed skill categories during design review. Documenting them here so future contributors do not re-propose them without addressing the original objection:
+
+| Category | Why rejected |
+|---|---|
+| Circuit Breaker Orchestration | Execution-layer. The suite has no business deciding *at runtime* whether to halt a workflow; that belongs in the engineering systems that actually run the workflow. |
+| Rotational Subagent Allocation | Execution-layer. Routing decisions between agents at runtime are not a governance artifact; they are a runtime concern. |
+| Shadow Pipeline | Execution-layer. Same reasoning. |
+| Hierarchical Goal Decomposition | The constructive parts already exist (`working-backwards-prfaq` decomposes via `success_metrics`; `mechanism-designer` decomposes via `inputs` → `inspection`). The interrogative part is now covered by `ambitious-goal-grading`. A combined skill would have collapsed two distinct phases and two distinct epistemic postures. |
+
+The disqualifying rule each violates: a proposed skill must satisfy the spine in [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md), produce an artifact a downstream skill consumes, and avoid collapsing constructive and interrogative responsibilities into a single skill. Execution-layer routing fails the first; multi-mode skills fail the third.
+
 ## Constructive vs interrogative
 
-The suite splits roughly 50/50 by epistemic posture:
+The suite has 12 skills — 5 constructive, 7 interrogative — split by epistemic posture:
 
 **Constructive** (produce an artifact):
 

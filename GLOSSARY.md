@@ -70,7 +70,23 @@ The explicit list of what is in scope and what is *not*. Out-of-scope must conta
 
 ## Severity and likelihood
 
-`[open question]` — PRFAQ and six-page-narrative both ask for severity and likelihood on each risk, but neither defines the scale. Pick one consistently within a document and document the choice. This is a known gap to close in a follow-up.
+Risk register entries in PRFAQ, six-page-narrative, and launch-readiness-review carry both a severity and a likelihood. Named tiers with concrete anchors; numeric grids were rejected as theater.
+
+**Severity** (consequence if the risk materializes):
+
+- **catastrophic** — customer churn at scale, regulatory action, public incident, data loss
+- **high** — significant rework, missed quarter commitment, named-customer escalation, contract violation
+- **medium** — internal rework, slipped commitment within a team, recoverable operational pain
+- **low** — documented, monitored, no immediate action; would be a footnote
+
+**Likelihood** (probability the risk materializes in the review window):
+
+- **likely** — historical base rate or current signal indicates this will happen
+- **possible** — plausible based on adjacent evidence or named assumption
+- **unlikely** — would require multiple unanticipated conditions to align
+- **speculative** — no current evidence; included for completeness or stress-testing
+
+A `proceed` recommendation paired with any `catastrophic + likely` or `catastrophic + possible` risk that lacks a documented mitigation is incoherent. Reviewers should fail it. Triage rules beyond that belong in the skills that use the scale, not in the scale itself.
 
 ## Evidence type
 
@@ -203,6 +219,26 @@ Borrowed from Bezos. Used by `dissent-before-commit` to control how strict the d
 ## Stale dissent reuse
 
 The named failure mode `dissent-before-commit` exists to catch. The team points to authoring-time dissent (six-pager's gate, LP-reviewer's `are_right_a_lot`) as proof that concerns were heard, and proceeds with execution without checking what has changed between authoring and now. The dissent record was true at authoring time and may be stale now — state changes since authoring may have invalidated prior assessments or surfaced concerns that weren't visible then. The skill's `dissent_recanvassed` gate exists to force re-evaluation against current state. Analogous in structure to `metric satisficing` (tenets-review) and `sandbagging laundering` (ambitious-goal-grading) — each names a way a previously-honest signal goes stale while looking healthy.
+
+## Named failure modes (cross-reference)
+
+The suite has a signature architectural commitment: every interrogative skill that gates an artifact's *ongoing validity over time* declares a single named failure mode it exists to catch. Each instance has a specific name, but they share a shape:
+
+> A surface signal that looks healthy on its face masks a structural failure underneath. The skill refuses to grade only against the surface; it forces a second-axis check.
+
+Current instances:
+
+| Skill | Named failure mode | Surface signal | Second-axis check |
+|---|---|---|---|
+| [`tenets-review`](#metric-satisficing) | **metric satisficing** | output metrics within target | external context (market, competitor, regulatory shifts) |
+| [`ambitious-goal-grading`](#sandbagging-laundering) | **sandbagging laundering** | attainment hits at 100% | surprise evidence + stated difficulty intent |
+| [`dissent-before-commit`](#stale-dissent-reuse) | **stale dissent reuse** | authoring-time dissent record exists | re-canvass against `state_changes_since_authoring` |
+
+Interrogative skills that gate an artifact's *initial quality* (linter, leadership-principles-reviewer) do not declare a named failure mode of this shape — their failures are local to the artifact under review, not products of time passing.
+
+See [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md#named-failure-modes) for the rule that new ongoing-validity interrogative skills should declare one of these.
+
+Candidates for future elevation: `customer-interview-synthesis` likely has an analogous failure mode (`founder bias laundering` — panel selected to confirm the founder's hypothesis), and `launch-readiness-review` has one (`PRFAQ drift` — gap between authoring-time promise and ship-time reality). Both are already named in their respective skill docs but haven't been elevated to suite-level named failure modes. Deferred pending separate review.
 
 ## Required reviews
 

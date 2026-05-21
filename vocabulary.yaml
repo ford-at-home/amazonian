@@ -69,10 +69,39 @@ principle_scores:
 
 severity_and_likelihood:
   description: |
-    Risk severity and likelihood scales used by PRFAQ and six-page-narrative.
-  status: open_question
+    Risk severity and likelihood scales used by PRFAQ, six-page-narrative,
+    and any skill that emits or evaluates a risk register. Named tiers with
+    concrete anchors; numeric grids were rejected as risk-management theater
+    that obscures evidence.
+  severity:
+    description: consequence if the risk materializes
+    values:
+      catastrophic:
+        anchor: customer churn at scale, regulatory action, public incident, data loss
+      high:
+        anchor: significant rework, missed quarter commitment, named-customer escalation, contract violation
+      medium:
+        anchor: internal rework, slipped commitment within a team, recoverable operational pain
+      low:
+        anchor: documented, monitored, no immediate action; would be a footnote
+  likelihood:
+    description: probability the risk materializes in the review window
+    values:
+      likely:
+        anchor: historical base rate or current signal indicates this will happen
+      possible:
+        anchor: plausible based on adjacent evidence or named assumption
+      unlikely:
+        anchor: would require multiple unanticipated conditions to align
+      speculative:
+        anchor: no current evidence; included for completeness or stress-testing
   notes:
-    - "Both authoring skills ask for severity + likelihood on each risk, but neither defines the scale. Pick one consistently within a document and document the choice. Adopt a shared scale in a follow-up."
+    - "Triage rules (e.g., catastrophic regardless of likelihood must have a mitigation) belong in the skills that use the scale, not in the scale itself."
+    - "A `proceed` recommendation paired with any catastrophic+likely or catastrophic+possible risk lacking a documented mitigation is incoherent; reviewers should fail it."
+  used_by:
+    - 01-working-backwards-prfaq
+    - 03-six-page-narrative
+    - 09-launch-readiness-review        # risk_register_delta carries forward these labels
 
 evidence_type:
   description: |

@@ -198,6 +198,14 @@ After emitting, run a second pass that checks:
 - If `stale_dissent_warning: true` repeatedly across actions on the same initiative, route to `correction-of-errors` on the dissent mechanism itself. The team is treating authoring-time dissent as a one-time gate when it should be re-canvassed against state.
 - If the strongest case turned out to be correct in retrospect (the addressed dissent or accepted tradeoff materialized), the action's `correction-of-errors` should reference the original dissent record. Dissent that proved right is the most valuable kind.
 
+## Why this skill is not a `required_review` on `mechanism-designer`
+
+`mechanism-designer` declares `required_reviews: [amazon-writing-linter]`. A natural question is whether `dissent-before-commit` should be added there. It is deliberately not, for one structural reason:
+
+`mechanism-designer` runs at **design time**. `dissent-before-commit` runs at **execution time on a specific scheduled action**. Required reviews fire when their parent skill emits an artifact — at *authoring* time. Forcing this skill to run at authoring time would collapse the temporal axis the skill exists to preserve, and most of its inputs (`proposed_execution_date`, `state_changes_since_authoring`, `dissent_history` re-canvass) would either be synthetic or trivially empty.
+
+The discipline is enforced by invocation, not by frontmatter: any team that schedules a mechanism for execution invokes this skill against the specific scheduled instance. Documenting this here so future contributors do not re-propose adding it as a required review without first solving the temporal-collapse problem.
+
 ## Handoffs
 
 **Consumes from**

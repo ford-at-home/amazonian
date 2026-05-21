@@ -88,6 +88,32 @@ The convention exists because reviewer cadence is the suite's leverage. A review
 Each skill belongs to one of two epistemic categories:
 
 - **Constructive** — produces an artifact (PRFAQ, six-pager, mechanism, WBR, CoE).
-- **Interrogative** — stress-tests an artifact or belief and produces revisions, not new artifacts (linter, LP-reviewer, customer-interview-synthesis, launch-readiness-review, tenets-review).
+- **Interrogative** — stress-tests an artifact or belief and produces revisions, not new artifacts (linter, LP-reviewer, customer-interview-synthesis, launch-readiness-review, tenets-review, ambitious-goal-grading, dissent-before-commit).
 
 Interrogative skills are the falsification layer. They must refuse confirmatory invocation explicitly in their stop conditions. A reviewer asked to "confirm this is good" is being asked to fail at its job.
+
+## Named failure modes
+
+Interrogative skills that gate an artifact's **ongoing validity over time** must declare a single named failure mode they exist to catch. Each instance has a specific name, but they share a shape:
+
+> A surface signal that looks healthy on its face masks a structural failure underneath. The skill refuses to grade only against the surface; it forces a second-axis check.
+
+Current instances (see [`GLOSSARY.md#named-failure-modes-cross-reference`](GLOSSARY.md#named-failure-modes-cross-reference)):
+
+- `tenets-review` → **metric satisficing**
+- `ambitious-goal-grading` → **sandbagging laundering**
+- `dissent-before-commit` → **stale dissent reuse**
+
+**The rule for new skills:**
+
+If a proposed interrogative skill gates ongoing validity (anything where a previously-valid signal can become stale or misleading over time), it must declare a named failure mode with:
+
+1. A short, concrete name (two or three words, not a sentence).
+2. The surface signal the failure mode hides behind.
+3. The second-axis check the skill performs to refuse grading on surface alone.
+
+If a proposed interrogative skill gates only **initial quality** of an artifact (e.g., prose linting, principle review) — its failures are local to the artifact under review and not products of time passing — a named failure mode is not required.
+
+The named failure mode goes in the skill's frontmatter `description`, in a `## Failure modes` section, and in `GLOSSARY.md`. The cross-reference index in `GLOSSARY.md` is the single surface for discovering the pattern.
+
+**Why this matters.** Surface signals are easy to engineer (or accidentally produce) so they keep looking healthy after the underlying mechanism has stopped working. Without a named failure mode and a second-axis check, an interrogative skill becomes a confirmation engine. The named failure mode is the load-bearing commitment that the skill refuses to be one.
