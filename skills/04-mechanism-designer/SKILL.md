@@ -124,6 +124,7 @@ See [`mechanism-template.md`](mechanism-template.md) for the prose form.
 - `weekly-business-review`: `mechanism.inspection_method` defines the WBR's structure; `mechanism.outputs` + `mechanism.inputs` → `input_metrics` / `output_metrics`
 - `correction-of-errors`: when the mechanism itself fails, the mechanism spec is the artifact under review → `contributing_factors`
 - `launch-readiness-review`: operational gaps the launch needs to close → review consumes the mechanism's `inspection_method` to verify metric instrumentation is wired before ship
+- `tenets-review`: when the bet's operating mechanism is the artifact being reviewed → `mechanism.outputs` → `metrics_snapshot`
 
 Enums used: `metric_types`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 

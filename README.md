@@ -51,6 +51,9 @@ flowchart TD
     MECH --> WBR[weekly-business-review]
     WBR -.->|persistent variance| COE[correction-of-errors]
     COE -.->|findings| PRFAQ
+    MECH -.->|event-driven| TR[tenets-review]
+    WBR -.->|metric anomaly| TR
+    TR -.->|kill / pivot| PRFAQ
 
     PRFAQ -.->|draft| LINT[amazon-writing-linter]
     SIX -.->|draft| LINT
@@ -74,6 +77,7 @@ Solid arrows = the operating loop. Dotted arrows = review passes and feedback. F
 | 07 | [`leadership-principles-reviewer`](skills/07-leadership-principles-reviewer/SKILL.md) | A proposal | Review against Amazon-style leadership principles; contradictions and hidden risk |
 | 08 | [`customer-interview-synthesis`](skills/08-customer-interview-synthesis/SKILL.md) | Raw interview transcripts, notes, surveys (≥ 8 for PRFAQ-grade) | PRFAQ-ready structured inputs with behavioral vs attitudinal evidence tags and cited bias flags |
 | 09 | [`launch-readiness-review`](skills/09-launch-readiness-review/SKILL.md) | Original PRFAQ + current build state + rollback testability | Gate decision (`go` / `no_go` / `conditional_go` / `defer`) with PRFAQ drift report and pre-mortem |
+| 10 | [`tenets-review`](skills/10-tenets-review/SKILL.md) | Product tenets + original PRFAQ + external context changes + metrics | Bet recommendation (`continue` / `kill` / `pivot` / `escalate`) with tenet validity report and metric-satisficing warning |
 
 Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). The disqualifying criteria in that doc are the bar. Shared vocabulary (assumption tags, variance classifications, metric types, decision recommendations, principle scores, gate decisions, tenet status) lives in [`GLOSSARY.md`](GLOSSARY.md) and [`vocabulary.yaml`](vocabulary.yaml).
 
@@ -126,9 +130,12 @@ amazonian/
     ├── 08-customer-interview-synthesis/
     │   ├── SKILL.md
     │   └── bias-patterns.yaml
-    └── 09-launch-readiness-review/
+    ├── 09-launch-readiness-review/
+    │   ├── SKILL.md
+    │   └── readiness-checklist.md
+    └── 10-tenets-review/
         ├── SKILL.md
-        └── readiness-checklist.md
+        └── tenet-template.md
 ```
 
 The three worked examples (`example-prfaq.md`, `example-wbr.md`, `example-coe.md`) share a common hypothetical product ("ChangeLens") so you can read them in sequence and see how the artifacts chain.

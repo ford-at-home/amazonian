@@ -148,6 +148,7 @@ See [`wbr-template.md`](wbr-template.md). See [`examples/example-wbr.md`](exampl
 - `correction-of-errors`: persistent negative variance on a metric → `contributing_factors` / `prior_incidents`
 - `working-backwards-prfaq`: pattern requiring a structural fix → new PRFAQ
 - `six-page-narrative`: a decision surfaced in "Decisions Needed" → `decision_needed`
+- `tenets-review`: persistent variance the WBR cannot resolve at its cadence → `review_trigger: metric_anomaly` + `trigger_detail`
 
 Enums used: `variance_classifications`, `metric_types`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 
