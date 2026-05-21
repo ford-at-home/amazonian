@@ -137,7 +137,8 @@ This skill emits a decision packet, not an execution plan. The PRFAQ is a contra
 
 **Consumes from**
 
-- User inputs only. This skill is an entry point.
+- `customer-interview-synthesis` (preferred when raw interview signal exists): `prfaq_input_map.customer` → `customer`; `prfaq_input_map.customer_problem` → `customer_problem`; `prfaq_input_map.current_workaround` → `current_workaround`; `prfaq_input_map.known_evidence` → `known_evidence`; `prfaq_input_map.unknowns` → `unknowns`
+- User inputs directly (when no synthesis available; the gates become harder to pass without behavioral evidence).
 
 **Feeds into**
 

@@ -1,0 +1,105 @@
+# bias-patterns.yaml
+# Patterns the synthesist looks for in selection_method, interview_method,
+# and the transcripts themselves. A pattern flagged without a quoted citation
+# from the source MUST be stripped. The citation requirement is the only
+# defense against LLM-generated bias-flag theater.
+
+selection_bias:
+
+  friendly_panel:
+    pattern: All or most respondents were pre-existing contacts of the founder or company.
+    signal_in: selection_method
+    signal_keywords:
+      - friends
+      - my network
+      - existing customers
+      - introduced by
+      - personal contact
+    risk: Respondents are pre-conditioned to be supportive. Behavioral evidence may be performative. Stated preferences are nearly worthless.
+
+  recruited_via_problem_statement:
+    pattern: Respondents were recruited by being told the problem the product solves.
+    signal_in: selection_method
+    signal_keywords:
+      - "people who struggle with"
+      - "users who hate"
+      - "teams that have problems with"
+    risk: Confirms the problem exists by definition; the panel cannot disconfirm. Sample is filtered for problem-salience before the interview starts.
+
+  single_segment_collapse:
+    pattern: All respondents share a non-target characteristic (industry, company size, geography) that the founder did not control for.
+    signal_in: selection_method or transcript distribution
+    risk: Conclusions generalize beyond the sample. The skill should refuse to claim segment validity outside the collapsed dimension.
+
+  early_adopter_skew:
+    pattern: All respondents self-identify as early adopters or "love trying new tools".
+    signal_in: transcripts
+    signal_keywords:
+      - "I always try"
+      - "love new tools"
+      - "early adopter"
+    risk: Early-adopter signal does not predict mainstream behavior; willingness-to-try is uncorrelated with willingness-to-stick.
+
+question_bias:
+
+  leading_question:
+    pattern: Question phrasing implies the desired answer.
+    signal_in: interview_method or transcripts
+    signal_keywords:
+      - "Would you find it valuable if"
+      - "Don't you think"
+      - "How frustrated are you with"
+      - "Wouldn't it be great if"
+    risk: Affirmative responses cannot be distinguished from social desirability. Treat all answers to leading questions as `[assumption]`, not `[fact]`.
+
+  feature_focused_questioning:
+    pattern: Questions ask about features rather than behavior.
+    signal_in: interview_method or transcripts
+    signal_keywords:
+      - "Would you use a tool that"
+      - "Would you pay for"
+      - "Would you switch if"
+    risk: Generates attitudinal evidence only; no behavioral signal. PRFAQ-grade conclusions require behavioral corroboration.
+
+  solution_first_framing:
+    pattern: The interviewer described the proposed solution before asking about the problem.
+    signal_in: interview_method or transcript ordering
+    risk: Respondents anchor on the solution and reverse-engineer a problem to match. Problem statements collected this way are not customer-shaped.
+
+evidence_bias:
+
+  attitudinal_only:
+    pattern: Theme is supported entirely by what respondents said they would do.
+    signal_in: own analysis — count behavioral_evidence entries per segment
+    risk: Stated preferences predict behavior at roughly 40-60% accuracy. A segment with zero behavioral_evidence cannot ground a PRFAQ.
+
+  hypothetical_willingness_to_pay:
+    pattern: Willingness-to-pay signal comes from "would you pay $X for this?" rather than from actual payment or paid workarounds.
+    signal_in: transcripts
+    risk: Hypothetical WTP overstates real WTP by 2-3x in most studies. Substitute behavioral signal: what they currently pay for workarounds.
+
+  enthusiasm_substitution:
+    pattern: Respondent enthusiasm is treated as evidence of demand.
+    signal_in: transcripts
+    signal_keywords:
+      - "this is amazing"
+      - "I love this"
+      - "you should build this"
+    risk: Enthusiasm in an interview is courtesy. The behavioral question is what they did after the interview, which is rarely measured.
+
+founder_bias:
+
+  hypothesis_pre_loading:
+    pattern: The founder's hypothesis appears in the interview script or transcript questions.
+    signal_in: hypothesis_going_in vs interview_method
+    risk: The interview was a search for confirmation, not a test. Treat all positive signal as `[assumption]` requiring behavioral validation.
+
+  missing_disconfirming_evidence:
+    pattern: The synthesis output's `evidence_against` for the founder hypothesis is empty.
+    signal_in: own analysis — check evidence_against length
+    risk: Either no one disagreed (suspicious) or disagreement was filtered out (more likely). Investigate the panel.
+
+  ignored_dissenters:
+    pattern: One or more respondents disagreed substantively, but the synthesis collapses them into a majority theme or footnotes them.
+    signal_in: own analysis — check conflict_with_segments
+    risk: Dissent in a small panel is a strong signal of segment heterogeneity. Preserve it; do not average it out.

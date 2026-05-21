@@ -41,7 +41,8 @@ Use the working-backwards-prfaq skill to draft a PRFAQ for <idea>.
 
 ```mermaid
 flowchart TD
-    Idea([Idea / Problem]) --> PRFAQ[working-backwards-prfaq]
+    Signal([Customer signal]) --> CIS[customer-interview-synthesis]
+    CIS --> PRFAQ[working-backwards-prfaq]
     PRFAQ -.->|architectural depth| SIX[six-page-narrative]
     PRFAQ --> GATE{decision gate}
     SIX --> GATE
@@ -70,6 +71,7 @@ Solid arrows = the operating loop. Dotted arrows = review passes and feedback. F
 | 05 | [`weekly-business-review`](skills/05-weekly-business-review/SKILL.md) | Metrics + a mechanism spec | WBR with required variance analysis |
 | 06 | [`correction-of-errors`](skills/06-correction-of-errors/SKILL.md) | An incident | Blameless Five Whys review with action items and owners |
 | 07 | [`leadership-principles-reviewer`](skills/07-leadership-principles-reviewer/SKILL.md) | A proposal | Review against Amazon-style leadership principles; contradictions and hidden risk |
+| 08 | [`customer-interview-synthesis`](skills/08-customer-interview-synthesis/SKILL.md) | Raw interview transcripts, notes, surveys (≥ 8 for PRFAQ-grade) | PRFAQ-ready structured inputs with behavioral vs attitudinal evidence tags and cited bias flags |
 
 Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). The disqualifying criteria in that doc are the bar. Shared vocabulary (assumption tags, variance classifications, metric types, decision recommendations, principle scores, gate decisions, tenet status) lives in [`GLOSSARY.md`](GLOSSARY.md) and [`vocabulary.yaml`](vocabulary.yaml).
 
@@ -116,9 +118,12 @@ amazonian/
     │   ├── SKILL.md
     │   ├── coe-template.md
     │   └── examples/example-coe.md
-    └── 07-leadership-principles-reviewer/
+    ├── 07-leadership-principles-reviewer/
+    │   ├── SKILL.md
+    │   └── rubric.yaml
+    └── 08-customer-interview-synthesis/
         ├── SKILL.md
-        └── rubric.yaml
+        └── bias-patterns.yaml
 ```
 
 The three worked examples (`example-prfaq.md`, `example-wbr.md`, `example-coe.md`) share a common hypothetical product ("ChangeLens") so you can read them in sequence and see how the artifacts chain.
