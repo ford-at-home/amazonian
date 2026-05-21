@@ -27,6 +27,16 @@ This is the **governance layer** around a product development lifecycle — not 
 
 The suite is also opinionated about its own architecture. Skills split into **constructive** (produce an artifact) and **interrogative** (stress-test an artifact, produce revisions). Interrogative skills that gate ongoing validity declare a named failure mode — `founder bias laundering`, `PRFAQ drift`, `metric satisficing`, `sandbagging laundering`, `stale dissent reuse`, `portfolio drift`. Each names a way a previously-honest signal goes stale (or was never honest to begin with) while looking healthy. That pattern is the suite's signature commitment, codified in [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md#named-failure-modes) and indexed in [`GLOSSARY.md`](GLOSSARY.md#named-failure-modes-cross-reference).
 
+## Composition with your engineering toolchain
+
+The plugin is the bookends. The middle — Build, most of Launch operations, day-to-day engineering — happens in tools and agent skills you bring yourself. That composition is the point, not a gap:
+
+<p align="center">
+  <img src="docs/amazonian-composition-whiteboard.png" alt="Whiteboard-style composition infographic with two strata sharing a single lifecycle ribbon (Discover, Define, Design, Build, Launch, Operate, Learn). Upper stratum shows the 11 phase-bound Amazonian skills with the Build column explicitly marked '(empty by design)'. Lower stratum shows twelve example external SWE skills with dashed borders and 'ext' tags — spec-driven-development, planning-and-task-breakdown, api-and-interface-design, test-driven-development, incremental-implementation, code-review-and-quality, git-workflow-and-versioning, security-and-hardening, ci-cd-and-automation, shipping-and-launch, debugging-and-error-recovery, performance-optimization — densest under Build. Three cross-stratum arrows illustrate handoffs: PRFAQ contracts the build, launch-readiness-review gates the launch, debugging incidents trigger correction-of-errors. A caveat panel notes the external skills are examples from one user's ~/.claude/skills/ environment and that the plugin does not dictate how you build, only that what enters Build is contracted and what leaves Build is inspectable." width="900" />
+</p>
+
+The external skills shown above are illustrative examples from one user's environment — they are **not part of this plugin** and the plugin makes no claim on which engineering skills you use. What the plugin does claim is the contract at the boundary: what enters Build comes through a passed PRFAQ (or six-pager); what leaves Build comes through `launch-readiness-review`; what breaks in production comes back through `correction-of-errors`. How you implement Build itself is yours.
+
 ## Quick start
 
 ```bash
