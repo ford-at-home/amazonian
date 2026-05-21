@@ -46,7 +46,8 @@ flowchart TD
     PRFAQ -.->|architectural depth| SIX[six-page-narrative]
     PRFAQ --> GATE{decision gate}
     SIX --> GATE
-    GATE --> MECH[mechanism-designer]
+    GATE -.->|build happens elsewhere| LRR[launch-readiness-review]
+    LRR --> MECH[mechanism-designer]
     MECH --> WBR[weekly-business-review]
     WBR -.->|persistent variance| COE[correction-of-errors]
     COE -.->|findings| PRFAQ
@@ -72,6 +73,7 @@ Solid arrows = the operating loop. Dotted arrows = review passes and feedback. F
 | 06 | [`correction-of-errors`](skills/06-correction-of-errors/SKILL.md) | An incident | Blameless Five Whys review with action items and owners |
 | 07 | [`leadership-principles-reviewer`](skills/07-leadership-principles-reviewer/SKILL.md) | A proposal | Review against Amazon-style leadership principles; contradictions and hidden risk |
 | 08 | [`customer-interview-synthesis`](skills/08-customer-interview-synthesis/SKILL.md) | Raw interview transcripts, notes, surveys (≥ 8 for PRFAQ-grade) | PRFAQ-ready structured inputs with behavioral vs attitudinal evidence tags and cited bias flags |
+| 09 | [`launch-readiness-review`](skills/09-launch-readiness-review/SKILL.md) | Original PRFAQ + current build state + rollback testability | Gate decision (`go` / `no_go` / `conditional_go` / `defer`) with PRFAQ drift report and pre-mortem |
 
 Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). The disqualifying criteria in that doc are the bar. Shared vocabulary (assumption tags, variance classifications, metric types, decision recommendations, principle scores, gate decisions, tenet status) lives in [`GLOSSARY.md`](GLOSSARY.md) and [`vocabulary.yaml`](vocabulary.yaml).
 
@@ -121,9 +123,12 @@ amazonian/
     ├── 07-leadership-principles-reviewer/
     │   ├── SKILL.md
     │   └── rubric.yaml
-    └── 08-customer-interview-synthesis/
+    ├── 08-customer-interview-synthesis/
+    │   ├── SKILL.md
+    │   └── bias-patterns.yaml
+    └── 09-launch-readiness-review/
         ├── SKILL.md
-        └── bias-patterns.yaml
+        └── readiness-checklist.md
 ```
 
 The three worked examples (`example-prfaq.md`, `example-wbr.md`, `example-coe.md`) share a common hypothetical product ("ChangeLens") so you can read them in sequence and see how the artifacts chain.
