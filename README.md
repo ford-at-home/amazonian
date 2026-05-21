@@ -54,6 +54,9 @@ flowchart TD
     MECH -.->|event-driven| TR[tenets-review]
     WBR -.->|metric anomaly| TR
     TR -.->|kill / pivot| PRFAQ
+    WBR -.->|period close| AGG[ambitious-goal-grading]
+    AGG -.->|chronic sandbagging| TR
+    AGG -.->|recalibrate targets| PRFAQ
 
     PRFAQ -.->|draft| LINT[amazon-writing-linter]
     SIX -.->|draft| LINT
@@ -78,8 +81,9 @@ Solid arrows = the operating loop. Dotted arrows = review passes and feedback. F
 | 08 | [`customer-interview-synthesis`](skills/08-customer-interview-synthesis/SKILL.md) | Raw interview transcripts, notes, surveys (≥ 8 for PRFAQ-grade) | PRFAQ-ready structured inputs with behavioral vs attitudinal evidence tags and cited bias flags |
 | 09 | [`launch-readiness-review`](skills/09-launch-readiness-review/SKILL.md) | Original PRFAQ + current build state + rollback testability | Gate decision (`go` / `no_go` / `conditional_go` / `defer`) with PRFAQ drift report and pre-mortem |
 | 10 | [`tenets-review`](skills/10-tenets-review/SKILL.md) | Product tenets + original PRFAQ + external context changes + metrics | Bet recommendation (`continue` / `kill` / `pivot` / `escalate`) with tenet validity report and metric-satisficing warning |
+| 11 | [`ambitious-goal-grading`](skills/11-ambitious-goal-grading/SKILL.md) | Period goals (with targets, actuals, stated difficulty) + original PRFAQ + optional prior gradings | Per-goal calibration assessment, chronic-pattern detection across periods, recalibration recommendations, and sandbagging-laundering warnings |
 
-Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). The disqualifying criteria in that doc are the bar. Shared vocabulary (assumption tags, variance classifications, metric types, decision recommendations, principle scores, gate decisions, tenet status) lives in [`GLOSSARY.md`](GLOSSARY.md) and [`vocabulary.yaml`](vocabulary.yaml).
+Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). The disqualifying criteria in that doc are the bar. Shared vocabulary (assumption tags, variance classifications, metric types, decision recommendations, principle scores, gate decisions, tenet status, calibration assessment) lives in [`GLOSSARY.md`](GLOSSARY.md) and [`vocabulary.yaml`](vocabulary.yaml).
 
 [`LIFECYCLE.md`](LIFECYCLE.md) positions the suite as the **governance layer** around a product development lifecycle — explicitly *not* a PDLC — and shows which phases each skill covers and which it deliberately omits.
 
@@ -134,9 +138,12 @@ amazonian/
     ├── 09-launch-readiness-review/
     │   ├── SKILL.md
     │   └── readiness-checklist.md
-    └── 10-tenets-review/
+    ├── 10-tenets-review/
+    │   ├── SKILL.md
+    │   └── tenet-template.md
+    └── 11-ambitious-goal-grading/
         ├── SKILL.md
-        └── tenet-template.md
+        └── calibration-patterns.yaml
 ```
 
 The three worked examples (`example-prfaq.md`, `example-wbr.md`, `example-coe.md`) share a common hypothetical product ("ChangeLens") so you can read them in sequence and see how the artifacts chain.

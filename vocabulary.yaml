@@ -165,6 +165,66 @@ bet_recommendations:
   used_by:
     - 10-tenets-review
 
+calibration_assessment:
+  description: |
+    Per-goal calibration assessment emitted by ambitious-goal-grading. Distinct
+    from outcome quality (tenets-review) and execution quality (correction-of-errors).
+    The question is whether the target was set at the right difficulty level,
+    regardless of whether it was hit.
+  values:
+    sandbagged:                # hit at attainment_score >= 1.0 with no surprise evidence
+      definition: target was set deliberately or implicitly below honest capacity
+    well_calibrated:           # attainment_score in [0.3, 1.0] with honest plan or surprise evidence
+      definition: target was set at a level that taught the team something
+    overreach:                 # attainment_score < 0.5 with no honest plan; not an execution failure
+      definition: target was set beyond any plan that could have hit it
+    unknowable:                # goal_setting_context == "unstated"
+      definition: difficulty intent was never declared; calibration cannot be assessed
+    goalpost_moving:           # mid_period_target_changes present and not disclosed
+      definition: target moved mid-period and grading reported only the revised target
+  used_by:
+    - 11-ambitious-goal-grading
+
+attainment_score:
+  description: |
+    Continuous score (0.0–1.5) representing what fraction of a target was achieved.
+    0.7 is the honest-calibration norm, borrowed from OKR convention. 1.0 is
+    suspect until paired with surprise_evidence. Over-attainment past 1.5 is itself
+    a calibration signal, not a credential.
+  format: continuous_0_to_1_5
+  notes:
+    - "Numeric goals: actual / target, clamped to [0.0, 1.5]."
+    - "Qualitative goals: rubric {met, partially_met, not_met} maps to {1.0, 0.5, 0.0} for pattern math."
+  used_by:
+    - 11-ambitious-goal-grading
+
+pattern_assessment:
+  description: |
+    Cross-period calibration pattern emitted by ambitious-goal-grading when
+    prior_period_gradings are supplied. Threshold is three consecutive periods
+    of the same per-period assessment on the same recurring goal.
+  values:
+    - chronic_sandbagging         # triggers tenet_violation_candidate
+    - chronic_overreach           # routes to six-page-narrative on capacity or tenets-review
+    - well_calibrated             # baseline state
+    - mixed                       # no clean pattern across periods
+    - insufficient_data           # prior_period_gradings absent
+  used_by:
+    - 11-ambitious-goal-grading
+
+goal_setting_context:
+  description: |
+    The team's stated difficulty intent for a goal at authoring time. Required
+    for honest calibration assessment after the fact; without it, every outcome
+    can be retroactively framed as success.
+  values:
+    - committed                   # the team intended to hit this
+    - stretch                     # the team intended to push for this, ~0.7 attainment honest
+    - aspirational                # the team intended this as a direction marker, not a target
+    - unstated                    # no intent declared; itself a finding
+  used_by:
+    - 11-ambitious-goal-grading
+
 required_reviews:
   description: |
     Convention: authoring skills declare a `required_reviews` field in their

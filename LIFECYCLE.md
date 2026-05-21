@@ -16,7 +16,7 @@ The suite's job is to make sure what enters Build is contracted (PRFAQ / six-pag
 | **Build** | Implementation | — | empty (deliberate) |
 | **Launch** | Release gating | `launch-readiness-review` | partial |
 | **Operate** | Run, inspect, escalate | `mechanism-designer`, `weekly-business-review` | dense |
-| **Learn** | Incident review, thesis re-examination | `correction-of-errors` (incident-driven), `tenets-review` (event-driven) | partial |
+| **Learn** | Incident review, thesis re-examination, goal calibration | `correction-of-errors` (incident-driven), `tenets-review` (event-driven), `ambitious-goal-grading` (period-driven) | dense |
 
 † Cross-cutting reviewer passes; not phase-bound.
 
@@ -47,6 +47,7 @@ The suite splits roughly 50/50 by epistemic posture:
 - `leadership-principles-reviewer` — stress-tests proposals against principles
 - `launch-readiness-review` — stress-tests build state vs PRFAQ contract
 - `tenets-review` — stress-tests whether the original thesis is still worth pursuing
+- `ambitious-goal-grading` — stress-tests whether targets were set at honest difficulty, independent of outcome
 
 Interrogative skills are the falsification layer. They produce no artifact of their own — they produce *revisions* to the artifacts other skills emit.
 
@@ -76,7 +77,12 @@ A typical bet runs through the suite roughly like this:
 4. **Build** — happens in your engineering process. The suite is silent here on purpose.
 5. **Launch** — `launch-readiness-review` gates the ship decision by diffing the build against the PRFAQ contract.
 6. **Operate** — `weekly-business-review` inspects the metrics on cadence; `correction-of-errors` fires on incidents.
-7. **Learn** — `tenets-review` fires on external context shifts or annually; recommends continue / kill / pivot / escalate.
+7. **Learn** — three skills, three questions:
+   - `correction-of-errors` (incident-driven): *what broke?*
+   - `tenets-review` (event-driven): *was the bet right?*
+   - `ambitious-goal-grading` (period-driven): *were the targets set at honest difficulty?*
+
+   These are deliberately separate. A team can pass two and fail the third — for example, hit sandbagged targets on a doomed bet that broke nothing. Each LEARN skill catches a failure mode the others miss.
 
 The chain is not strict. PRFAQs can run without interview synthesis (you accept the assumption tags). Six-pagers can run without a prior PRFAQ. Launch-readiness can run on an artifact whose PRFAQ has drifted (that drift is the point). What matters is that each artifact is contracted and inspectable.
 

@@ -169,6 +169,7 @@ After emitting, run a second pass that checks:
 - `working-backwards-prfaq`: full packet → `original_prfaq`; `decision_recommendation.rationale` → tenet synthesis basis when written tenets are absent
 - `mechanism-designer`: when the bet's operating mechanism is the artifact being reviewed → `metrics_snapshot` from the mechanism's outputs
 - `weekly-business-review`: persistent variance flagged in WBR → `review_trigger: metric_anomaly` + `trigger_detail`
+- `ambitious-goal-grading`: `tenet_violation_candidate: true` (chronic sandbagging) → `review_trigger: named_concern` + `trigger_detail` citing the chronic pattern
 - External: market reports, competitor analyses, regulatory updates → `external_context_changes`
 
 **Feeds into**

@@ -125,6 +125,7 @@ See [`mechanism-template.md`](mechanism-template.md) for the prose form.
 - `correction-of-errors`: when the mechanism itself fails, the mechanism spec is the artifact under review → `contributing_factors`
 - `launch-readiness-review`: operational gaps the launch needs to close → review consumes the mechanism's `inspection_method` to verify metric instrumentation is wired before ship
 - `tenets-review`: when the bet's operating mechanism is the artifact being reviewed → `mechanism.outputs` → `metrics_snapshot`
+- `ambitious-goal-grading`: when goals were defined by the operating mechanism rather than the PRFAQ → `mechanism.outputs` → `period_goals`
 
 Enums used: `metric_types`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 

@@ -10,7 +10,7 @@
 
 suite:
   name: amazonian
-  version: 0.2.0
+  version: 0.3.0
   positioning: governance layer around a product development lifecycle, not a PDLC itself
   phase_model: [discover, define, design, build, launch, operate, learn]
 
@@ -72,11 +72,12 @@ phases:
 
   - id: learn
     name: Learn
-    description: Incident review, thesis re-examination
-    density: partial
+    description: Incident review, thesis re-examination, goal calibration
+    density: dense
     skills:
       - correction-of-errors      # incident-driven
       - tenets-review             # event-driven
+      - ambitious-goal-grading    # period-driven (quarterly/annual)
 
 skills:
 
@@ -232,12 +233,31 @@ skills:
       - working-backwards-prfaq           # tenet synthesis basis if written tenets absent
       - mechanism-designer                # mechanism outputs -> metrics_snapshot
       - weekly-business-review            # metric anomaly -> review_trigger
+      - ambitious-goal-grading            # tenet_violation_candidate -> review_trigger
     feeds_into:
       - working-backwards-prfaq           # kill/pivot -> new PRFAQ
       - mechanism-designer                # pivot -> new operating mechanism
       - weekly-business-review            # metric_satisficing_warning -> revise WBR metric set
     enums_used: [tenet_status, bet_recommendations, assumption_tags]
     skill_md: skills/10-tenets-review/SKILL.md
+
+  - name: ambitious-goal-grading
+    number: "11"
+    category: interrogative
+    primary_phase: learn
+    consumes_from:
+      - working-backwards-prfaq           # success_metrics -> period_goals
+      - weekly-business-review            # period actuals -> attainment
+      - mechanism-designer                # mechanism-defined metrics when not in PRFAQ
+      - ambitious-goal-grading            # prior period output -> chronic-pattern detection
+    feeds_into:
+      - working-backwards-prfaq           # recalibration_recommendations -> next period targets
+      - weekly-business-review            # next period's target tables for recurring metrics
+      - tenets-review                     # tenet_violation_candidate -> review_trigger
+      - correction-of-errors              # per-goal routes_to: correction-of-errors
+      - mechanism-designer                # goalpost_moving -> redesign goal-setting mechanism
+    enums_used: [calibration_assessment, attainment_score, pattern_assessment, goal_setting_context, metric_types, assumption_tags]
+    skill_md: skills/11-ambitious-goal-grading/SKILL.md
 
 # Enforced ordering rules:
 # The only ordering the suite hard-enforces is via `required_reviews` in

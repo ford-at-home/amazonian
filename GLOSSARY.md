@@ -143,6 +143,40 @@ A tenet status check must cite external context (market shifts, competitor moves
 
 A failure mode where output metrics sit within target while the underlying thesis has collapsed. Metrics keep saying "everything is fine" because the team has narrowed what they measure to what's still working. Caught by checking tenet validity against external context, not just metrics. The named risk that `tenets-review` exists to catch.
 
+## Calibration assessment
+
+`ambitious-goal-grading` rates each goal not on attainment but on whether the *target* was set at the right level:
+
+- **sandbagged** — hit at 100% with no surprise evidence; target was below honest capacity.
+- **well_calibrated** — attainment in the honest range with cited plan or named surprises.
+- **overreach** — missed badly because no plan could have hit the target (distinct from execution failure).
+- **unknowable** — the team never stated difficulty intent; assessment is impossible.
+- **goalpost_moving** — target moved mid-period and the grading hid the original; supersedes other classifications.
+
+The named convention: 0.7 attainment is the honest norm, not 1.0. Borrowed from OKR practice.
+
+## Attainment score
+
+Continuous score (0.0–1.5) used by `ambitious-goal-grading`. Numeric goals: `actual / target`, clamped. Qualitative goals: `{met, partially_met, not_met}` maps to `{1.0, 0.5, 0.0}`. Over-attainment past 1.5 is itself a calibration signal.
+
+## Pattern assessment
+
+Cross-period calibration pattern from `ambitious-goal-grading`. Threshold is three consecutive periods of the same per-period assessment on the same recurring goal:
+
+- **chronic_sandbagging** — triggers a `tenet_violation_candidate`; team is no longer testing the thesis.
+- **chronic_overreach** — capacity, goal, or bet is mismatched to reality.
+- **well_calibrated** — baseline.
+- **mixed** — no clean pattern.
+- **insufficient_data** — only valid when prior gradings genuinely absent.
+
+## Goal-setting context
+
+The team's stated difficulty intent at authoring time: `committed`, `stretch`, `aspirational`, or `unstated`. Without it, every outcome can be retroactively framed as success. `unstated` is itself a finding.
+
+## Sandbagging laundering
+
+The named failure mode `ambitious-goal-grading` exists to catch. Targets set deliberately or implicitly below honest capacity and described in language that sounds principled: "ambitious enough to motivate, achievable enough to hit." Detected by the rule that any 100% attainment without cited surprise evidence is presumptive sandbagging until proven otherwise. Analogous in structure to `metric satisficing` for `tenets-review` — both are failure modes where the surface signal looks healthy while the underlying mechanism has stopped working.
+
 ## Required reviews
 
 Authoring skills declare a `required_reviews` field in their frontmatter listing reviewer skills that must run before the artifact is considered complete. Reviewer skills do not declare this field — they are the leaves. The convention converts the soft promise "if a reviewer is available, hand it the prose" into a contract. See [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md#required-reviews).
