@@ -76,7 +76,7 @@ evidence_bias:
   hypothetical_willingness_to_pay:
     pattern: Willingness-to-pay signal comes from "would you pay $X for this?" rather than from actual payment or paid workarounds.
     signal_in: transcripts
-    risk: Hypothetical WTP overstates real WTP by 2-3x in most studies. Substitute behavioral signal: what they currently pay for workarounds.
+    risk: "Hypothetical WTP overstates real WTP by 2-3x in most studies. Substitute behavioral signal: what they currently pay for workarounds."
 
   enthusiasm_substitution:
     pattern: Respondent enthusiasm is treated as evidence of demand.

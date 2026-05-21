@@ -23,7 +23,7 @@ ownership:
   evidence_weak:
     - Team-level ownership ("the platform team")
     - Action items with no owner
-    - "We will figure out who owns this" — the absence of ownership
+    - '"We will figure out who owns this" — the absence of ownership'
 
 invent_and_simplify:
   meaning_for_review: The proposal removes a step, eliminates a tool, or collapses complexity. Or it justifies new complexity with a specific cost benefit.
@@ -32,7 +32,7 @@ invent_and_simplify:
     - The MVP boundary excludes plausible scope, not just impossible scope
   evidence_weak:
     - New systems added without removing anything
-    - "And we will also do X" patterns
+    - '"And we will also do X" patterns'
 
 are_right_a_lot:
   meaning_for_review: The proposal seeks disconfirming evidence. The author has talked to people who disagree.
@@ -51,7 +51,7 @@ learn_and_be_curious:
     - References to prior memos, incidents, experiments
     - Acknowledgement of what was tried before and why it failed
   evidence_weak:
-    - "This is new" without confirming it
+    - '"This is new" without confirming it'
     - No references to prior work in the same space
 
 insist_on_highest_standards:
@@ -78,7 +78,7 @@ bias_for_action:
     - A clear next step that can be taken this quarter
     - Reversibility explicitly considered (one-way vs two-way door)
   evidence_weak:
-    - "We will research more" as the next step
+    - '"We will research more" as the next step'
     - Irreversible action proposed without weighing reversibility
 
 frugality:
@@ -89,7 +89,7 @@ frugality:
     - Opportunity cost acknowledged
   evidence_weak:
     - Cost section absent or hand-waved
-    - "Resources" used without a number
+    - '"Resources" used without a number'
 
 earn_trust:
   meaning_for_review: The proposal is honest about uncertainty. It does not overclaim.
@@ -110,7 +110,7 @@ dive_deep:
     - The author can defend specifics under questioning
   evidence_weak:
     - Strategy-layer prose with no operational specifics
-    - "Details TBD" in load-bearing sections
+    - '"Details TBD" in load-bearing sections'
 
 have_backbone_disagree_and_commit:
   meaning_for_review: The proposal takes a position. It does not hedge into ambiguity to keep all stakeholders happy.
