@@ -100,6 +100,7 @@ amazonian/
 ├── LICENSE
 ├── SKILL_DESIGN_PATTERN.md
 ├── LIFECYCLE.md
+├── lifecycle.yaml
 ├── GLOSSARY.md
 ├── vocabulary.yaml
 └── skills/

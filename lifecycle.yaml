@@ -1,0 +1,256 @@
+# lifecycle.yaml
+# Machine-readable companion to LIFECYCLE.md.
+# Agents can query phase coverage, skill categories, required reviews,
+# and skill-level handoffs without parsing prose.
+#
+# This file is skill-level and summary, not field-exhaustive. For the
+# exact field-level handoff contract (e.g., "success_metrics[].metric ->
+# inputs"), read the corresponding SKILL.md's `## Handoffs` block —
+# that is the authoritative source. This file points at it.
+
+suite:
+  name: amazonian
+  version: 0.2.0
+  positioning: governance layer around a product development lifecycle, not a PDLC itself
+  phase_model: [discover, define, design, build, launch, operate, learn]
+
+phases:
+
+  - id: discover
+    name: Discover
+    description: Hunt for problems, customer signal, opportunity sizing
+    density: partial
+    skills:
+      - customer-interview-synthesis
+
+  - id: define
+    name: Define
+    description: Specify what / for whom / why
+    density: dense
+    skills:
+      - working-backwards-prfaq
+      - six-page-narrative
+    cross_cutting_reviewers:
+      - amazon-writing-linter
+      - leadership-principles-reviewer
+
+  - id: design
+    name: Design
+    description: Architecture, UX, operational mechanism
+    density: partial
+    skills:
+      - mechanism-designer        # operational
+      - six-page-narrative        # strategic; primary phase is define
+
+  - id: build
+    name: Build
+    description: Implementation
+    density: empty
+    deliberate_omission: true
+    omission_rationale: |
+      Implementation happens in engineering tooling (Jira, Linear, CI/CD,
+      feature flags). The suite has no business pretending to be a sprint
+      board.
+    skills: []
+
+  - id: launch
+    name: Launch
+    description: Release gating
+    density: partial
+    skills:
+      - launch-readiness-review
+    deliberate_omissions_within_phase:
+      - release engineering (deploys, rollouts, canaries) — engineering's domain
+
+  - id: operate
+    name: Operate
+    description: Run, inspect, escalate
+    density: dense
+    skills:
+      - mechanism-designer
+      - weekly-business-review
+
+  - id: learn
+    name: Learn
+    description: Incident review, thesis re-examination
+    density: partial
+    skills:
+      - correction-of-errors      # incident-driven
+      - tenets-review             # event-driven
+
+skills:
+
+  - name: working-backwards-prfaq
+    number: "01"
+    category: constructive
+    primary_phase: define
+    required_reviews:
+      - amazon-writing-linter
+      - leadership-principles-reviewer
+    consumes_from:
+      - customer-interview-synthesis    # preferred upstream when raw interview signal exists
+    feeds_into:
+      - amazon-writing-linter
+      - leadership-principles-reviewer
+      - mechanism-designer
+      - six-page-narrative
+      - weekly-business-review
+      - launch-readiness-review
+    enums_used: [decision_recommendations, assumption_tags]
+    skill_md: skills/01-working-backwards-prfaq/SKILL.md
+
+  - name: amazon-writing-linter
+    number: "02"
+    category: interrogative
+    primary_phase: cross_cutting
+    consumes_from:
+      - working-backwards-prfaq
+      - six-page-narrative
+      - mechanism-designer
+      - correction-of-errors
+    feeds_into:
+      - leadership-principles-reviewer
+      - "<originating authoring skill>"   # linted prose replaces the original
+    enums_used: [assumption_tags]
+    skill_md: skills/02-amazon-writing-linter/SKILL.md
+
+  - name: six-page-narrative
+    number: "03"
+    category: constructive
+    primary_phase: define                 # design too, when used strategically
+    required_reviews:
+      - amazon-writing-linter
+      - leadership-principles-reviewer
+    consumes_from:
+      - working-backwards-prfaq           # optional context
+    feeds_into:
+      - amazon-writing-linter
+      - leadership-principles-reviewer
+      - mechanism-designer
+      - weekly-business-review
+    enums_used: [decision_recommendations, assumption_tags]
+    skill_md: skills/03-six-page-narrative/SKILL.md
+
+  - name: mechanism-designer
+    number: "04"
+    category: constructive
+    primary_phase: design                 # operates in design AND operate phases
+    secondary_phases: [operate]
+    required_reviews:
+      - amazon-writing-linter
+    consumes_from:
+      - working-backwards-prfaq
+      - six-page-narrative
+    feeds_into:
+      - weekly-business-review
+      - correction-of-errors
+      - launch-readiness-review
+      - tenets-review
+    enums_used: [metric_types, assumption_tags]
+    skill_md: skills/04-mechanism-designer/SKILL.md
+
+  - name: weekly-business-review
+    number: "05"
+    category: constructive
+    primary_phase: operate
+    required_reviews: []                  # cadence-driven; reviewer friction harms rhythm
+    consumes_from:
+      - working-backwards-prfaq
+      - mechanism-designer
+      - weekly-business-review            # prior week
+    feeds_into:
+      - correction-of-errors
+      - working-backwards-prfaq
+      - six-page-narrative
+      - tenets-review
+    enums_used: [variance_classifications, metric_types, assumption_tags]
+    skill_md: skills/05-weekly-business-review/SKILL.md
+
+  - name: correction-of-errors
+    number: "06"
+    category: constructive
+    primary_phase: learn
+    required_reviews:
+      - amazon-writing-linter
+    consumes_from:
+      - mechanism-designer                # when failed artifact is a mechanism
+      - weekly-business-review            # persistent variance
+    feeds_into:
+      - weekly-business-review
+      - mechanism-designer
+      - working-backwards-prfaq
+    enums_used: [assumption_tags]
+    skill_md: skills/06-correction-of-errors/SKILL.md
+
+  - name: leadership-principles-reviewer
+    number: "07"
+    category: interrogative
+    primary_phase: cross_cutting
+    consumes_from:
+      - working-backwards-prfaq
+      - six-page-narrative
+      - amazon-writing-linter             # prefer linting first
+    feeds_into:
+      - working-backwards-prfaq           # revisions
+      - six-page-narrative                # revisions
+      - mechanism-designer                # cross-proposal weakness patterns
+    enums_used: [principle_scores, assumption_tags]
+    skill_md: skills/07-leadership-principles-reviewer/SKILL.md
+
+  - name: customer-interview-synthesis
+    number: "08"
+    category: interrogative
+    primary_phase: discover
+    consumes_from: []                     # entry point — raw interview artifacts only
+    feeds_into:
+      - working-backwards-prfaq
+      - six-page-narrative
+    enums_used: [evidence_type, interview_artifact_type, assumption_tags]
+    skill_md: skills/08-customer-interview-synthesis/SKILL.md
+
+  - name: launch-readiness-review
+    number: "09"
+    category: interrogative
+    primary_phase: launch
+    consumes_from:
+      - working-backwards-prfaq
+      - six-page-narrative
+      - mechanism-designer
+    feeds_into:
+      - weekly-business-review            # predicted_failure_modes -> first-week risks
+      - correction-of-errors              # if a predicted failure materializes
+      - working-backwards-prfaq           # blocking drift -> next PRFAQ
+      - mechanism-designer                # newly discovered operational gaps
+    enums_used: [gate_decisions, prfaq_drift_severity, risk_status, assumption_tags]
+    skill_md: skills/09-launch-readiness-review/SKILL.md
+
+  - name: tenets-review
+    number: "10"
+    category: interrogative
+    primary_phase: learn
+    consumes_from:
+      - working-backwards-prfaq           # tenet synthesis basis if written tenets absent
+      - mechanism-designer                # mechanism outputs -> metrics_snapshot
+      - weekly-business-review            # metric anomaly -> review_trigger
+    feeds_into:
+      - working-backwards-prfaq           # kill/pivot -> new PRFAQ
+      - mechanism-designer                # pivot -> new operating mechanism
+      - weekly-business-review            # metric_satisficing_warning -> revise WBR metric set
+    enums_used: [tenet_status, bet_recommendations, assumption_tags]
+    skill_md: skills/10-tenets-review/SKILL.md
+
+# Enforced ordering rules:
+# The only ordering the suite hard-enforces is via `required_reviews` in
+# each authoring skill. Everything else is a documented preference, not
+# a gate. See SKILL_DESIGN_PATTERN.md#required-reviews and LIFECYCLE.md
+# for the rationale.
+ordering:
+  enforced:
+    - working-backwards-prfaq cannot be considered complete without amazon-writing-linter AND leadership-principles-reviewer running
+    - six-page-narrative cannot be considered complete without amazon-writing-linter AND leadership-principles-reviewer running
+    - mechanism-designer cannot be considered complete without amazon-writing-linter running
+    - correction-of-errors cannot be considered complete without amazon-writing-linter running
+  preferred_not_enforced:
+    - customer-interview-synthesis before working-backwards-prfaq when raw interview signal exists
+    - launch-readiness-review before any ship of a PRFAQ-authorized artifact
+    - tenets-review on external context shift or annually

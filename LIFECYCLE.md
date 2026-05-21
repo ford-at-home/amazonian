@@ -2,6 +2,8 @@
 
 This suite is **not a product development lifecycle (PDLC)**. It is the **governance layer around one**.
 
+> Machine-readable companion: [`lifecycle.yaml`](lifecycle.yaml). Agents can query phase coverage, skill categories, required reviews, and skill-level handoffs without parsing this document.
+
 The suite's job is to make sure what enters Build is contracted (PRFAQ / six-pager passed the gates), and what leaves Build is inspectable (mechanism + WBR + CoE) and falsifiable (tenets-review). Build itself happens in engineering tools you already have. Pretending a skill suite is a sprint board is how skill suites die.
 
 ## Phase coverage
