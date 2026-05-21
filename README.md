@@ -71,7 +71,9 @@ Solid arrows = the operating loop. Dotted arrows = review passes and feedback. F
 | 06 | [`correction-of-errors`](skills/06-correction-of-errors/SKILL.md) | An incident | Blameless Five Whys review with action items and owners |
 | 07 | [`leadership-principles-reviewer`](skills/07-leadership-principles-reviewer/SKILL.md) | A proposal | Review against Amazon-style leadership principles; contradictions and hidden risk |
 
-Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). The disqualifying criteria in that doc are the bar. Shared vocabulary (assumption tags, variance classifications, metric types, decision recommendations, principle scores) lives in [`GLOSSARY.md`](GLOSSARY.md) and [`vocabulary.yaml`](vocabulary.yaml).
+Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). The disqualifying criteria in that doc are the bar. Shared vocabulary (assumption tags, variance classifications, metric types, decision recommendations, principle scores, gate decisions, tenet status) lives in [`GLOSSARY.md`](GLOSSARY.md) and [`vocabulary.yaml`](vocabulary.yaml).
+
+[`LIFECYCLE.md`](LIFECYCLE.md) positions the suite as the **governance layer** around a product development lifecycle — explicitly *not* a PDLC — and shows which phases each skill covers and which it deliberately omits.
 
 ## What this suite is not
 
@@ -89,6 +91,7 @@ amazonian/
 ├── README.md
 ├── LICENSE
 ├── SKILL_DESIGN_PATTERN.md
+├── LIFECYCLE.md
 ├── GLOSSARY.md
 ├── vocabulary.yaml
 └── skills/

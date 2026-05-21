@@ -1,6 +1,10 @@
 ---
 name: six-page-narrative
 description: Convert a strategy, architecture, or major decision into a six-page narrative — a written decision memo with context, problem, current state, proposed mechanism, alternatives, risks, metrics, and explicit dissent. No slides. No bullet soup. Use when preparing a decision document for senior review, when an architecture needs written defense, or when the user mentions "six-pager", "narrative", "decision memo", "strategy doc", or "ADR but bigger".
+category: constructive
+required_reviews:
+  - amazon-writing-linter
+  - leadership-principles-reviewer
 ---
 
 # Six-Page Narrative
@@ -54,6 +58,7 @@ appendix:                     # supporting data, prior art, links
 | Dissent recorded | Either named dissenters with their position, or a stated reason no dissent exists | Solicit dissent |
 | Hidden assumptions surfaced | Every `[assumption]` tag is also listed in an Assumptions register | Re-scan |
 | No slide thinking | No section is bullet-only; no bullet exceeds two clauses | Rewrite as prose |
+| Required reviews completed | `amazon-writing-linter` and `leadership-principles-reviewer` have both run against the draft and their revisions are incorporated | Run them; do not emit |
 
 ## Process
 

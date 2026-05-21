@@ -71,3 +71,87 @@ The explicit list of what is in scope and what is *not*. Out-of-scope must conta
 ## Severity and likelihood
 
 `[open question]` — PRFAQ and six-page-narrative both ask for severity and likelihood on each risk, but neither defines the scale. Pick one consistently within a document and document the choice. This is a known gap to close in a follow-up.
+
+## Evidence type
+
+Customer signal is classified by what kind of evidence it provides:
+
+- **Behavioral** — what respondents did. Observable. Example: switched tools, paid for a workaround, opened a GitHub issue, churned.
+- **Attitudinal** — what respondents said they would do. Self-reported. Example: stated preference, hypothetical willingness to pay, opinion in an interview.
+
+Attitudinal evidence predicts behavior at roughly 40–60% accuracy. A PRFAQ-grade conclusion requires behavioral corroboration; an attitudinal-only segment is `[assumption]` until behavior confirms it.
+
+## Interview artifact type
+
+`customer-interview-synthesis` distinguishes its inputs:
+
+- **Transcript** — verbatim record of what was said. Weighted high.
+- **Structured notes** — interviewer's filtered record. Weighted low; notes carry the interviewer's selection bias.
+- **Survey response** — structured survey data. Weighted medium.
+
+Treating transcripts and notes as interchangeable launders the interviewer's bias as customer signal.
+
+## Gate decision
+
+`launch-readiness-review` emits one of:
+
+- `go` — all checks pass; launch.
+- `no_go` — blocking drift, gaps, or risks; do not launch.
+- `conditional_go` — launch with named conditions, each with its own owner and gate date.
+- `defer` — the work isn't done; come back in N days. Distinct from `no_go` in that `defer` says "not yet, ask later," while `no_go` says "this should not ship as built."
+
+`conditional_go` has historically rotted into soft `go`. Conditions must themselves be gated. A condition that says "we'll fix this post-launch" makes the decision `go-with-risk`, not `conditional_go`.
+
+## PRFAQ drift severity
+
+When `launch-readiness-review` compares the PRFAQ to the current build, each drift is rated:
+
+- **Blocking** — the commitment isn't met; cannot ship.
+- **Significant** — measurably different from promised; must be acknowledged in the launch narrative.
+- **Acceptable** — within tolerance; documented but does not block.
+
+## Risk status
+
+How a risk from the PRFAQ risk register has evolved by launch time:
+
+- **Mitigated** — the documented mitigation worked.
+- **Open** — the risk still exists; mitigation unproven.
+- **Materialized** — the risk happened during build; document the outcome.
+
+## Tenet status
+
+`tenets-review` rates each product tenet:
+
+- **Valid** — external evidence still supports it.
+- **Invalid** — external evidence contradicts it; thesis broken.
+- **Unknown** — insufficient evidence to judge.
+
+A tenet status check must cite external context (market shifts, competitor moves, regulatory changes), not just metrics. See the **metric satisficing** failure mode.
+
+## Bet recommendation
+
+`tenets-review` emits one of:
+
+- `continue` — all tenets valid or unknown with active monitoring; keep investing.
+- `kill` — one or more tenets invalid; stop investing.
+- `pivot` — tenets need restatement; thesis has evolved.
+- `escalate` — the decision is above this review's pay grade.
+
+`continue` requires no tenet to be `invalid`. A single invalid tenet forces kill/pivot/escalate.
+
+## Metric satisficing
+
+A failure mode where output metrics sit within target while the underlying thesis has collapsed. Metrics keep saying "everything is fine" because the team has narrowed what they measure to what's still working. Caught by checking tenet validity against external context, not just metrics. The named risk that `tenets-review` exists to catch.
+
+## Required reviews
+
+Authoring skills declare a `required_reviews` field in their frontmatter listing reviewer skills that must run before the artifact is considered complete. Reviewer skills do not declare this field — they are the leaves. The convention converts the soft promise "if a reviewer is available, hand it the prose" into a contract. See [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md#required-reviews).
+
+## Constructive vs interrogative skills
+
+Skills split by epistemic posture:
+
+- **Constructive** skills produce an artifact (PRFAQ, six-pager, mechanism spec, WBR, CoE).
+- **Interrogative** skills stress-test an artifact or belief and produce *revisions*, not new artifacts (linter, LP-reviewer, customer-interview-synthesis, launch-readiness-review, tenets-review).
+
+Interrogative skills are the falsification layer. Users will be tempted to invoke them confirmatorily — to seek reassurance rather than friction. Skills in this category must refuse that posture explicitly in their stop conditions.

@@ -73,3 +73,107 @@ severity_and_likelihood:
   status: open_question
   notes:
     - "Both authoring skills ask for severity + likelihood on each risk, but neither defines the scale. Pick one consistently within a document and document the choice. Adopt a shared scale in a follow-up."
+
+evidence_type:
+  description: |
+    Customer evidence is classified by what kind of signal it provides.
+    Attitudinal evidence predicts behavior at roughly 40-60% accuracy.
+    PRFAQ-grade conclusions require behavioral corroboration.
+  values:
+    behavioral:
+      definition: what respondents did, observable
+      example: switched tools, paid for a workaround, opened a GitHub issue, churned
+    attitudinal:
+      definition: what respondents said they would do, self-reported
+      example: stated preference, hypothetical willingness to pay, opinion in an interview
+  used_by:
+    - 08-customer-interview-synthesis
+
+interview_artifact_type:
+  description: |
+    Source type for customer-interview-synthesis inputs. Transcripts and notes are
+    not interchangeable; notes carry the interviewer's selection bias.
+  values:
+    transcript:
+      definition: verbatim record of what was said
+      weight: high
+    structured_notes:
+      definition: interviewer's filtered record
+      weight: low
+    survey_response:
+      definition: structured survey data
+      weight: medium
+  used_by:
+    - 08-customer-interview-synthesis
+
+gate_decisions:
+  description: |
+    Gate decision emitted by launch-readiness-review.
+  values:
+    - go                       # all checks pass; launch
+    - no_go                    # blocking drift, gaps, or risks; do not launch
+    - conditional_go           # launch with named conditions, each with owner + gate_date
+    - defer                    # work not done; ask again in N days
+  notes:
+    - "'conditional_go' has historically rotted into soft 'go'. Conditions must themselves be gated; a condition that says 'we'll fix this post-launch' makes the decision 'go-with-risk', not 'conditional_go'."
+    - "'defer' is distinct from 'no_go': defer says 'not yet, ask later'; no_go says 'this should not ship as built'."
+  used_by:
+    - 09-launch-readiness-review
+
+prfaq_drift_severity:
+  description: |
+    How significant a drift between PRFAQ promise and current build state is.
+  values:
+    - blocking                 # commitment not met; cannot ship
+    - significant              # measurably different from promised; must be acknowledged in launch narrative
+    - acceptable               # within tolerance; documented but does not block
+  used_by:
+    - 09-launch-readiness-review
+
+risk_status:
+  description: |
+    How a risk from the PRFAQ risk register has evolved by launch time.
+  values:
+    - mitigated                # the documented mitigation worked
+    - open                     # the risk still exists; mitigation unproven
+    - materialized             # the risk happened during build; document the outcome
+  used_by:
+    - 09-launch-readiness-review
+
+tenet_status:
+  description: |
+    Validity of a product tenet at review time.
+  values:
+    - valid                    # external evidence still supports it
+    - invalid                  # external evidence contradicts it; thesis broken
+    - unknown                  # insufficient evidence to judge
+  notes:
+    - "A tenet status check must cite external context (market shifts, competitor moves, regulatory changes), not just metrics. See the 'metric satisficing' failure mode in tenets-review."
+  used_by:
+    - 10-tenets-review
+
+bet_recommendations:
+  description: |
+    Recommendation emitted by tenets-review.
+  values:
+    - continue                 # all tenets valid (or unknown with active monitoring); keep investing
+    - kill                     # one or more tenets invalid; stop investing
+    - pivot                    # tenets need restatement; thesis has evolved
+    - escalate                 # decision is above this review's pay grade
+  notes:
+    - "'continue' requires no tenet to be 'invalid'. A single invalid tenet forces kill/pivot/escalate."
+  used_by:
+    - 10-tenets-review
+
+required_reviews:
+  description: |
+    Convention: authoring skills declare a `required_reviews` field in their
+    frontmatter listing reviewer skills that must run before the artifact is
+    considered complete. Reviewer skills do not declare this field.
+  rationale: |
+    Reviewer cadence is the suite's leverage. An optional reviewer becomes
+    decorative. Codifying required reviews per authoring skill converts the soft
+    promise "if a reviewer is available, hand it the prose" into a contract.
+  used_by:
+    - SKILL_DESIGN_PATTERN.md
+    - all authoring skills

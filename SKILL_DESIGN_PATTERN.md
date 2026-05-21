@@ -62,3 +62,32 @@ Every claim a skill emits should be tagged with one of:
 A skill that emits unlabeled claims is producing confident fog. Add the tags.
 
 Canonical definitions live in [`GLOSSARY.md`](GLOSSARY.md#assumption-tags); machine-readable form in [`vocabulary.yaml`](vocabulary.yaml).
+
+## Required reviews
+
+Authoring skills must declare which reviewer skills must run before their artifact is considered complete. This goes in the skill's YAML frontmatter:
+
+```yaml
+---
+name: working-backwards-prfaq
+description: ...
+required_reviews:
+  - amazon-writing-linter
+  - leadership-principles-reviewer
+---
+```
+
+The skill's `## Process` section must include a step that invokes each required reviewer. The skill's `## Validation gates` must include a gate that fails if any required review has not been completed.
+
+Reviewer skills (those whose output is feedback rather than an artifact) do not declare `required_reviews`. They are the leaves.
+
+The convention exists because reviewer cadence is the suite's leverage. A reviewer that is optional becomes decorative.
+
+## Constructive vs interrogative
+
+Each skill belongs to one of two epistemic categories:
+
+- **Constructive** — produces an artifact (PRFAQ, six-pager, mechanism, WBR, CoE).
+- **Interrogative** — stress-tests an artifact or belief and produces revisions, not new artifacts (linter, LP-reviewer, customer-interview-synthesis, launch-readiness-review, tenets-review).
+
+Interrogative skills are the falsification layer. They must refuse confirmatory invocation explicitly in their stop conditions. A reviewer asked to "confirm this is good" is being asked to fail at its job.

@@ -1,6 +1,9 @@
 ---
 name: correction-of-errors
 description: Run a blameless post-incident review (Correction of Errors / CoE) covering incident summary, customer impact, timeline, facts, Five Whys, root cause, detection and prevention gaps, action items, and follow-up. Refuses to stop at "human error" — asks why the system allowed the human action to create customer impact. Use after any production incident, customer-impacting outage, or process failure; or when the user mentions "CoE", "Correction of Errors", "postmortem", "post-incident review", "RCA", or "Five Whys".
+category: constructive
+required_reviews:
+  - amazon-writing-linter
 ---
 
 # Correction of Errors
@@ -55,6 +58,7 @@ prior_incidents:              # similar past incidents, if any
 | Detection and prevention separated | Gaps classified as "we could have caught this sooner" vs "we could have prevented this" | Re-classify |
 | Action items have owner + date | Every action has both | Demand them |
 | Follow-up scheduled | A specific date and owner for confirming actions landed | Add it |
+| Required reviews completed | `amazon-writing-linter` has run against the timeline and root-cause prose and its revisions are incorporated | Run it; do not emit |
 
 ## Process
 

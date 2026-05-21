@@ -1,6 +1,9 @@
 ---
 name: mechanism-designer
 description: Convert a goal into a recurring operational mechanism with cadence, inputs, outputs, inspection method, escalation rule, and a 30-day trial. Use when a one-off effort needs to become recurring practice, when "we will try harder" is the current plan, when a goal has been set but has no operating cadence, or when the user mentions "mechanism", "process", "cadence", or "operationalize".
+category: constructive
+required_reviews:
+  - amazon-writing-linter
 ---
 
 # Mechanism Designer
@@ -53,6 +56,7 @@ escalation_path:              # who is notified, when, and what they do
 | Inspection method | Someone other than the owner inspects it | Name the inspector |
 | Escalation rule | Explicit "if X, then notify Y within Z" | Write it |
 | Mechanism failure mode named | The author can name how the mechanism will silently fail | Demand the answer |
+| Required reviews completed | `amazon-writing-linter` has run against the mechanism spec and its revisions are incorporated | Run it; do not emit |
 
 ## Process
 

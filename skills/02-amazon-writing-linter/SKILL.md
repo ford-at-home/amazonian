@@ -1,6 +1,7 @@
 ---
 name: amazon-writing-linter
 description: Rewrite docs into clear, evidence-heavy Amazon-style prose. Strips vague adjectives, unsupported claims, passive evasions, and weasel words; demands metrics, owners, and decision relevance. Use when polishing a PRFAQ, six-page narrative, memo, or any decision-bearing document; when the user asks to "tighten", "edit", or "make this Amazon-style"; or when a draft is full of "we believe", "significant", "robust", or "simple".
+category: interrogative
 ---
 
 # Amazon Writing Linter

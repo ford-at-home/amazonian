@@ -1,6 +1,10 @@
 ---
 name: working-backwards-prfaq
 description: Turn an idea into a PRFAQ (Amazon Working Backwards) packet — press release, customer FAQ, internal FAQ, MVP boundary, success metrics, risks, decision recommendation, and open questions. Use when defining a new product, feature, or internal initiative; when an idea needs sharpening before engineering or design starts; or when the user mentions PRFAQ, press release, working backwards, product definition, product brief, or product discovery.
+category: constructive
+required_reviews:
+  - amazon-writing-linter
+  - leadership-principles-reviewer
 ---
 
 # Working Backwards PRFAQ
@@ -55,6 +59,7 @@ Run these *before* writing the press release. A failing gate is a stop, not a so
 | Unmeasurable success | `desired_customer_outcome` has a metric, threshold, or observable behavior | Ask for the metric |
 | No "why now?" | The packet explains what changed (cost, regulation, capability) that makes this the right moment | Ask the user |
 | No out-of-scope | `mvp_boundary` lists at least three items explicitly *not* in scope | Add them |
+| Required reviews completed | `amazon-writing-linter` and `leadership-principles-reviewer` have both run against the draft and their revisions are incorporated | Run them; do not emit |
 
 ## Process
 

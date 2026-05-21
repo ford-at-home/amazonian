@@ -1,6 +1,8 @@
 ---
 name: weekly-business-review
 description: Generate a Weekly Business Review (WBR) from metrics and operating notes. Connects input metrics, output metrics, week-over-week variance, risks, issues, challenges, observations, and action items. Enforces that every negative variance maps to a specific cause or action. Use when the user mentions "WBR", "weekly review", "metrics review", "ops review", or when preparing a recurring metrics meeting.
+category: constructive
+required_reviews: []  # cadence-driven; reviewer friction harms weekly rhythm
 ---
 
 # Weekly Business Review

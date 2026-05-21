@@ -1,6 +1,7 @@
 ---
 name: leadership-principles-reviewer
 description: Evaluate a proposal, project, PRFAQ, or six-page narrative against Amazon-style leadership principles. Surfaces strongest and weakest alignment, contradictions, missing evidence, and risks hidden by optimism. Use when reviewing a PRFAQ before submission, when stress-testing a strategy doc, when a proposal feels "too clean", or when the user mentions "LP review", "leadership principles", "stress test", "red team", or "pre-mortem".
+category: interrogative
 ---
 
 # Leadership Principles Reviewer
