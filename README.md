@@ -17,6 +17,10 @@ A small, opinionated suite of agent skills that translates **operational discipl
 
 Most agent skills tell the model to "be thoughtful." That is not a mechanism; that is a vibe. The skills in this suite refuse to emit output if the inputs are vague, tag claims with `[assumption]` when evidence is thin, hand off to the next skill in a deterministic chain, and — for any skill that gates an artifact's ongoing validity over time — declare a [named failure mode](GLOSSARY.md#named-failure-modes-cross-reference) they exist to catch.
 
+<p align="center">
+  <img src="docs/amazonian-skills-whiteboard.png" alt="Whiteboard-style infographic mapping the 13 Amazonian skills onto the product lifecycle (Discover, Define, Design, Build [out of scope], Launch, Operate, Learn). Constructive skills are shown as rectangles, interrogative skills as hexagons. A side rail shows the two cross-cutting passes (amazon-writing-linter and leadership-principles-reviewer). Six yellow sticky notes along the bottom name the failure modes the interrogative skills exist to catch: founder bias laundering, PRFAQ drift, metric satisficing, sandbagging laundering, stale dissent reuse, and portfolio drift." width="900" />
+</p>
+
 ## What this suite is
 
 This is the **governance layer** around a product development lifecycle — not a PDLC itself. It handles the entrance (Discover, Define) and the exit (Operate, Learn) of any significant bet. Build and most of Launch happen in your engineering tooling, deliberately out of scope here. The suite's value is in making the bookends load-bearing enough that the middle has somewhere honest to attach. See [`LIFECYCLE.md`](LIFECYCLE.md) for the phase map and the deliberate omissions.
