@@ -225,6 +225,63 @@ goal_setting_context:
   used_by:
     - 11-ambitious-goal-grading
 
+dissent_recommendation:
+  description: |
+    Recommendation emitted by dissent-before-commit. Distinct from
+    decision_recommendations (used by authoring skills at authoring time) and
+    gate_decisions (used by launch-readiness-review). Operates at execution
+    time on a specific action about to fire.
+  values:
+    - proceed                  # strongest dissent addressed or accepted with named tradeoff
+    - proceed_with_changes     # named changes required before the action fires
+    - pause                    # action does not fire; trigger conditions must resolve
+    - escalate                 # decision is above this review's pay grade
+  notes:
+    - "'proceed' on a one-way door requires addressed_in_action: true. Accepted tradeoff is insufficient for irreversible actions."
+  used_by:
+    - 12-dissent-before-commit
+
+reversibility:
+  description: |
+    Reversibility classification for an action about to execute. Borrows Bezos's
+    one-way / two-way door framing. The classification controls how strict the
+    dissent gate is.
+  values:
+    one_way_door:
+      definition: action is not reversible without significant cost; once executed, the team owns the outcome
+      examples: production data migration with no rollback path, public announcement, hire/fire, deprecation cut-over
+      gate: dissent must be addressed in the action; accepted tradeoff is insufficient
+    two_way_door:
+      definition: action is reversible at modest cost within a reasonable timeframe
+      examples: feature flag rollout, internal UI change, batch job schedule change
+      gate: addressed OR accepted-with-named-tradeoff is sufficient
+    partial_reversal:
+      definition: action is reversible but with material cost or partial-recovery only
+      examples: schema change with backfill cost, multi-tenant config change with per-tenant unwind
+      gate: addressed in action preferred; accepted tradeoff requires explicit owner of the reversal cost
+  used_by:
+    - 12-dissent-before-commit
+
+dissent_perspective:
+  description: |
+    Functional perspective whose stake makes its dissent load-bearing.
+    dissent-before-commit demands a named perspective for each dissent item;
+    "the team" or "people" is insufficient.
+  values:
+    - engineering
+    - operations
+    - support
+    - customer_facing       # account managers, sales engineering, customer success
+    - security
+    - finance
+    - compliance
+    - other                 # used when domain-specific perspectives apply (e.g., legal, PR, HR)
+  notes:
+    - "See skills/12-dissent-before-commit/dissent-perspectives.yaml for typical stakes and dissent patterns per perspective."
+    - "Selection is by stake, not by checklist. Canvassing all seven perspectives on every action is itself a rubber-stamp pattern."
+  used_by:
+    - 12-dissent-before-commit
+
 required_reviews:
   description: |
     Convention: authoring skills declare a `required_reviews` field in their

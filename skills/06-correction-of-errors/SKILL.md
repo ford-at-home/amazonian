@@ -156,6 +156,7 @@ See [`coe-template.md`](coe-template.md). See [`examples/example-coe.md`](exampl
 - `weekly-business-review`: `action_items` → next week's `action_items` (tracked until closed)
 - `mechanism-designer`: structural gaps → `goal` + `failure_mode_today` for a new mechanism
 - `working-backwards-prfaq`: pattern across multiple CoEs → new PRFAQ for a larger investment
+- `dissent-before-commit`: recent incidents on adjacent systems → `state_changes_since_authoring` (used by DBC to re-canvass dissent against current state)
 
 Enums used: `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml). See [`GLOSSARY.md`](../../GLOSSARY.md#blameless) for the definition of "blameless" used here.
 

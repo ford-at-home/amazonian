@@ -119,6 +119,7 @@ See [`template.md`](template.md) for the prose skeleton.
 - `leadership-principles-reviewer`: full memo → `proposal` (`proposal_type: six_pager`)
 - `mechanism-designer`: "Proposed Mechanism" section → `goal` + `desired_behavior`
 - `weekly-business-review`: "Metrics" section → `input_metrics` / `output_metrics` (labeled per [`GLOSSARY.md`](../../GLOSSARY.md#input-vs-output-metrics))
+- `dissent-before-commit`: full memo → `authoring_artifact`; dissent section → `dissent_history`
 
 Enums used: `decision_recommendation`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 

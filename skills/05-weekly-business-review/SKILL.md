@@ -150,6 +150,7 @@ See [`wbr-template.md`](wbr-template.md). See [`examples/example-wbr.md`](exampl
 - `six-page-narrative`: a decision surfaced in "Decisions Needed" → `decision_needed`
 - `tenets-review`: persistent variance the WBR cannot resolve at its cadence → `review_trigger: metric_anomaly` + `trigger_detail`
 - `ambitious-goal-grading`: aggregated period actuals → `period_goals[].actual`; variance classifications provide context to misses
+- `dissent-before-commit`: recent variance, anomalies, or unresolved action items → `state_changes_since_authoring`
 
 Enums used: `variance_classifications`, `metric_types`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 

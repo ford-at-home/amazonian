@@ -12,7 +12,7 @@ The suite's job is to make sure what enters Build is contracted (PRFAQ / six-pag
 |-------|--------------|--------|---------|
 | **Discover** | Hunt for problems, customer signal, opportunity sizing | `customer-interview-synthesis` | partial |
 | **Define** | Specify what / for whom / why | `working-backwards-prfaq`, `six-page-narrative`, `amazon-writing-linter`†, `leadership-principles-reviewer`† | dense |
-| **Design** | Architecture, UX, operational mechanism | `mechanism-designer` (operational), `six-page-narrative` (strategic) | partial |
+| **Design** | Architecture, UX, operational mechanism, pre-execution gating | `mechanism-designer` (operational), `six-page-narrative` (strategic), `dissent-before-commit` (pre-execution gate) | partial |
 | **Build** | Implementation | — | empty (deliberate) |
 | **Launch** | Release gating | `launch-readiness-review` | partial |
 | **Operate** | Run, inspect, escalate | `mechanism-designer`, `weekly-business-review` | dense |
@@ -48,6 +48,7 @@ The suite splits roughly 50/50 by epistemic posture:
 - `launch-readiness-review` — stress-tests build state vs PRFAQ contract
 - `tenets-review` — stress-tests whether the original thesis is still worth pursuing
 - `ambitious-goal-grading` — stress-tests whether targets were set at honest difficulty, independent of outcome
+- `dissent-before-commit` — stress-tests whether the strongest current case against firing a specific action has been addressed or accepted, not just acknowledged
 
 Interrogative skills are the falsification layer. They produce no artifact of their own — they produce *revisions* to the artifacts other skills emit.
 
@@ -73,7 +74,7 @@ A typical bet runs through the suite roughly like this:
 
 1. **Discover** — `customer-interview-synthesis` turns raw interview signal into PRFAQ-ready structured inputs with evidence tags.
 2. **Define** — `working-backwards-prfaq` consumes those inputs; required-reviews run; six-pager added when architectural depth needed.
-3. **Design** — `mechanism-designer` defines the operating cadence that will keep the bet honest after launch.
+3. **Design** — `mechanism-designer` defines the operating cadence that will keep the bet honest after launch. Before any mechanism fires (or any irreversible action executes), `dissent-before-commit` surfaces the strongest current case against execution and forces it to be addressed or accepted with a named tradeoff — not just acknowledged.
 4. **Build** — happens in your engineering process. The suite is silent here on purpose.
 5. **Launch** — `launch-readiness-review` gates the ship decision by diffing the build against the PRFAQ contract.
 6. **Operate** — `weekly-business-review` inspects the metrics on cadence; `correction-of-errors` fires on incidents.

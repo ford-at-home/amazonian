@@ -149,6 +149,7 @@ This skill emits a decision packet, not an execution plan. The PRFAQ is a contra
 - `weekly-business-review`: `success_metrics` → `input_metrics` / `output_metrics` (caller classifies leading vs lagging per [`GLOSSARY.md`](../../GLOSSARY.md#input-vs-output-metrics))
 - `launch-readiness-review`: full packet → `original_prfaq`; `desired_customer_outcome` → `customer_outcome_assessment.promised_outcome`; `success_metrics` → `success_metrics_status`; `risks` → `risk_register_delta`; `mvp_boundary.in_scope` → drift basis
 - `ambitious-goal-grading`: `success_metrics` → `period_goals` (with targets and original `goal_setting_context`); `decision_recommendation.rationale` → original target rationale
+- `dissent-before-commit`: full packet → `authoring_artifact`; `risks` and `mvp_boundary` → context for the re-canvass
 
 Enums used: `decision_recommendation`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 

@@ -177,6 +177,33 @@ The team's stated difficulty intent at authoring time: `committed`, `stretch`, `
 
 The named failure mode `ambitious-goal-grading` exists to catch. Targets set deliberately or implicitly below honest capacity and described in language that sounds principled: "ambitious enough to motivate, achievable enough to hit." Detected by the rule that any 100% attainment without cited surprise evidence is presumptive sandbagging until proven otherwise. Analogous in structure to `metric satisficing` for `tenets-review` — both are failure modes where the surface signal looks healthy while the underlying mechanism has stopped working.
 
+## Dissent recommendation
+
+`dissent-before-commit` emits one of:
+
+- `proceed` — strongest dissent addressed in the action OR accepted with a named tradeoff.
+- `proceed_with_changes` — named changes required before the action fires.
+- `pause` — action does not fire; trigger conditions must resolve first.
+- `escalate` — decision is above this review's pay grade; named target gets a briefing.
+
+`proceed` on a one-way door requires `addressed_in_action: true`. Accepted tradeoff is insufficient for irreversible actions.
+
+## Reversibility (one-way / two-way door)
+
+Borrowed from Bezos. Used by `dissent-before-commit` to control how strict the dissent gate is:
+
+- **One-way door** — action is not reversible without significant cost. The team owns the outcome once executed. Examples: production data migrations without rollback paths, public announcements, hires/fires, deprecation cut-overs. Dissent must be *addressed in the action* — accepted tradeoff is insufficient.
+- **Two-way door** — action is reversible at modest cost within a reasonable timeframe. Examples: feature flag rollouts, internal UI changes, batch job schedule changes. Addressed OR accepted-with-named-tradeoff is sufficient.
+- **Partial reversal** — reversible but with material cost or partial recovery only. Examples: schema change with backfill cost, multi-tenant config change with per-tenant unwind. Treat closer to one-way door; accepted tradeoff requires a named owner of the reversal cost.
+
+## Dissent perspective
+
+`dissent-before-commit` requires a *named functional perspective* on each dissent item. Generic "the team" or "people" fails the gate. The default perspective set: engineering, operations, support, customer-facing, security, finance, compliance. Choice is by stake, not by checklist — canvassing all seven on every action is itself a rubber-stamp pattern. See [`skills/12-dissent-before-commit/dissent-perspectives.yaml`](skills/12-dissent-before-commit/dissent-perspectives.yaml) for typical stakes and dissent patterns per perspective.
+
+## Stale dissent reuse
+
+The named failure mode `dissent-before-commit` exists to catch. The team points to authoring-time dissent (six-pager's gate, LP-reviewer's `are_right_a_lot`) as proof that concerns were heard, and proceeds with execution without checking what has changed between authoring and now. The dissent record was true at authoring time and may be stale now — state changes since authoring may have invalidated prior assessments or surfaced concerns that weren't visible then. The skill's `dissent_recanvassed` gate exists to force re-evaluation against current state. Analogous in structure to `metric satisficing` (tenets-review) and `sandbagging laundering` (ambitious-goal-grading) — each names a way a previously-honest signal goes stale while looking healthy.
+
 ## Required reviews
 
 Authoring skills declare a `required_reviews` field in their frontmatter listing reviewer skills that must run before the artifact is considered complete. Reviewer skills do not declare this field — they are the leaves. The convention converts the soft promise "if a reviewer is available, hand it the prose" into a contract. See [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md#required-reviews).

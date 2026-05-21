@@ -10,7 +10,7 @@
 
 suite:
   name: amazonian
-  version: 0.3.0
+  version: 0.4.0
   positioning: governance layer around a product development lifecycle, not a PDLC itself
   phase_model: [discover, define, design, build, launch, operate, learn]
 
@@ -36,11 +36,12 @@ phases:
 
   - id: design
     name: Design
-    description: Architecture, UX, operational mechanism
+    description: Architecture, UX, operational mechanism, pre-execution gating
     density: partial
     skills:
       - mechanism-designer        # operational
       - six-page-narrative        # strategic; primary phase is define
+      - dissent-before-commit     # pre-execution gate on a specific action
 
   - id: build
     name: Build
@@ -258,6 +259,27 @@ skills:
       - mechanism-designer                # goalpost_moving -> redesign goal-setting mechanism
     enums_used: [calibration_assessment, attainment_score, pattern_assessment, goal_setting_context, metric_types, assumption_tags]
     skill_md: skills/11-ambitious-goal-grading/SKILL.md
+
+  - name: dissent-before-commit
+    number: "12"
+    category: interrogative
+    primary_phase: design                 # pre-execution gate; can also fire pre-launch
+    secondary_phases: [launch]
+    consumes_from:
+      - mechanism-designer                # mechanism about to fire -> proposed_action
+      - working-backwards-prfaq           # authoring artifact + risks -> context
+      - six-page-narrative                # authoring artifact + dissent_section -> dissent_history
+      - leadership-principles-reviewer    # prior are_right_a_lot findings -> dissent_history
+      - launch-readiness-review           # predicted_failure_modes -> dissent_history
+      - correction-of-errors              # prior incidents -> state_changes_since_authoring
+      - weekly-business-review            # recent variance -> state_changes_since_authoring
+    feeds_into:
+      - mechanism-designer                # proceed_with_changes -> mechanism revisions
+      - launch-readiness-review           # pause/escalate on launch-adjacent actions
+      - tenets-review                     # escalate when dissent is thesis-level -> review_trigger
+      - correction-of-errors              # cross-reference original dissent record post-execution
+    enums_used: [dissent_recommendation, reversibility, dissent_perspective, assumption_tags]
+    skill_md: skills/12-dissent-before-commit/SKILL.md
 
 # Enforced ordering rules:
 # The only ordering the suite hard-enforces is via `required_reviews` in

@@ -138,6 +138,7 @@ Summary list:
 - `working-backwards-prfaq`: `recommended_revisions` → author updates the PRFAQ
 - `six-page-narrative`: `recommended_revisions` → author updates the memo
 - `mechanism-designer`: cross-proposal weakness patterns → `goal` + `failure_mode_today`
+- `dissent-before-commit`: `principle_review.are_right_a_lot` findings → `dissent_history`
 
 Enums used: `principle_scores`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 

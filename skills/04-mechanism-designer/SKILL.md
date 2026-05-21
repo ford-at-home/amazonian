@@ -126,6 +126,7 @@ See [`mechanism-template.md`](mechanism-template.md) for the prose form.
 - `launch-readiness-review`: operational gaps the launch needs to close → review consumes the mechanism's `inspection_method` to verify metric instrumentation is wired before ship
 - `tenets-review`: when the bet's operating mechanism is the artifact being reviewed → `mechanism.outputs` → `metrics_snapshot`
 - `ambitious-goal-grading`: when goals were defined by the operating mechanism rather than the PRFAQ → `mechanism.outputs` → `period_goals`
+- `dissent-before-commit`: the mechanism spec about to fire → `proposed_action`; `inspection_method` + `escalation_rule` → context for the reversibility check
 
 Enums used: `metric_types`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 

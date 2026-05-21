@@ -177,6 +177,7 @@ After emitting, run a second pass that checks:
 - `correction-of-errors`: if a `predicted_failure_mode` materializes post-launch, this output is `prior_incidents` context
 - `working-backwards-prfaq`: blocking drift → revisions to the next PRFAQ (the contract was wrong, not just the build)
 - `mechanism-designer`: if launch reveals operational gaps not in the PRFAQ, those become new mechanism inputs
+- `dissent-before-commit`: `predicted_failure_modes` → `dissent_history` (when a `go` or `conditional_go` is queued for execution, DBC re-canvasses against current state)
 
 Enums used: `gate_decisions`, `prfaq_drift_severity`, `risk_status`, `assumption_tags` — see [`vocabulary.yaml`](../../vocabulary.yaml).
 

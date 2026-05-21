@@ -1,0 +1,143 @@
+# dissent-perspectives.yaml
+# Functional perspectives the dissent-before-commit skill canvasses by default.
+# Each perspective carries the stake it has in execution and the kinds of dissent
+# it tends to raise that other perspectives miss. The skill demands at least
+# three perspectives consulted for non-trivial actions; this file is the default
+# set, not an exhaustive list.
+#
+# Rule: a perspective is consulted only when its stake is non-trivial for the
+# specific action under review. Mechanically canvassing all seven on every
+# action is itself a failure mode (rubber-stamp pattern). Pick perspectives by
+# stake, not by checklist.
+
+perspectives:
+
+  engineering:
+    stake: |
+      Owns the technical mechanism, the deploy, the on-call rotation, the
+      tech-debt consequence of the change. Carries the costs first.
+    typical_dissent:
+      - "This depends on a system that's been flaky for the last two weeks."
+      - "The rollback path we documented assumes the dependency is healthy."
+      - "We're proceeding before the load test that was in the plan."
+      - "Two engineers who own this part of the stack are out this week."
+    miss_signal: |
+      If engineering says "no concerns" but the action touches systems where
+      recent incidents (last 30 days) exist, the perspective wasn't really
+      consulted — it was rubber-stamped.
+
+  operations:
+    stake: |
+      Will run the system after the action fires. Carries the long tail of
+      operational cost — alerts, runbooks, recurring toil, on-call burden.
+    typical_dissent:
+      - "We don't have a runbook for the failure mode this change introduces."
+      - "Alert volume from this system has tripled this month; this adds more."
+      - "The new escalation path routes to a team that's down two people."
+      - "We've never operated this at the scale the PRFAQ predicted."
+    miss_signal: |
+      If ops says "no concerns" but no runbook exists for the new failure
+      modes, the dissent is being suppressed or the perspective wasn't really
+      consulted on operational specifics.
+
+  support:
+    stake: |
+      Receives the customer consequence of the action — tickets, escalations,
+      account losses. Sees the action from the customer's reaction side.
+    typical_dissent:
+      - "We're shipping a behavior change with no customer-facing documentation."
+      - "The last similar change generated 200 tickets we couldn't close for two weeks."
+      - "Customers we surveyed about this said the workaround is fine."
+      - "This breaks a workflow our top-10 accounts rely on."
+    miss_signal: |
+      If support says "no concerns" but the change is customer-visible and no
+      support brief exists, the perspective wasn't really consulted.
+
+  security:
+    stake: |
+      Owns the consequences of new attack surface, new data flows, new
+      authorization paths, and compliance posture changes.
+    typical_dissent:
+      - "This adds a new data flow that hasn't gone through review."
+      - "The new endpoint inherits an authorization model we're trying to deprecate."
+      - "We haven't threat-modeled the change."
+      - "This expands the blast radius of an existing vulnerability."
+    miss_signal: |
+      If security says "no concerns" but the action touches authentication,
+      data storage, network boundaries, or PII handling, and no review record
+      exists, the perspective was bypassed.
+
+  customer_facing:
+    stake: |
+      Account managers, sales engineers, customer success — the humans who own
+      the customer relationship. Carries political and trust costs of changes
+      customers experience.
+    typical_dissent:
+      - "Three of our largest customers asked us not to do this in the last QBR."
+      - "We promised these customers something different at renewal."
+      - "The competitive narrative we built last quarter relied on the current behavior."
+      - "We're firing this on a date the customer is in a code freeze."
+    miss_signal: |
+      If customer-facing teams weren't consulted on a change that customers
+      will notice, the perspective is silent because it wasn't asked.
+
+  finance:
+    stake: |
+      Owns the cost envelope, contract obligations, revenue recognition
+      implications, and the long-arc opportunity cost.
+    typical_dissent:
+      - "The infrastructure cost of this change exceeds the budget we modeled."
+      - "Contracts we signed last quarter constrain this change."
+      - "Revenue recognition implications of this haven't been reviewed."
+      - "The opportunity cost is funding something with a 3x weaker thesis."
+    miss_signal: |
+      If finance hasn't been consulted on a change with material cost or
+      contract implications, the perspective is silent by oversight.
+
+  compliance:
+    stake: |
+      Owns regulatory exposure, audit posture, contractual obligations to
+      regulators or customers' regulators.
+    typical_dissent:
+      - "This change requires notification to a regulator we haven't notified."
+      - "Customer contracts include audit clauses this change interacts with."
+      - "The retention behavior we're changing is referenced in our SOC2 control set."
+      - "We're firing this inside a regulatory comment period that's open."
+    miss_signal: |
+      If compliance hasn't been consulted on a change that touches regulated
+      data, retention, audit logs, or contractual commitments, the perspective
+      is silent because it wasn't asked.
+
+# Selection rule:
+# At least three perspectives must be canvassed for non-trivial actions.
+# Pick perspectives by stake, not by checklist. The rubber-stamp pattern is
+# canvassing all seven on every action without distinguishing stakes.
+selection_rule: |
+  Choose perspectives whose stake is non-trivial for THIS action. A change
+  that touches only internal tooling may need only engineering + operations.
+  A customer-visible behavior change needs support + customer-facing at minimum.
+  A change to data handling needs security + compliance. The skill demands
+  three perspectives minimum, but the choice is by stake, not by alphabet.
+
+# Forced-ranking rule:
+# When multiple perspectives raise concerns, the skill must rank them.
+# "All concerns are equally important" is a hedge. The strongest case is the
+# one most likely to make the team regret execution if it goes ahead.
+forced_ranking_rule: |
+  When more than one perspective raises dissent, rank them by:
+    1. Reversibility impact — does this dissent point at a one-way-door cost?
+    2. Likelihood — how likely is the concern to materialize?
+    3. Detectability — how late would we find out the concern was right?
+
+  Lowest reversibility + highest likelihood + lowest detectability = strongest.
+  The skill emits exactly one strongest_dissent_case. Co-equal cases is a
+  refusal to rank.
+
+# Stale-dissent rule:
+# Dissent canvassed before recent state changes is stale until re-checked.
+stale_dissent_rule: |
+  If state_changes_since_authoring is non-empty and dissent_history exists,
+  every prior dissent item must be re-evaluated against current state and
+  marked still_applies: true | false | new. Items marked "new" are dissent
+  surfaced by state changes that weren't present at authoring time. These
+  are the highest-value dissent items in the review.
