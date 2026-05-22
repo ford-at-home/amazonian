@@ -39,6 +39,8 @@ The external skills shown above are illustrative examples from one user's enviro
 
 ## Quick start
 
+> **New here?** Read [`docs/WALKTHROUGH.md`](docs/WALKTHROUGH.md) — a 15-minute operator path from `git clone` through a running governance session with optional real-time observability. Captures the full intent of this Quick start with worked examples and troubleshooting.
+
 The recommended path is `scripts/install.sh`, which copies the skills into the chosen scope, scaffolds a `governance.yaml` stub if one does not exist, and reports whether `superpowers` was detected:
 
 ```bash
@@ -256,6 +258,10 @@ The three worked examples (`example-prfaq.md`, `example-wbr.md`, `example-coe.md
 ## Contributing
 
 Proposed skills must satisfy the spine in [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md).
+
+## Changelog
+
+See [`CHANGELOG.md`](CHANGELOG.md) for a complete log of suite-level changes, organized by RFC. The current suite version is tracked in [`lifecycle.yaml`](lifecycle.yaml) under `suite.version`.
 
 ## License
 
