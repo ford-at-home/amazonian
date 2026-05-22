@@ -190,6 +190,33 @@ The manifest is in a state the state machine does not recognize. Mitigation: `ro
 
 For `advance` routings, the recommended skill consumes its normal inputs (now sourced from the manifest) and emits its normal output. Its emission may update manifest field groups (e.g., `01-working-backwards-prfaq` writes the PRFAQ and updates `bet.prfaq_path`). Each skill's manifest-update behavior is documented in that skill's `## Handoffs` section in its own SKILL.md. *[Unverified — existing skills 01–13 do not yet declare manifest-write behavior; that is v2 scope per RFC-001 §3.2 NG6.]*
 
+## Optional observability emission
+
+If the localhost observability stack at [`tools/observability/`](../../tools/observability/README.md) is running, this skill should emit events at each major phase of the routing pass so the operator can watch the reasoning unfold in real time. Emission is best-effort and silent on failure. The skill must complete its routing decision whether the observability server is up or not.
+
+Recommended emission points:
+
+```bash
+source scripts/lib/emit-event.sh
+
+amazonian_emit_event 14-lifecycle-navigator start
+
+# After the state-machine match:
+echo '{"matched_position":"operating-wbr-due"}' \
+  | amazonian_emit_event 14-lifecycle-navigator progress
+
+# When the phase-laundering check finds a gap:
+echo '{"finding":"live_mechanisms[wbr-monday] evidence=assumption"}' \
+  | amazonian_emit_event 14-lifecycle-navigator progress \
+      "live_mechanisms[wbr-monday]" "" ""
+
+# At the routing decision:
+echo '{"routing_decision":"upstream_remediation","recommended_skill":"04-mechanism-designer"}' \
+  | amazonian_emit_event 14-lifecycle-navigator end
+```
+
+See [`tools/observability/README.md`](../../tools/observability/README.md) for the event schema. The phase-laundering finding in particular benefits from being on the event log — it is the single most pedagogically valuable moment in a navigator session.
+
 ## Influences
 
 - The orchestrator-with-hard-gates pattern is structurally similar to `using-superpowers` and `brainstorming` in the superpowers suite. The navigator borrows the pattern (one-question-at-a-time, propose-2-3-approaches, refuse to skip gates) without forking the implementation.

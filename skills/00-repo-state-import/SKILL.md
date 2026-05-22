@@ -172,6 +172,21 @@ The skill refuses to emit output when:
 
 The manifest is the contract. Every downstream skill reads from it; no skill writes to it except via its declared field-owners (this skill on bootstrap; the navigator on `history[]`; future skill revisions on their respective field groups).
 
+## Optional observability emission
+
+If the localhost observability stack at [`tools/observability/`](../../tools/observability/README.md) is running, this skill may emit events at the start and end of each field group's interview so the operator can watch the bootstrap progress in real time. Emission is best-effort: when `AMAZONIAN_OBSERVABILITY_URL` is unset or the server is down, the helper is a silent no-op. The skill must complete the bootstrap whether observability is up or not.
+
+```bash
+source scripts/lib/emit-event.sh
+
+amazonian_emit_event 00-repo-state-import start
+# ... walk the operator through field groups ...
+echo '{"declined_groups":["dissent_log"]}' \
+  | amazonian_emit_event 00-repo-state-import end "" "" ""
+```
+
+See [`tools/observability/README.md`](../../tools/observability/README.md) for the event schema and architectural commitments.
+
 ## Influences
 
 - Manifest-driven import is a known pattern from infrastructure-as-code (Terraform `import`, Kubernetes resource manifests). This skill borrows the discipline that *importing existing state must be explicit and audit-trailed*, not implicit.

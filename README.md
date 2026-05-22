@@ -72,6 +72,18 @@ You can also invoke any skill explicitly:
 Use the working-backwards-prfaq skill to draft a PRFAQ for <idea>.
 ```
 
+## Optional: localhost observability
+
+A read-mostly observability stack lives at [`tools/observability/`](tools/observability/README.md). When it's running, you can watch `governance.yaml` snapshots and skill events in a browser as the agent works — a timeline, a skill DAG topology view, and an evidence-tag-colored manifest inspector. The stack is strictly optional: the skill suite remains fully functional without it, and the manifest is always the source of truth.
+
+```bash
+cd tools/observability
+make up-bg                              # start FastAPI + SQLite + WebSocket on :8765
+./scripts/seed-demo.sh                  # replay a worked ChangeLens session
+```
+
+See [`docs/rfcs/RFC-002-localhost-observability.md`](docs/rfcs/RFC-002-localhost-observability.md) for the design and architectural commitments.
+
 ## The operating chain
 
 `amazon-writing-linter` and `leadership-principles-reviewer` are cross-cutting passes that any authoring skill runs against its own draft. The remaining skills compose into the operating loop — Discover → Define → Design → (Build, elsewhere) → Launch → Operate → Learn — with feedback edges where each phase's findings flow back to revise upstream artifacts.

@@ -8,25 +8,50 @@ A read-mostly observability stack over `governance.yaml`. Tails the manifest, in
 
 To make the data flow visible: which skill emitted which event, what manifest field changed as a result, and how `evidence` tags evolve over a session. The suite is intentionally text-first; this view is for *watching the agent work* in real time, not for replacing the manifest.
 
-## What's in v0 (B5 of RFC-001)
+## What's in v1 (B5–B7 of RFC-002)
 
 - Backend: FastAPI + SQLite + WebSocket
 - Manifest file watcher with content-hash dedupe
 - `POST /api/events` for skill emission
-- Frontend timeline view with live updates
+- Frontend with three tabs:
+  - **Timeline**: snapshots + events, newest first, live updates
+  - **Topology**: skill DAG from `lifecycle.yaml` with hover-to-highlight
+  - **Manifest**: indented tree with evidence-tag color coding
+- `scripts/lib/emit-event.sh`: best-effort POST helper for skills
 - `make up` / `make down` / `make smoke` workflow
-
-What's not here yet (lands in B6): topology DAG view, colorized manifest inspector. Lands in B7: `scripts/lib/emit-event.sh` helper, skill integration, demo seed.
+- `tools/observability/scripts/seed-demo.sh`: scripted ChangeLens walkthrough
 
 ## Quick start
 
 ```bash
 cd tools/observability
-make up
-# Visit http://127.0.0.1:8765/
+make up-bg                                 # start server in background
+open http://127.0.0.1:8765/                # or visit manually
+./scripts/seed-demo.sh                     # replay a worked ChangeLens session
 ```
 
-Then, from another terminal in the repo root:
+What the seed walkthrough does (paced; pass `--fast` for no pacing):
+
+1. Drops `skills/00-repo-state-import/examples/example-bootstrap.yaml` into the repo root as `governance.yaml`. **Snapshot 1** lands; the watcher picks it up.
+2. Emits a `00-repo-state-import end` event recording the bootstrap.
+3. Emits a `14-lifecycle-navigator start` event.
+4. Emits a `progress` event recording the state-machine match (position: `operating-wbr-due`).
+5. Emits a `progress` event recording the phase-laundering finding on `live_mechanisms[wbr-monday]` (it's `evidence: assumption`).
+6. Emits an `end` event with `routing_decision: upstream_remediation` and `recommended_skill: 04-mechanism-designer`.
+7. Emits a `04-mechanism-designer end` event recording the spec being written.
+8. Rewrites the manifest's WBR mechanism to `evidence: fact` and a real `spec_path`. **Snapshot 2** lands.
+
+Watch the three tabs as it runs:
+
+- **Timeline** fills in with the alternating snapshots and events.
+- **Topology** is static for this demo (it's a property of the suite, not the bet) but the DAG you see makes the data flow legible.
+- **Manifest** updates twice: first when snapshot 1 arrives (you can see `live_mechanisms[wbr-monday]` with a yellow `assumption` border), then again at snapshot 2 (the border goes green and the badge flips to `fact`).
+
+Tear down with `./scripts/teardown-demo.sh && make down`.
+
+## Manual exercise
+
+If you'd rather drive it yourself:
 
 ```bash
 # Edit the manifest — the timeline will pick it up.
@@ -45,7 +70,21 @@ curl -fsS -X POST http://127.0.0.1:8765/api/events \
   }'
 ```
 
-You should see both the snapshot (from the manifest edit) and the event appear in the timeline within ~1 second.
+## Skill integration via emit-event.sh
+
+Skills emit events into this stack by sourcing the helper:
+
+```bash
+source scripts/lib/emit-event.sh
+amazonian_emit_event <skill_id> <phase> [manifest_field] [evidence_before] [evidence_after]
+```
+
+The helper is a silent no-op when `AMAZONIAN_OBSERVABILITY_URL` is unset OR when the server is unreachable (1-second timeout). The skill suite is required to work regardless — emit-event.sh is observability sugar.
+
+Verified failure modes (real tests, not [Unverified]):
+- Unset `AMAZONIAN_OBSERVABILITY_URL` → returns 0; no DB write.
+- Set URL but unreachable port → returns 0 within ~1s; no DB write.
+- Reachable server → POSTs the event; broadcasts to live WebSocket clients.
 
 ## API surface
 
