@@ -39,17 +39,34 @@ The external skills shown above are illustrative examples from one user's enviro
 
 ## Quick start
 
-```bash
-# Personal scope (available across all your projects)
-mkdir -p ~/.cursor/skills
-cp -R skills/* ~/.cursor/skills/
+The recommended path is `scripts/install.sh`, which copies the skills into the chosen scope, scaffolds a `governance.yaml` stub if one does not exist, and reports whether `superpowers` was detected:
 
-# Or project scope (shared with the repo)
-mkdir -p .cursor/skills
-cp -R skills/* .cursor/skills/
+```bash
+# From the suite's checkout, deploy onto the repo you want to govern:
+cd /path/to/your/repo
+/path/to/amazonian/scripts/install.sh                     # personal scope (default)
+/path/to/amazonian/scripts/install.sh --scope project     # store skills in ./.cursor/skills/
+/path/to/amazonian/scripts/install.sh --reimport          # rebuild a stale manifest
 ```
 
-Once installed, the agent will discover skills by description. You can also invoke explicitly:
+The script is idempotent — re-running with no flags on an already-deployed repo is a no-op. See `scripts/install.sh --help` for the full option list.
+
+Manual install also works:
+
+```bash
+mkdir -p ~/.cursor/skills && cp -R skills/* ~/.cursor/skills/          # personal scope
+mkdir -p .cursor/skills && cp -R skills/* .cursor/skills/              # project scope
+```
+
+Once installed, the agent will discover skills by description. The recommended session-start flow is:
+
+```text
+1. (first time only) Run skill 00-repo-state-import to lift the repo's current state into governance.yaml.
+2. Run skill 14-lifecycle-navigator to see the next required action given the manifest.
+3. Run the recommended skill; the navigator's history[] entry records the handoff.
+```
+
+You can also invoke any skill explicitly:
 
 ```text
 Use the working-backwards-prfaq skill to draft a PRFAQ for <idea>.
@@ -98,6 +115,7 @@ Solid arrows = the operating loop. Dotted arrows = review passes and feedback. F
 
 | # | Skill | Reads | Emits |
 |---|-------|-------|-------|
+| 00 | [`repo-state-import`](skills/00-repo-state-import/SKILL.md) | A brownfield repo + operator interview | `governance.yaml` manifest with evidence-tagged fields for the bet's current tenets, metrics, mechanisms, goals, interviews, dissent history |
 | 01 | [`working-backwards-prfaq`](skills/01-working-backwards-prfaq/SKILL.md) | An idea | PRFAQ packet with `success_metrics`, customer, FAQ |
 | 02 | [`amazon-writing-linter`](skills/02-amazon-writing-linter/SKILL.md) | Any draft in this suite | Linted text; vague adjectives stripped, unsupported claims flagged, owners surfaced |
 | 03 | [`six-page-narrative`](skills/03-six-page-narrative/SKILL.md) | A strategy or architecture | Decision memo with risks, alternatives, and dissent |
@@ -111,6 +129,7 @@ Solid arrows = the operating loop. Dotted arrows = review passes and feedback. F
 | 11 | [`ambitious-goal-grading`](skills/11-ambitious-goal-grading/SKILL.md) | Period goals (with targets, actuals, stated difficulty) + original PRFAQ + optional prior gradings | Per-goal calibration assessment, chronic-pattern detection across periods, recalibration recommendations, and sandbagging-laundering warnings |
 | 12 | [`dissent-before-commit`](skills/12-dissent-before-commit/SKILL.md) | A specific action about to execute (mechanism, launch, irreversible change) + authoring artifact + state changes since + dissent history | Execution-time gate (`proceed` / `proceed_with_changes` / `pause` / `escalate`) with the strongest current case named, reversibility classification, and stale-dissent warning |
 | 13 | [`portfolio-review`](skills/13-portfolio-review/SKILL.md) | All current bets (each with PRFAQ, recent tenets-review, recent goal-grading, WBR variance) + candidate alternatives + total capacity | Per-bet recommendations (`continue` / `wind_down` / `amplify` / `hold` / `pivot`), per-candidate decisions, a zero-based reallocation comparison, and a portfolio-drift report |
+| 14 | [`lifecycle-navigator`](skills/14-lifecycle-navigator/SKILL.md) | `governance.yaml` + optional `session_intent` | Routing recommendation (`advance` / `upstream_remediation` / `block`) with the next required skill, prepared inputs, and rationale; appends a `history[]` entry to the manifest. Refuses confirmatory invocation; second-axis check refuses recommendations against assumption-tagged required inputs (`phase laundering`) |
 
 Every skill conforms to [`SKILL_DESIGN_PATTERN.md`](SKILL_DESIGN_PATTERN.md). The disqualifying criteria in that doc are the bar. Shared vocabulary (assumption tags, variance classifications, metric types, decision recommendations, principle scores, gate decisions, tenet status, calibration assessment, dissent recommendation, reversibility, portfolio bet recommendation, candidate decision) lives in [`GLOSSARY.md`](GLOSSARY.md) and [`vocabulary.yaml`](vocabulary.yaml).
 
@@ -154,7 +173,23 @@ amazonian/
 ├── lifecycle.yaml
 ├── GLOSSARY.md
 ├── vocabulary.yaml
+├── schema/
+│   └── governance.schema.json
+├── scripts/
+│   ├── install.sh
+│   ├── lib/
+│   │   ├── detect-plugins.sh
+│   │   └── scaffold-manifest.sh
+│   └── templates/
+│       └── governance-template.yaml
+├── docs/
+│   └── rfcs/
+│       └── RFC-001-deployment-and-orchestration.md
 └── skills/
+    ├── 00-repo-state-import/
+    │   ├── SKILL.md
+    │   ├── interview-questions.yaml
+    │   └── examples/example-bootstrap.yaml
     ├── 01-working-backwards-prfaq/
     │   ├── SKILL.md
     │   ├── templates/prfaq-template.md
@@ -194,9 +229,14 @@ amazonian/
     ├── 12-dissent-before-commit/
     │   ├── SKILL.md
     │   └── dissent-perspectives.yaml
-    └── 13-portfolio-review/
+    ├── 13-portfolio-review/
+    │   ├── SKILL.md
+    │   └── allocation-patterns.yaml
+    └── 14-lifecycle-navigator/
         ├── SKILL.md
-        └── allocation-patterns.yaml
+        ├── state-machine.yaml
+        ├── delegation-contract.md
+        └── examples/example-navigation.md
 ```
 
 The three worked examples (`example-prfaq.md`, `example-wbr.md`, `example-coe.md`) share a common hypothetical product ("ChangeLens") so you can read them in sequence and see how the artifacts chain.

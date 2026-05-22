@@ -10,6 +10,7 @@ The suite's job is to make sure what enters Build is contracted (PRFAQ / six-pag
 
 | Phase | What happens | Skills | Density |
 |-------|--------------|--------|---------|
+| **Deploy** | Bring an existing repo into the suite's contracted state | `repo-state-import` | dense |
 | **Discover** | Hunt for problems, customer signal, opportunity sizing | `customer-interview-synthesis` | partial |
 | **Define** | Specify what / for whom / why | `working-backwards-prfaq`, `six-page-narrative`, `amazon-writing-linter`†, `leadership-principles-reviewer`† | dense |
 | **Design** | Architecture, UX, operational mechanism, pre-execution gating | `mechanism-designer` (operational), `six-page-narrative` (strategic), `dissent-before-commit` (pre-execution gate) | partial |
@@ -17,8 +18,9 @@ The suite's job is to make sure what enters Build is contracted (PRFAQ / six-pag
 | **Launch** | Release gating | `launch-readiness-review` | partial |
 | **Operate** | Run, inspect, escalate | `mechanism-designer`, `weekly-business-review` | dense |
 | **Learn** | Incident review, thesis re-examination, goal calibration, cross-bet allocation | `correction-of-errors` (incident-driven), `tenets-review` (event-driven), `ambitious-goal-grading` (period-driven), `portfolio-review` (period-driven, cross-bet) | dense |
+| *Cross-cutting* | Question-driven routing across phases | `lifecycle-navigator`† | per-session |
 
-† Cross-cutting reviewer passes; not phase-bound.
+† Cross-cutting passes; not phase-bound. `lifecycle-navigator` is read-mostly (it reads `governance.yaml` and emits routing recommendations); `amazon-writing-linter` and `leadership-principles-reviewer` are draft-review passes any authoring skill runs against its output.
 
 ## Deliberate omissions
 
