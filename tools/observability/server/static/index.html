@@ -44,13 +44,36 @@
 
     <section id="tab-topology" class="tab-panel">
       <h2>Topology</h2>
-      <p class="muted">DAG view lands in B6.</p>
+      <p class="muted">
+        Skill DAG from <code>lifecycle.yaml</code>. Columns are lifecycle phases;
+        nodes are skills (border style = category); edges are
+        <code>feeds_into</code> / <code>consumes_from</code> declarations.
+        Hover a node to highlight its edges.
+      </p>
+      <div class="topo-legend">
+        <span class="legend-item"><span class="legend-swatch legend-constructive"></span> constructive</span>
+        <span class="legend-item"><span class="legend-swatch legend-interrogative"></span> interrogative</span>
+        <span class="legend-item legend-spacer"></span>
+        <span id="topo-stats" class="muted">loading…</span>
+      </div>
+      <div id="topo-container" class="topo-container">
+        <svg id="topo-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <p class="muted small">
+        Self-loops are hidden in this view; they appear in <code>/api/topology</code>'s JSON.
+      </p>
     </section>
 
     <section id="tab-manifest" class="tab-panel">
       <h2>Manifest</h2>
-      <p class="muted">Pretty-printed manifest inspector lands in B6.</p>
-      <pre id="manifest-raw" class="manifest"><em>(no snapshot yet)</em></pre>
+      <p class="muted">
+        Current snapshot from <code id="manifest-snapshot-path">(none)</code>.
+        Fields with an <code>evidence:</code> tag get a colored border;
+        the tag itself appears as a badge. Updates live with the manifest file.
+      </p>
+      <div id="manifest-tree" class="manifest-tree">
+        <em>(no snapshot yet)</em>
+      </div>
     </section>
   </main>
 

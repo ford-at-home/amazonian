@@ -33,6 +33,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import db
 from .models import EventIn, EventOut, LiveMessage, SnapshotOut, StateOut
+from .topology import build_topology
 from .watcher import ManifestWatcher
 
 log = logging.getLogger(__name__)
@@ -210,9 +211,10 @@ async def post_event(payload: EventIn, request: Request) -> EventOut:
 
 
 @app.get("/api/topology")
-async def get_topology() -> dict[str, list]:
-    """Stub for the topology view; populated in B6."""
-    return {"nodes": [], "edges": [], "note": "topology builder lands in B6"}
+async def get_topology() -> dict[str, Any]:
+    """Returns the suite's skill DAG derived from lifecycle.yaml.
+    Cached by lru_cache in topology._load_lifecycle; cheap to call."""
+    return await asyncio.to_thread(build_topology)
 
 
 @app.websocket("/api/live")

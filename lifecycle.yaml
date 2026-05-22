@@ -29,6 +29,13 @@ suite:
 
 phases:
 
+  - id: deploy
+    name: Deploy
+    description: Bring an existing repo into the suite's contracted state
+    density: dense
+    skills:
+      - repo-state-import
+
   - id: discover
     name: Discover
     description: Hunt for problems, customer signal, opportunity sizing
@@ -94,7 +101,31 @@ phases:
       - ambitious-goal-grading    # period-driven, per-bet
       - portfolio-review          # period-driven, cross-bet
 
+cross_cutting:
+  description: Skills that operate across phases rather than within one phase.
+  skills:
+    - lifecycle-navigator         # reads governance.yaml; routes to the next required skill
+
 skills:
+
+  - name: repo-state-import
+    number: "00"
+    category: constructive
+    primary_phase: deploy
+    required_reviews:
+      - amazon-writing-linter
+    consumes_from: []                       # entry door; no prior suite artifacts
+    feeds_into:
+      - lifecycle-navigator                 # navigator reads the manifest this produces
+      - customer-interview-synthesis        # interviews[] populated here feeds discovery
+      - working-backwards-prfaq             # bet.prfaq_path tracked here
+      - mechanism-designer                  # live_mechanisms[] surfaced here
+      - tenets-review                       # tenets[] populated here
+      - ambitious-goal-grading              # period_goals[] populated here
+      - dissent-before-commit               # dissent_log[] populated here
+    enums_used: [assumption_tags, bet_status, bet_origin]
+    skill_md: skills/00-repo-state-import/SKILL.md
+    named_risk_informal: brownfield_laundering
 
   - name: working-backwards-prfaq
     number: "01"
@@ -313,6 +344,36 @@ skills:
       - tenets-review                     # wind_down resisted -> review_trigger: portfolio_review_kill_disputed
     enums_used: [portfolio_bet_recommendation, candidate_decision, allocation_change_severity, assumption_tags]
     skill_md: skills/13-portfolio-review/SKILL.md
+
+  - name: lifecycle-navigator
+    number: "14"
+    category: interrogative
+    primary_phase: cross_cutting
+    consumes_from:
+      - repo-state-import                   # reads the manifest this skill produces
+      - working-backwards-prfaq             # bet.prfaq_path drives state-machine positions
+      - mechanism-designer                  # live_mechanisms[] drives operate-phase positions
+      - weekly-business-review              # history[] cadence drives recommendation freshness
+      - customer-interview-synthesis        # interviews[] drives discovery-phase positions
+      - tenets-review                       # tenets[] freshness drives review-phase positions
+      - ambitious-goal-grading              # period_goals[].actual drives grading-phase positions
+      - dissent-before-commit               # dissent_log[] drives pre-execution-gate positions
+      - portfolio-review                    # not a producer for nav; navigator routes to it
+    feeds_into:                             # writes only to manifest.history[]; routes operator to:
+      - repo-state-import                   # on phase-laundering: route to upstream producer
+      - working-backwards-prfaq
+      - mechanism-designer
+      - weekly-business-review
+      - customer-interview-synthesis
+      - launch-readiness-review
+      - tenets-review
+      - ambitious-goal-grading
+      - dissent-before-commit
+      - portfolio-review
+      - correction-of-errors
+    enums_used: [routing_decision, handoff_status, prefer_superpowers, assumption_tags]
+    skill_md: skills/14-lifecycle-navigator/SKILL.md
+    named_failure_mode: phase_laundering
 
 # Enforced ordering rules:
 # The only ordering the suite hard-enforces is via `required_reviews` in
