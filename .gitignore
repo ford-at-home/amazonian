@@ -10,3 +10,16 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# This suite itself is not a "bet" — the suite's own governance.yaml would
+# be a demo artifact, not real state. Operators get their own manifest in
+# their target repo.
+/governance.yaml
+
+# Observability venv and runtime data.
+tools/observability/.venv/
+tools/observability/data/observability.db
+tools/observability/data/observability.db-shm
+tools/observability/data/observability.db-wal
+tools/observability/data/server.log
+tools/observability/data/server.pid

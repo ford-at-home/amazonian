@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amazonian Observability</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="title">
+      <span class="brand">amazonian</span>
+      <span class="subtitle">localhost observability</span>
+    </div>
+    <div class="status">
+      <span id="ws-status" class="ws-dot ws-down" title="WebSocket status"></span>
+      <span id="ws-label">connecting…</span>
+      <span class="sep">·</span>
+      <span id="manifest-path" class="muted">manifest: ?</span>
+      <span class="sep">·</span>
+      <span id="snapshot-count" class="muted">snapshots: 0</span>
+      <span class="sep">·</span>
+      <span id="event-count" class="muted">events: 0</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="timeline">Timeline</button>
+    <button class="tab" data-tab="topology">Topology</button>
+    <button class="tab" data-tab="manifest">Manifest</button>
+  </nav>
+
+  <main>
+    <section id="tab-timeline" class="tab-panel active">
+      <h2>Timeline</h2>
+      <p class="muted">
+        Chronological stream of snapshots and events. Newest first.
+        Updates live over WebSocket.
+      </p>
+      <ol id="timeline" class="timeline">
+        <li class="empty">No events yet. Edit governance.yaml or POST to /api/events to populate.</li>
+      </ol>
+    </section>
+
+    <section id="tab-topology" class="tab-panel">
+      <h2>Topology</h2>
+      <p class="muted">DAG view lands in B6.</p>
+    </section>
+
+    <section id="tab-manifest" class="tab-panel">
+      <h2>Manifest</h2>
+      <p class="muted">Pretty-printed manifest inspector lands in B6.</p>
+      <pre id="manifest-raw" class="manifest"><em>(no snapshot yet)</em></pre>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
