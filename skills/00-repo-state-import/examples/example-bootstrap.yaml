@@ -1,0 +1,121 @@
+# example-bootstrap.yaml
+#
+# Worked example: ChangeLens — a hypothetical product that exists in the
+# other suite examples (example-prfaq.md, example-wbr.md, example-coe.md).
+# This shows what governance.yaml looks like after 00-repo-state-import
+# runs on a brownfield repo that had been operating informally before
+# the suite was deployed.
+#
+# Note the evidence tags: tenets pulled from a written file are `fact`;
+# the time-to-status metric has a dashboard source so it is `fact`;
+# stated-but-undocumented mechanisms are `assumption`; a goal whose
+# "stated_difficulty" was never declared is `assumption` AND
+# stated_difficulty: unstated (itself a finding for 11-ambitious-goal-grading).
+
+schema_version: 1
+
+bet:
+  id: changelens
+  name: "ChangeLens — diff-aware customer status notifications"
+  status: active
+  prfaq_path: docs/prfaq.md
+  six_pager_paths: []
+  origin: brownfield
+  bootstrapped_at: "2026-05-21T20:30:00Z"
+  bootstrapped_by: w.prior
+
+tenets:
+  - id: tenet-1
+    statement: "Customers see the same status the operator sees, at the same time."
+    evidence: fact
+    source: docs/principles.md#tenet-1
+  - id: tenet-2
+    statement: "Status changes are evented, not polled — latency is a customer-experience metric."
+    evidence: fact
+    source: docs/principles.md#tenet-2
+  - id: tenet-3
+    statement: "We do not show partial status; either the operator has confirmed or the system says 'unknown'."
+    evidence: assumption                  # operator stated this in the interview; not yet written down
+    source: null
+
+success_metrics:
+  - id: time-to-status
+    name: "P95 customer-reported time-to-status"
+    target: 30
+    current: 47
+    unit: minutes
+    measurement_source: "https://metrics.example.com/dashboards/sla"
+    evidence: fact
+    metric_type: output_metric
+  - id: confirmation-throughput
+    name: "Operator confirmations per hour"
+    target: 60
+    current: 42
+    unit: confirmations_per_hour
+    measurement_source: "https://metrics.example.com/dashboards/ops"
+    evidence: fact
+    metric_type: input_metric
+
+live_mechanisms:
+  - id: wbr-monday
+    name: "Monday Weekly Business Review"
+    cadence: weekly
+    spec_path: null
+    inferred_from: "calendar invite; agenda lives in the meeting doc; no 04-mechanism-designer spec"
+    evidence: assumption
+  - id: incident-retro
+    name: "Per-incident retro"
+    cadence: per-incident
+    spec_path: docs/retro-template.md
+    inferred_from: null
+    evidence: fact
+
+period_goals:
+  - period_id: "2026-Q2"
+    goals:
+      - id: g1
+        statement: "Reduce P95 time-to-status from 47 minutes to 30 minutes"
+        target: 30
+        actual: 41
+        stated_difficulty: stretch
+        evidence: fact
+      - id: g2
+        statement: "Increase operator confirmation throughput to 60/hour"
+        target: 60
+        actual: 42
+        stated_difficulty: unstated            # operator could not recall how difficulty was framed
+        evidence: assumption
+
+prior_gradings: []                              # no prior period was graded under the suite
+
+dissent_log: []                                 # no recorded dissent history; marked open_question collectively
+                                                # (see history[] entry below)
+
+interviews:
+  - id: int-001
+    path: interviews/2026-03-12-acme-corp.md
+    interviewee_role: "VP of Operations"
+    conducted_at: "2026-03-12T15:00:00Z"
+    evidence_classification: behavioral
+  - id: int-002
+    path: interviews/2026-03-19-beta-logistics.md
+    interviewee_role: "Director of Customer Success"
+    conducted_at: "2026-03-19T14:00:00Z"
+    evidence_classification: mixed
+
+history:
+  - timestamp: "2026-05-21T20:30:00Z"
+    invoked_by: w.prior
+    state_snapshot_hash: "9c2f8a1"
+    recommended_skill: 14-lifecycle-navigator
+    rationale: "Bootstrap complete. Operator declined to populate dissent_log; recorded as open_question. Navigator should determine next step."
+    inputs_provided:
+      bootstrap_mode: partial
+      declined_groups: [dissent_log]
+    handoff_status: proposed
+    routing_decision: advance
+
+config:
+  prefer_superpowers: auto
+  amazonian_skill_scope: personal
+  manifest_path: null

@@ -1,0 +1,179 @@
+# interview-questions.yaml
+#
+# Structured questions the import skill walks the operator through, one
+# field group at a time. Each question names the manifest field it
+# populates, the evidence-tag resolution rule, and follow-up prompts.
+#
+# Order matters: the bet group must be populated first; later groups may
+# reference bet.id. Within each group, questions run sequentially.
+
+field_groups:
+
+  bet:
+    manifest_path: bet
+    order: 1
+    questions:
+      - id: bet-id
+        prompt: |
+          What kebab-case identifier should this bet have within this repo?
+          (e.g., "status-page-redesign", "support-tier-2-routing")
+        target: bet.id
+        validation: pattern '^[a-z0-9][a-z0-9-]*[a-z0-9]$'
+      - id: bet-name
+        prompt: |
+          What is the human-readable name of this bet?
+        target: bet.name
+        evidence: fact                # the operator naming it is the source
+      - id: bet-status
+        prompt: |
+          Is this bet currently active, paused, or being wound down?
+        target: bet.status
+        choices: [active, paused, wound_down]
+      - id: bet-prfaq-path
+        prompt: |
+          Does a PRFAQ-shaped document already exist for this bet?
+          If yes, provide the path (relative to repo root). If no, leave blank.
+        target: bet.prfaq_path
+        evidence_rule: if_path_resolves_then_fact_else_null
+
+  tenets:
+    manifest_path: tenets
+    order: 2
+    questions:
+      - id: tenets-source
+        prompt: |
+          Are stated product tenets written down anywhere for this bet?
+        choices: [yes_in_a_file, yes_but_only_implicit, no]
+        follow_up:
+          yes_in_a_file: tenets-from-file
+          yes_but_only_implicit: tenets-stated-now
+          no: tenets-skip
+      - id: tenets-from-file
+        prompt: |
+          Provide the path to the tenets file. The skill will read it and
+          present each candidate tenet for confirmation.
+        evidence: fact
+        source_required: true
+      - id: tenets-stated-now
+        prompt: |
+          State each tenet, one per message. The skill will tag each as
+          evidence: assumption (newly stated, never tested externally)
+          unless you can cite a source.
+        evidence: assumption
+      - id: tenets-skip
+        prompt: |
+          Record tenets field group as evidence: open_question.
+          The navigator will recommend authoring tenets before
+          10-tenets-review can run.
+        evidence: open_question
+
+  success_metrics:
+    manifest_path: success_metrics
+    order: 3
+    questions:
+      - id: metrics-list
+        prompt: |
+          What metrics does this bet measure to know it's working?
+          For each: name, unit, current value, target value, and where
+          (URL or path) the current value can be read.
+      - id: metric-type
+        prompt: |
+          For each metric, is it an input (leading indicator the team
+          controls) or an output (lagging indicator the customer
+          experiences)? See GLOSSARY.md#input-vs-output-metrics.
+        choices: [input_metric, output_metric]
+      - id: metric-source
+        prompt: |
+          For each metric, can the current value be read from a dashboard
+          or query? If yes, provide URL/path → evidence: fact.
+          If the operator quotes a number from memory → evidence: assumption.
+        evidence_rule: if_source_resolves_then_fact_else_assumption
+
+  live_mechanisms:
+    manifest_path: live_mechanisms
+    order: 4
+    questions:
+      - id: mechanisms-inventory
+        prompt: |
+          What recurring forums or processes exist for this bet?
+          Examples: weekly review, monthly business review, daily
+          standup, per-incident retro, quarterly tenet check.
+          For each: name, cadence, and whether a written spec exists.
+      - id: mechanism-spec-path
+        prompt: |
+          For each mechanism, is there a written spec (e.g., produced
+          by 04-mechanism-designer or similar)? If yes, provide path
+          → evidence: fact + source. If no but the mechanism runs, set
+          inferred_from: <how we know it exists> → evidence: assumption.
+
+  period_goals:
+    manifest_path: period_goals
+    order: 5
+    questions:
+      - id: current-period
+        prompt: |
+          What is the current goal-setting period? (e.g., "2026-Q2",
+          "2026-H1", "2026-W22"). If the bet does not run on periodic
+          goals, mark the group as open_question.
+      - id: goals-list
+        prompt: |
+          For the current period, list each goal: statement, target,
+          actual (if known), and stated difficulty
+          (committed | stretch | aspirational | unstated).
+          Stated difficulty is required for 11-ambitious-goal-grading
+          to operate honestly. "unstated" is a valid answer and is
+          itself a finding.
+        evidence_rule: if_documented_then_fact_else_assumption
+      - id: prior-gradings
+        prompt: |
+          Have prior periods been graded (by 11-ambitious-goal-grading
+          or any equivalent process)? If yes, list each {period_id,
+          graded_at, grading_path}.
+
+  interviews:
+    manifest_path: interviews
+    order: 6
+    questions:
+      - id: interview-inventory
+        prompt: |
+          List existing customer interview artifacts (transcripts,
+          structured notes, survey responses) with their path and
+          the interviewee's role.
+        evidence: fact
+        source_required: true
+      - id: interview-classification
+        prompt: |
+          For each interview, is the recorded evidence primarily
+          behavioral (what they did), attitudinal (what they said
+          they'd do), or mixed? See GLOSSARY.md#evidence-type.
+        choices: [behavioral, attitudinal, mixed]
+      - id: interview-conducted-at
+        prompt: |
+          For each interview, when was it conducted? Provide ISO-8601
+          timestamp; "approximate" is acceptable but flag the precision.
+
+  dissent_log:
+    manifest_path: dissent_log
+    order: 7
+    questions:
+      - id: dissent-inventory
+        prompt: |
+          Have past decisions on this bet carried recorded dissent
+          (objections raised by a named perspective and addressed,
+          accepted with tradeoff, or deferred)? If yes, list each
+          {against_action, raised_by, disposition, resolution_path}.
+          If no recorded history exists, mark the group as
+          open_question — do NOT invent a clean dissent history.
+        evidence_rule: if_documented_then_fact_else_open_question
+
+partial_mode_rules:
+  description: |
+    When mode == partial, the operator may decline any field group.
+    Declined groups are recorded as evidence: open_question at the
+    group level (not silently omitted). The navigator's phase-laundering
+    check then ensures recommendations against open_question groups
+    are routed to upstream_remediation, not advance.
+  declination_record:
+    location: history[]
+    handoff_status: declined
+    routing_decision: upstream_remediation
