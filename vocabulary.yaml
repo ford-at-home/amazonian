@@ -364,3 +364,100 @@ required_reviews:
   used_by:
     - SKILL_DESIGN_PATTERN.md
     - all authoring skills
+
+bet_status:
+  description: |
+    Lifecycle status of a bet recorded in governance.yaml. Distinct from
+    bet_recommendations (10-tenets-review's output) and portfolio_bet_recommendation
+    (13-portfolio-review's output) — those are recommendations; this is current state.
+  values:
+    - active                            # currently being invested in
+    - paused                            # temporarily not being invested in; not killed
+    - wound_down                        # permanently exited
+  used_by:
+    - governance.yaml
+    - 14-lifecycle-navigator
+
+bet_origin:
+  description: |
+    How the bet entered the suite. Determines whether brownfield-laundering
+    discipline applies to lifted manifest fields.
+  values:
+    - greenfield                        # bet authored from scratch under suite governance
+    - brownfield                        # bet pre-existed the suite; state lifted via 00-repo-state-import
+  used_by:
+    - governance.yaml
+    - 00-repo-state-import
+    - 14-lifecycle-navigator
+
+handoff_status:
+  description: |
+    Status of a navigator-initiated handoff recorded in governance.yaml.history[].
+    Captures whether the operator acted on the recommendation.
+  values:
+    - proposed                          # navigator recommended; operator has not yet acted
+    - executed                          # operator ran the recommended skill
+    - declined                          # operator explicitly chose not to run the recommended skill
+  used_by:
+    - 14-lifecycle-navigator
+    - governance.yaml
+
+routing_decision:
+  description: |
+    Type of routing the navigator emits. `upstream_remediation` is the
+    phase-laundering guard: when a downstream skill's required inputs are
+    `assumption`-tagged or missing, the navigator routes to the upstream
+    constructive skill that produces them, not the downstream interrogative
+    skill that would have stress-tested laundered state.
+  values:
+    - advance                           # all upstream gates pass; route to the next chain skill
+    - upstream_remediation              # upstream gap detected; route to the producing skill
+    - block                             # no coherent route; surface the state inconsistency
+  used_by:
+    - 14-lifecycle-navigator
+
+prefer_superpowers:
+  description: |
+    Manifest config controlling whether the navigator delegates question-driven
+    UX to superpowers:brainstorming or runs its native questioning loop. `auto`
+    attempts skill-presence detection at session start and falls back to the
+    native loop if detection is inconclusive.
+  values:
+    - auto                              # default; detect at session start
+    - "true"                            # always delegate (operator confirms superpowers is installed)
+    - "false"                           # always use native loop
+  used_by:
+    - 14-lifecycle-navigator
+    - governance.yaml
+
+phase_laundering:
+  description: |
+    Named failure mode that 14-lifecycle-navigator exists to catch.
+    Surface signal: navigator reports clean state and recommends an advanced-phase
+    skill. Structural failure: the upstream artifacts that skill assumes are
+    themselves evidence=assumption from bootstrap, or missing.
+    Second-axis check: trace recommended skill's required_artifacts to manifest
+    fields and verify evidence in {fact, inference}. Otherwise demote to
+    upstream_remediation toward the constructive producer of the missing field.
+  type: named_failure_mode
+  formal: true
+  used_by:
+    - 14-lifecycle-navigator
+    - GLOSSARY.md
+    - SKILL_DESIGN_PATTERN.md
+
+brownfield_laundering:
+  description: |
+    Informal named risk that 00-repo-state-import is designed to prevent.
+    Surface signal: manifest fully populated, schema valid, downstream skills
+    runnable. Structural failure: the populated state never passed any
+    governance gate; lifted assumptions are treated by downstream skills as if
+    they were the output of the constructive skills that should have produced them.
+    Mitigation: every manifest field carries an evidence tag; `fact` requires a
+    source; assumption-tagged fields propagate as constraints on downstream
+    routing in 14-lifecycle-navigator.
+  type: named_failure_mode
+  formal: false                         # informal — declared on a constructive skill, not catalogued in the formal cross-reference
+  used_by:
+    - 00-repo-state-import
+    - GLOSSARY.md
