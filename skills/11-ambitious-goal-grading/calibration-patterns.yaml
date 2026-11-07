@@ -1,0 +1,205 @@
+# calibration-patterns.yaml
+# Detection heuristics for sandbagging, overreach, goalpost-moving, and survival-bias
+# patterns in goal grading. Companion file to ambitious-goal-grading SKILL.md.
+#
+# Each pattern carries:
+#   - signal_in: where in the input or computed values to look
+#   - signal_keywords: language patterns that often accompany the failure mode (when present)
+#   - heuristic: the rule that flags it
+#   - risk: what goes wrong if the pattern is missed
+#   - calibration_assessment: which assessment this pattern should map to
+#
+# Rule: no calibration flag may be emitted without a cited signal. Pattern matching is
+# evidence, not accusation.
+
+patterns:
+
+  - id: sandbagging_laundering
+    name: Sandbagging laundering
+    signal_in:
+      - period_goals[].goal_setting_context == "stretch"
+      - period_goals[].attainment_score >= 1.0
+      - period_goals[].surprise_evidence absent or generic
+    signal_keywords:
+      - "ambitious but achievable"
+      - "ambitious enough to motivate, achievable enough to hit"
+      - "stretch goal"
+      - "aggressive target"   # often paired with 100% attainment
+      - "we always knew we could"
+      - "team was confident"
+    heuristic: |
+      Goal labeled "stretch" or "aggressive" hit at attainment_score >= 1.0
+      AND surprise_evidence is absent or contains generic phrases like
+      "team worked hard" / "executed well" / "delivered as planned".
+      A stretch goal hit on plan is not a stretch goal.
+    risk: |
+      The organization congratulates itself for hitting easy targets and
+      gets no signal about whether the bet is honestly being tested.
+    calibration_assessment: sandbagged
+
+  - id: goalpost_moving
+    name: Goalpost moving
+    signal_in:
+      - mid_period_target_changes is non-empty
+      - period_goals[].target shown matches mid_period_target_changes[].revised_target
+      - original target absent from the grading view
+    signal_keywords:
+      - "revised based on new data"
+      - "recalibrated mid-period"
+      - "scope adjusted"
+      - "in light of"
+    heuristic: |
+      A target was revised mid-period and the grading reports only the
+      revised target's attainment_score. The original target disappears.
+    risk: |
+      Every period the team revises down and hits the revised target,
+      attainment looks healthy, and no learning about goal-setting occurs.
+    calibration_assessment: goalpost_moving
+
+  - id: survival_bias
+    name: Survival bias in grading
+    signal_in:
+      - count(period_goals) < count(authorized goals for the period)
+      - abandoned_goals present without rationale
+      - excluded_with_rationale missing or vague
+    signal_keywords:
+      - "deprioritized"
+      - "no longer relevant"
+      - "decided not to pursue"   # mid-period, with no replacement metric
+    heuristic: |
+      Goals from the period are missing from the grading without being
+      either listed in abandoned_goals with a substantive reason or
+      named in excluded_with_rationale.
+    risk: |
+      Only winners get graded. The team's hit rate looks high while the
+      portfolio of goals tells a different story.
+    calibration_assessment: |
+      Survival bias is not itself a calibration assessment — it is a gate
+      failure that must be resolved before any calibration assessment can
+      be trusted. Reject the grading until completeness is restored.
+
+  - id: chronic_sandbagging
+    name: Chronic sandbagging
+    signal_in:
+      - prior_period_gradings present
+      - same goal flagged sandbagged across three or more consecutive periods
+    signal_keywords:
+      - "consistent overachievement"
+      - "reliably exceeds target"
+      - "track record of hitting"
+    heuristic: |
+      The same recurring goal has been flagged sandbagged across three or
+      more consecutive periods. The team is no longer setting honest
+      targets on this dimension.
+    risk: |
+      The thesis underneath this metric is no longer being tested. The
+      team has converted a falsification mechanism into a confirmation
+      mechanism.
+    calibration_assessment: |
+      Per-period: sandbagged. Pattern-level: chronic_sandbagging.
+      Triggers tenet_violation_candidate: true.
+
+  - id: chronic_overreach
+    name: Chronic overreach
+    signal_in:
+      - prior_period_gradings present
+      - same goal flagged overreach across three or more consecutive periods
+    signal_keywords:
+      - "too aspirational"
+      - "ahead of plan"   # ironic — usually paired with persistent misses
+      - "next period for sure"
+    heuristic: |
+      The same recurring goal has been flagged overreach across three or
+      more consecutive periods. The team is consistently planning beyond
+      what it can execute.
+    risk: |
+      Either capacity, the goal, or the underlying bet is mismatched to
+      reality. Continuing to set the same target is hope, not planning.
+    calibration_assessment: |
+      Per-period: overreach. Pattern-level: chronic_overreach.
+      Routes to six-page-narrative on team capacity OR tenets-review on
+      bet viability.
+
+  - id: execution_failure_as_overreach
+    name: Execution failure dressed as overreach
+    signal_in:
+      - period_goals[].attainment_score < 0.5
+      - correction-of-errors history shows execution incidents on this goal
+      - no rationale demonstrating the target was set at an unreachable level
+    signal_keywords:
+      - "we aimed too high"   # when the real cause was an outage, attrition, dependency, etc.
+      - "stretch was too far"
+      - "bit off more than we could chew"
+    heuristic: |
+      attainment_score < 0.5 and existing CoE history (or stop-the-line
+      incident records) shows execution disruption against this goal,
+      AND the rationale does not demonstrate the target was set at an
+      unreachable level.
+    risk: |
+      Goal calibration takes the blame for an execution incident. The
+      team rewrites the target downward and the underlying execution
+      issue is never addressed.
+    calibration_assessment: |
+      Not overreach. Route to correction-of-errors. Keep the original
+      target until the execution issue is resolved.
+
+  - id: abandoned_to_protect_hit_rate
+    name: Abandoned to protect hit rate
+    signal_in:
+      - abandoned_goals[].dropped_at is late in the period
+      - abandoned_goals[].reason is vague or absent
+      - abandoned_goals[] disproportionately tracks lagging or low-attainment goals
+    signal_keywords:
+      - "deprioritized for higher-value work"   # without naming the higher-value work
+      - "no longer aligned"
+      - "team capacity constraints"
+    heuristic: |
+      A goal was abandoned late in the period without a substantive
+      replacement (no new metric, no PRFAQ revision, no concrete
+      reallocation), and the abandoned goal was tracking toward a miss.
+    risk: |
+      Drop-to-protect-hit-rate becomes a habit. Goals stop being
+      commitments and become aspirations the team prunes when they go
+      sideways.
+    calibration_assessment: |
+      Mark abandoned_goals[].assessment = abandoned_to_protect_hit_rate.
+      Carries a follow-up obligation: the next period's PRFAQ revision
+      must address the dropped commitment.
+
+  - id: unstated_difficulty
+    name: Unstated difficulty intent
+    signal_in:
+      - period_goals[].goal_setting_context == "unstated"
+    signal_keywords: []   # this is a structural gap, not a language pattern
+    heuristic: |
+      The team did not state at authoring time whether a goal was
+      "committed", "stretch", or "aspirational". After the fact, the
+      goal's calibration cannot be assessed because the bar for
+      "hitting" it was never declared.
+    risk: |
+      Without stated intent, every outcome can be retroactively framed
+      as success. "We were stretching" if it missed; "we committed" if
+      it hit.
+    calibration_assessment: |
+      unknowable. Demand stated difficulty intent for next period before
+      any further calibration assessments are made on this goal.
+
+# Convention: 0.7 is honest attainment.
+# Attainment scores around 0.7 on stretch goals are the well-calibrated norm.
+# 1.0 is suspect until proven otherwise. Borrowed from OKR convention,
+# repurposed: the question is not "what did you hit" but "what did the
+# attainment teach you about your calibration".
+calibration_norm:
+  honest_attainment_score: 0.7
+  rationale: |
+    A stretch goal hit at 1.0 with no surprise is sandbagged.
+    A stretch goal hit at ~0.7 with cited honest plan is well_calibrated.
+    A stretch goal hit at < 0.3 with no execution incident is overreach.
+    The skill grades against this norm, not against a "did we hit it" bar.
+
+# No calibration flag without a cited signal.
+# Pattern matching is evidence, not accusation.
+emission_rule: |
+  Every flagged calibration_assessment must cite the specific input field
+  or computed value that triggered the pattern. A bare "sandbagged" with
+  no citation is decoration, not analysis.

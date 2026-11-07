@@ -1,0 +1,463 @@
+# vocabulary.yaml
+# Canonical enums and labels used across the skills suite.
+# When a skill references one of these, it links here instead of restating.
+# Human-readable companion: GLOSSARY.md
+
+assumption_tags:
+  description: |
+    Every empirical claim a skill emits should be tagged with one of these.
+    Untagged claims are confident fog.
+  values:
+    - fact            # verifiable, with a source
+    - assumption      # believed true, untested
+    - inference       # derived from facts already established
+    - open question   # listed in an explicit Open Questions section
+  used_by:
+    - all-skills
+    - SKILL_DESIGN_PATTERN.md
+
+variance_classifications:
+  description: |
+    Every negative variance in a Weekly Business Review must map to exactly one.
+  values:
+    - known cause
+    - hypothesis
+    - unknown
+    - no action needed because…
+    - action item created
+  notes:
+    - "'unknown' is acceptable for one week. Two weeks of 'unknown' on the same metric is a process failure and should trigger correction-of-errors on the inspection mechanism itself."
+  used_by:
+    - 05-weekly-business-review
+
+metric_types:
+  description: |
+    Metrics in this suite are classified by what they measure.
+  values:
+    input_metric:
+      definition: leading indicator the team controls
+      example: number of customer interviews completed this week
+    output_metric:
+      definition: lagging indicator the customer experiences
+      example: customer-reported time-to-status
+  used_by:
+    - 04-mechanism-designer
+    - 05-weekly-business-review
+
+decision_recommendations:
+  description: |
+    Terminal recommendation emitted by an authoring skill (PRFAQ, six-pager).
+  values:
+    - proceed
+    - proceed_with_changes
+    - do_not_proceed
+    - needs_more_info
+  used_by:
+    - 01-working-backwards-prfaq
+    - 03-six-page-narrative
+
+principle_scores:
+  description: |
+    How each leadership principle is scored against a proposal under review.
+  values:
+    - strong          # cited evidence in the proposal
+    - weak            # mentioned without evidence, or evidence runs counter
+    - silent          # the proposal does not address this principle
+    - contradictory   # the proposal invokes this principle to skip another
+  used_by:
+    - 07-leadership-principles-reviewer
+
+severity_and_likelihood:
+  description: |
+    Risk severity and likelihood scales used by PRFAQ, six-page-narrative,
+    and any skill that emits or evaluates a risk register. Named tiers with
+    concrete anchors; numeric grids were rejected as risk-management theater
+    that obscures evidence.
+  severity:
+    description: consequence if the risk materializes
+    values:
+      catastrophic:
+        anchor: customer churn at scale, regulatory action, public incident, data loss
+      high:
+        anchor: significant rework, missed quarter commitment, named-customer escalation, contract violation
+      medium:
+        anchor: internal rework, slipped commitment within a team, recoverable operational pain
+      low:
+        anchor: documented, monitored, no immediate action; would be a footnote
+  likelihood:
+    description: probability the risk materializes in the review window
+    values:
+      likely:
+        anchor: historical base rate or current signal indicates this will happen
+      possible:
+        anchor: plausible based on adjacent evidence or named assumption
+      unlikely:
+        anchor: would require multiple unanticipated conditions to align
+      speculative:
+        anchor: no current evidence; included for completeness or stress-testing
+  notes:
+    - "Triage rules (e.g., catastrophic regardless of likelihood must have a mitigation) belong in the skills that use the scale, not in the scale itself."
+    - "A `proceed` recommendation paired with any catastrophic+likely or catastrophic+possible risk lacking a documented mitigation is incoherent; reviewers should fail it."
+  used_by:
+    - 01-working-backwards-prfaq
+    - 03-six-page-narrative
+    - 09-launch-readiness-review        # risk_register_delta carries forward these labels
+
+evidence_type:
+  description: |
+    Customer evidence is classified by what kind of signal it provides.
+    Attitudinal evidence predicts behavior at roughly 40-60% accuracy.
+    PRFAQ-grade conclusions require behavioral corroboration.
+  values:
+    behavioral:
+      definition: what respondents did, observable
+      example: switched tools, paid for a workaround, opened a GitHub issue, churned
+    attitudinal:
+      definition: what respondents said they would do, self-reported
+      example: stated preference, hypothetical willingness to pay, opinion in an interview
+  used_by:
+    - 08-customer-interview-synthesis
+
+interview_artifact_type:
+  description: |
+    Source type for customer-interview-synthesis inputs. Transcripts and notes are
+    not interchangeable; notes carry the interviewer's selection bias.
+  values:
+    transcript:
+      definition: verbatim record of what was said
+      weight: high
+    structured_notes:
+      definition: interviewer's filtered record
+      weight: low
+    survey_response:
+      definition: structured survey data
+      weight: medium
+  used_by:
+    - 08-customer-interview-synthesis
+
+gate_decisions:
+  description: |
+    Gate decision emitted by launch-readiness-review.
+  values:
+    - go                       # all checks pass; launch
+    - no_go                    # blocking drift, gaps, or risks; do not launch
+    - conditional_go           # launch with named conditions, each with owner + gate_date
+    - defer                    # work not done; ask again in N days
+  notes:
+    - "'conditional_go' has historically rotted into soft 'go'. Conditions must themselves be gated; a condition that says 'we'll fix this post-launch' makes the decision 'go-with-risk', not 'conditional_go'."
+    - "'defer' is distinct from 'no_go': defer says 'not yet, ask later'; no_go says 'this should not ship as built'."
+  used_by:
+    - 09-launch-readiness-review
+
+prfaq_drift_severity:
+  description: |
+    How significant a drift between PRFAQ promise and current build state is.
+  values:
+    - blocking                 # commitment not met; cannot ship
+    - significant              # measurably different from promised; must be acknowledged in launch narrative
+    - acceptable               # within tolerance; documented but does not block
+  used_by:
+    - 09-launch-readiness-review
+
+risk_status:
+  description: |
+    How a risk from the PRFAQ risk register has evolved by launch time.
+  values:
+    - mitigated                # the documented mitigation worked
+    - open                     # the risk still exists; mitigation unproven
+    - materialized             # the risk happened during build; document the outcome
+  used_by:
+    - 09-launch-readiness-review
+
+tenet_status:
+  description: |
+    Validity of a product tenet at review time.
+  values:
+    - valid                    # external evidence still supports it
+    - invalid                  # external evidence contradicts it; thesis broken
+    - unknown                  # insufficient evidence to judge
+  notes:
+    - "A tenet status check must cite external context (market shifts, competitor moves, regulatory changes), not just metrics. See the 'metric satisficing' failure mode in tenets-review."
+  used_by:
+    - 10-tenets-review
+
+bet_recommendations:
+  description: |
+    Recommendation emitted by tenets-review.
+  values:
+    - continue                 # all tenets valid (or unknown with active monitoring); keep investing
+    - kill                     # one or more tenets invalid; stop investing
+    - pivot                    # tenets need restatement; thesis has evolved
+    - escalate                 # decision is above this review's pay grade
+  notes:
+    - "'continue' requires no tenet to be 'invalid'. A single invalid tenet forces kill/pivot/escalate."
+  used_by:
+    - 10-tenets-review
+
+calibration_assessment:
+  description: |
+    Per-goal calibration assessment emitted by ambitious-goal-grading. Distinct
+    from outcome quality (tenets-review) and execution quality (correction-of-errors).
+    The question is whether the target was set at the right difficulty level,
+    regardless of whether it was hit.
+  values:
+    sandbagged:                # hit at attainment_score >= 1.0 with no surprise evidence
+      definition: target was set deliberately or implicitly below honest capacity
+    well_calibrated:           # attainment_score in [0.3, 1.0] with honest plan or surprise evidence
+      definition: target was set at a level that taught the team something
+    overreach:                 # attainment_score < 0.5 with no honest plan; not an execution failure
+      definition: target was set beyond any plan that could have hit it
+    unknowable:                # goal_setting_context == "unstated"
+      definition: difficulty intent was never declared; calibration cannot be assessed
+    goalpost_moving:           # mid_period_target_changes present and not disclosed
+      definition: target moved mid-period and grading reported only the revised target
+  used_by:
+    - 11-ambitious-goal-grading
+
+attainment_score:
+  description: |
+    Continuous score (0.0–1.5) representing what fraction of a target was achieved.
+    0.7 is the honest-calibration norm, borrowed from OKR convention. 1.0 is
+    suspect until paired with surprise_evidence. Over-attainment past 1.5 is itself
+    a calibration signal, not a credential.
+  format: continuous_0_to_1_5
+  notes:
+    - "Numeric goals: actual / target, clamped to [0.0, 1.5]."
+    - "Qualitative goals: rubric {met, partially_met, not_met} maps to {1.0, 0.5, 0.0} for pattern math."
+  used_by:
+    - 11-ambitious-goal-grading
+
+pattern_assessment:
+  description: |
+    Cross-period calibration pattern emitted by ambitious-goal-grading when
+    prior_period_gradings are supplied. Threshold is three consecutive periods
+    of the same per-period assessment on the same recurring goal.
+  values:
+    - chronic_sandbagging         # triggers tenet_violation_candidate
+    - chronic_overreach           # routes to six-page-narrative on capacity or tenets-review
+    - well_calibrated             # baseline state
+    - mixed                       # no clean pattern across periods
+    - insufficient_data           # prior_period_gradings absent
+  used_by:
+    - 11-ambitious-goal-grading
+
+goal_setting_context:
+  description: |
+    The team's stated difficulty intent for a goal at authoring time. Required
+    for honest calibration assessment after the fact; without it, every outcome
+    can be retroactively framed as success.
+  values:
+    - committed                   # the team intended to hit this
+    - stretch                     # the team intended to push for this, ~0.7 attainment honest
+    - aspirational                # the team intended this as a direction marker, not a target
+    - unstated                    # no intent declared; itself a finding
+  used_by:
+    - 11-ambitious-goal-grading
+
+dissent_recommendation:
+  description: |
+    Recommendation emitted by dissent-before-commit. Distinct from
+    decision_recommendations (used by authoring skills at authoring time) and
+    gate_decisions (used by launch-readiness-review). Operates at execution
+    time on a specific action about to fire.
+  values:
+    - proceed                  # strongest dissent addressed or accepted with named tradeoff
+    - proceed_with_changes     # named changes required before the action fires
+    - pause                    # action does not fire; trigger conditions must resolve
+    - escalate                 # decision is above this review's pay grade
+  notes:
+    - "'proceed' on a one-way door requires addressed_in_action: true. Accepted tradeoff is insufficient for irreversible actions."
+  used_by:
+    - 12-dissent-before-commit
+
+reversibility:
+  description: |
+    Reversibility classification for an action about to execute. Borrows Bezos's
+    one-way / two-way door framing. The classification controls how strict the
+    dissent gate is.
+  values:
+    one_way_door:
+      definition: action is not reversible without significant cost; once executed, the team owns the outcome
+      examples: production data migration with no rollback path, public announcement, hire/fire, deprecation cut-over
+      gate: dissent must be addressed in the action; accepted tradeoff is insufficient
+    two_way_door:
+      definition: action is reversible at modest cost within a reasonable timeframe
+      examples: feature flag rollout, internal UI change, batch job schedule change
+      gate: addressed OR accepted-with-named-tradeoff is sufficient
+    partial_reversal:
+      definition: action is reversible but with material cost or partial-recovery only
+      examples: schema change with backfill cost, multi-tenant config change with per-tenant unwind
+      gate: addressed in action preferred; accepted tradeoff requires explicit owner of the reversal cost
+  used_by:
+    - 12-dissent-before-commit
+
+dissent_perspective:
+  description: |
+    Functional perspective whose stake makes its dissent load-bearing.
+    dissent-before-commit demands a named perspective for each dissent item;
+    "the team" or "people" is insufficient.
+  values:
+    - engineering
+    - operations
+    - support
+    - customer_facing       # account managers, sales engineering, customer success
+    - security
+    - finance
+    - compliance
+    - other                 # used when domain-specific perspectives apply (e.g., legal, PR, HR)
+  notes:
+    - "See skills/12-dissent-before-commit/dissent-perspectives.yaml for typical stakes and dissent patterns per perspective."
+    - "Selection is by stake, not by checklist. Canvassing all seven perspectives on every action is itself a rubber-stamp pattern."
+  used_by:
+    - 12-dissent-before-commit
+
+portfolio_bet_recommendation:
+  description: |
+    Per-bet recommendation emitted by portfolio-review. Distinct from
+    bet_recommendations (which is tenets-review's per-bet thesis-validity
+    output); portfolio_bet_recommendation is a cross-bet allocation decision
+    informed by tenets-review but not equivalent to it.
+  values:
+    - continue                 # allocation stays as-is; survived zero-based check
+    - wind_down                # bet is killed or de-prioritized over the next period
+    - amplify                  # allocation grows; cited triggering evidence required
+    - hold                     # allocation stays as-is pending a near-term decision; carries an explicit decision_due date
+    - pivot                    # bet continues with revised hypothesis; triggers a new PRFAQ
+  notes:
+    - "'continue' requires the same evidentiary burden as 'wind_down' or 'amplify'; status-quo defense is not free."
+    - "'hold' is distinct from 'continue': hold names a forthcoming decision; continue is a current decision."
+  used_by:
+    - 13-portfolio-review
+
+candidate_decision:
+  description: |
+    Per-candidate-alternative decision emitted by portfolio-review for each item
+    in the candidate_alternatives backlog.
+  values:
+    - fund                     # candidate moves into the active portfolio; requires named opportunity_cost_against
+    - continue_to_park         # candidate stays in the backlog; permitted only if zero-based authoring would not include it and it has not aged out
+    - reject                   # candidate is removed from the backlog; rationale required
+  notes:
+    - "Candidates parked across multiple consecutive reviews trigger the 'quiet candidate parking' drift pattern; the skill must escalate."
+  used_by:
+    - 13-portfolio-review
+
+allocation_change_severity:
+  description: |
+    Severity of drift detected between actual portfolio and zero-based hypothetical.
+  values:
+    - blocking                 # zero-based check fails materially; portfolio must change this period
+    - significant              # drift is named and acknowledged; reallocation deferred to next period requires justification
+    - acceptable               # drift is within tolerance; documented but does not force change
+  used_by:
+    - 13-portfolio-review
+
+required_reviews:
+  description: |
+    Convention: authoring skills declare a `required_reviews` field in their
+    frontmatter listing reviewer skills that must run before the artifact is
+    considered complete. Reviewer skills do not declare this field.
+  rationale: |
+    Reviewer cadence is the suite's leverage. An optional reviewer becomes
+    decorative. Codifying required reviews per authoring skill converts the soft
+    promise "if a reviewer is available, hand it the prose" into a contract.
+  used_by:
+    - SKILL_DESIGN_PATTERN.md
+    - all authoring skills
+
+bet_status:
+  description: |
+    Lifecycle status of a bet recorded in governance.yaml. Distinct from
+    bet_recommendations (10-tenets-review's output) and portfolio_bet_recommendation
+    (13-portfolio-review's output) — those are recommendations; this is current state.
+  values:
+    - active                            # currently being invested in
+    - paused                            # temporarily not being invested in; not killed
+    - wound_down                        # permanently exited
+  used_by:
+    - governance.yaml
+    - 14-lifecycle-navigator
+
+bet_origin:
+  description: |
+    How the bet entered the suite. Determines whether brownfield-laundering
+    discipline applies to lifted manifest fields.
+  values:
+    - greenfield                        # bet authored from scratch under suite governance
+    - brownfield                        # bet pre-existed the suite; state lifted via 00-repo-state-import
+  used_by:
+    - governance.yaml
+    - 00-repo-state-import
+    - 14-lifecycle-navigator
+
+handoff_status:
+  description: |
+    Status of a navigator-initiated handoff recorded in governance.yaml.history[].
+    Captures whether the operator acted on the recommendation.
+  values:
+    - proposed                          # navigator recommended; operator has not yet acted
+    - executed                          # operator ran the recommended skill
+    - declined                          # operator explicitly chose not to run the recommended skill
+  used_by:
+    - 14-lifecycle-navigator
+    - governance.yaml
+
+routing_decision:
+  description: |
+    Type of routing the navigator emits. `upstream_remediation` is the
+    phase-laundering guard: when a downstream skill's required inputs are
+    `assumption`-tagged or missing, the navigator routes to the upstream
+    constructive skill that produces them, not the downstream interrogative
+    skill that would have stress-tested laundered state.
+  values:
+    - advance                           # all upstream gates pass; route to the next chain skill
+    - upstream_remediation              # upstream gap detected; route to the producing skill
+    - block                             # no coherent route; surface the state inconsistency
+  used_by:
+    - 14-lifecycle-navigator
+
+prefer_superpowers:
+  description: |
+    Manifest config controlling whether the navigator delegates question-driven
+    UX to superpowers:brainstorming or runs its native questioning loop. `auto`
+    attempts skill-presence detection at session start and falls back to the
+    native loop if detection is inconclusive.
+  values:
+    - auto                              # default; detect at session start
+    - "true"                            # always delegate (operator confirms superpowers is installed)
+    - "false"                           # always use native loop
+  used_by:
+    - 14-lifecycle-navigator
+    - governance.yaml
+
+phase_laundering:
+  description: |
+    Named failure mode that 14-lifecycle-navigator exists to catch.
+    Surface signal: navigator reports clean state and recommends an advanced-phase
+    skill. Structural failure: the upstream artifacts that skill assumes are
+    themselves evidence=assumption from bootstrap, or missing.
+    Second-axis check: trace recommended skill's required_artifacts to manifest
+    fields and verify evidence in {fact, inference}. Otherwise demote to
+    upstream_remediation toward the constructive producer of the missing field.
+  type: named_failure_mode
+  formal: true
+  used_by:
+    - 14-lifecycle-navigator
+    - GLOSSARY.md
+    - SKILL_DESIGN_PATTERN.md
+
+brownfield_laundering:
+  description: |
+    Informal named risk that 00-repo-state-import is designed to prevent.
+    Surface signal: manifest fully populated, schema valid, downstream skills
+    runnable. Structural failure: the populated state never passed any
+    governance gate; lifted assumptions are treated by downstream skills as if
+    they were the output of the constructive skills that should have produced them.
+    Mitigation: every manifest field carries an evidence tag; `fact` requires a
+    source; assumption-tagged fields propagate as constraints on downstream
+    routing in 14-lifecycle-navigator.
+  type: named_failure_mode
+  formal: false                         # informal — declared on a constructive skill, not catalogued in the formal cross-reference
+  used_by:
+    - 00-repo-state-import
+    - GLOSSARY.md

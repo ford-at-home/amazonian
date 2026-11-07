@@ -1,0 +1,8 @@
+.venv/
+data/observability.db
+data/observability.db-shm
+data/observability.db-wal
+data/server.log
+data/server.pid
+__pycache__/
+*.pyc

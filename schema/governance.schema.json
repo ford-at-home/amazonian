@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/ford-at-home/amazonian/schema/governance.schema.json",
+  "title": "Amazonian Governance Manifest",
+  "description": "Single source of truth for a bet's governance state. Read by 14-lifecycle-navigator; produced/maintained by 00-repo-state-import and downstream skills. Schema v1.",
+  "type": "object",
+  "required": ["schema_version", "bet", "config"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version. v1 is the initial release; bumping requires an RFC."
+    },
+    "bet": {
+      "type": "object",
+      "required": ["id", "name", "status", "origin"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+          "description": "kebab-case identifier, unique within the repo"
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["active", "paused", "wound_down"] },
+        "prfaq_path": { "type": ["string", "null"] },
+        "six_pager_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "origin": { "enum": ["greenfield", "brownfield"] },
+        "bootstrapped_at": { "type": ["string", "null"], "format": "date-time" },
+        "bootstrapped_by": { "type": ["string", "null"] }
+      }
+    },
+    "tenets": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "statement": { "type": "string", "minLength": 1 },
+          "evidence": { "$ref": "#/definitions/evidence_tag" },
+          "source": { "type": ["string", "null"] }
+        },
+        "allOf": [{ "$ref": "#/definitions/fact_requires_source" }]
+      }
+    },
+    "success_metrics": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "unit", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "minLength": 1 },
+          "target": { "type": ["number", "string", "null"] },
+          "current": { "type": ["number", "string", "null"] },
+          "unit": { "type": "string" },
+          "measurement_source": { "type": ["string", "null"] },
+          "evidence": { "$ref": "#/definitions/evidence_tag" },
+          "metric_type": { "enum": ["input_metric", "output_metric"] }
+        }
+      }
+    },
+    "live_mechanisms": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "cadence", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "minLength": 1 },
+          "cadence": { "type": "string" },
+          "spec_path": { "type": ["string", "null"] },
+          "inferred_from": { "type": ["string", "null"] },
+          "evidence": { "$ref": "#/definitions/evidence_tag" }
+        }
+      }
+    },
+    "period_goals": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["period_id", "goals"],
+        "additionalProperties": false,
+        "properties": {
+          "period_id": { "type": "string" },
+          "goals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "statement", "target", "stated_difficulty", "evidence"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string" },
+                "statement": { "type": "string", "minLength": 1 },
+                "target": { "type": ["number", "string"] },
+                "actual": { "type": ["number", "string", "null"] },
+                "stated_difficulty": {
+                  "enum": ["committed", "stretch", "aspirational", "unstated"]
+                },
+                "evidence": { "$ref": "#/definitions/evidence_tag" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "prior_gradings": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["period_id", "graded_at", "grading_path"],
+        "additionalProperties": false,
+        "properties": {
+          "period_id": { "type": "string" },
+          "graded_at": { "type": "string", "format": "date-time" },
+          "grading_path": { "type": "string" }
+        }
+      }
+    },
+    "dissent_log": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["id", "raised_at", "against_action", "raised_by", "disposition"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "raised_at": { "type": "string", "format": "date-time" },
+          "against_action": { "type": "string", "minLength": 1 },
+          "raised_by": { "type": "string" },
+          "disposition": {
+            "enum": ["addressed", "accepted_with_tradeoff", "deferred", "pending"]
+          },
+          "resolution_path": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "interviews": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "interviewee_role", "conducted_at", "evidence_classification"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "path": { "type": "string" },
+          "interviewee_role": { "type": "string" },
+          "conducted_at": { "type": "string", "format": "date-time" },
+          "evidence_classification": { "enum": ["behavioral", "attitudinal", "mixed"] }
+        }
+      }
+    },
+    "history": {
+      "type": "array",
+      "default": [],
+      "description": "Append-only log written by 14-lifecycle-navigator. Each entry is one routing decision.",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "invoked_by", "recommended_skill", "rationale", "handoff_status"],
+        "additionalProperties": false,
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "invoked_by": { "type": "string" },
+          "state_snapshot_hash": { "type": ["string", "null"] },
+          "recommended_skill": { "type": "string" },
+          "rationale": { "type": "string" },
+          "inputs_provided": { "type": "object", "additionalProperties": true },
+          "handoff_status": { "enum": ["proposed", "executed", "declined"] },
+          "routing_decision": { "enum": ["advance", "upstream_remediation", "block"] }
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "required": ["prefer_superpowers", "amazonian_skill_scope"],
+      "additionalProperties": false,
+      "properties": {
+        "prefer_superpowers": { "enum": ["auto", "true", "false"] },
+        "amazonian_skill_scope": { "enum": ["project", "personal"] },
+        "manifest_path": { "type": ["string", "null"] }
+      }
+    }
+  },
+  "definitions": {
+    "evidence_tag": {
+      "enum": ["fact", "assumption", "inference", "open_question"],
+      "description": "Aligned with assumption_tags in vocabulary.yaml. Every claim-bearing field declares one."
+    },
+    "fact_requires_source": {
+      "if": { "properties": { "evidence": { "const": "fact" } } },
+      "then": { "required": ["source"], "properties": { "source": { "type": "string", "minLength": 1 } } }
+    }
+  }
+}

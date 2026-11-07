@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amazonian Observability</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="title">
+      <span class="brand">amazonian</span>
+      <span class="subtitle">localhost observability</span>
+    </div>
+    <div class="status">
+      <span id="ws-status" class="ws-dot ws-down" title="WebSocket status"></span>
+      <span id="ws-label">connecting…</span>
+      <span class="sep">·</span>
+      <span id="manifest-path" class="muted">manifest: ?</span>
+      <span class="sep">·</span>
+      <span id="snapshot-count" class="muted">snapshots: 0</span>
+      <span class="sep">·</span>
+      <span id="event-count" class="muted">events: 0</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="timeline">Timeline</button>
+    <button class="tab" data-tab="topology">Topology</button>
+    <button class="tab" data-tab="manifest">Manifest</button>
+  </nav>
+
+  <main>
+    <section id="tab-timeline" class="tab-panel active">
+      <h2>Timeline</h2>
+      <p class="muted">
+        Chronological stream of snapshots and events. Newest first.
+        Updates live over WebSocket.
+      </p>
+      <ol id="timeline" class="timeline">
+        <li class="empty">No events yet. Edit governance.yaml or POST to /api/events to populate.</li>
+      </ol>
+    </section>
+
+    <section id="tab-topology" class="tab-panel">
+      <h2>Topology</h2>
+      <p class="muted">
+        Skill DAG from <code>lifecycle.yaml</code>. Columns are lifecycle phases;
+        nodes are skills (border style = category); edges are
+        <code>feeds_into</code> / <code>consumes_from</code> declarations.
+        Hover a node to highlight its edges.
+      </p>
+      <div class="topo-legend">
+        <span class="legend-item"><span class="legend-swatch legend-constructive"></span> constructive</span>
+        <span class="legend-item"><span class="legend-swatch legend-interrogative"></span> interrogative</span>
+        <span class="legend-item legend-spacer"></span>
+        <span id="topo-stats" class="muted">loading…</span>
+      </div>
+      <div id="topo-container" class="topo-container">
+        <svg id="topo-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <p class="muted small">
+        Self-loops are hidden in this view; they appear in <code>/api/topology</code>'s JSON.
+      </p>
+    </section>
+
+    <section id="tab-manifest" class="tab-panel">
+      <h2>Manifest</h2>
+      <p class="muted">
+        Current snapshot from <code id="manifest-snapshot-path">(none)</code>.
+        Fields with an <code>evidence:</code> tag get a colored border;
+        the tag itself appears as a badge. Updates live with the manifest file.
+      </p>
+      <div id="manifest-tree" class="manifest-tree">
+        <em>(no snapshot yet)</em>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

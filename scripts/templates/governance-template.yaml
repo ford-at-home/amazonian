@@ -1,0 +1,85 @@
+# governance.yaml — Amazonian Governance Manifest
+#
+# Single source of truth for this bet's governance state. Read by skill
+# 14-lifecycle-navigator on each session start. Populated by skill
+# 00-repo-state-import on first deploy.
+#
+# Every claim-bearing field carries an `evidence:` tag from
+# {fact, assumption, inference, open_question}. `evidence: fact` requires
+# a non-null `source`. Untagged claims are confident fog; the import skill
+# refuses to emit them. See SKILL_DESIGN_PATTERN.md#assumption-tagging.
+
+schema_version: 1
+
+bet:
+  id: ""                                # kebab-case; unique within the repo
+  name: ""                              # human-readable
+  status: active                        # active | paused | wound_down
+  prfaq_path: null                      # path to PRFAQ artifact, or null if none yet
+  six_pager_paths: []                   # list of six-pager artifact paths
+  origin: brownfield                    # greenfield | brownfield; install.sh sets brownfield by default
+  bootstrapped_at: null                 # ISO-8601 timestamp set by 00-repo-state-import
+  bootstrapped_by: null                 # operator handle set by 00-repo-state-import
+
+tenets: []
+  # Example shape:
+  # - id: tenet-customer-first
+  #   statement: "We will not ship a feature that increases short-term revenue at the cost of long-term customer trust."
+  #   evidence: fact                    # fact | assumption | inference | open_question
+  #   source: "docs/principles.md"      # required when evidence == fact
+
+success_metrics: []
+  # - id: time-to-status
+  #   name: "Customer-reported time to status"
+  #   target: 30
+  #   current: 47
+  #   unit: minutes
+  #   measurement_source: "https://metrics.example.com/dashboards/sla"
+  #   evidence: fact
+  #   metric_type: output_metric
+
+live_mechanisms: []
+  # - id: wbr-monday
+  #   name: "Monday WBR"
+  #   cadence: weekly
+  #   spec_path: null
+  #   inferred_from: "calendar invite; no written spec"
+  #   evidence: assumption
+
+period_goals: []
+  # - period_id: "2026-Q2"
+  #   goals:
+  #     - id: g1
+  #       statement: "Reduce p95 time-to-status to 30 minutes"
+  #       target: 30
+  #       actual: null
+  #       stated_difficulty: stretch
+  #       evidence: fact
+
+prior_gradings: []
+  # - period_id: "2026-Q1"
+  #   graded_at: "2026-04-01T00:00:00Z"
+  #   grading_path: "governance/gradings/2026-Q1.md"
+
+dissent_log: []
+  # - id: dissent-1
+  #   raised_at: "2026-04-15T14:00:00Z"
+  #   against_action: "Sunset the legacy import endpoint"
+  #   raised_by: "support"
+  #   disposition: addressed
+  #   resolution_path: "docs/dissent/2026-04-15-import-sunset.md"
+
+interviews: []
+  # - id: int-001
+  #   path: "interviews/2026-03-12-acme-corp.md"
+  #   interviewee_role: "VP of Operations"
+  #   conducted_at: "2026-03-12T15:00:00Z"
+  #   evidence_classification: behavioral
+
+history: []
+  # Appended by 14-lifecycle-navigator on each invocation. Do not edit by hand.
+
+config:
+  prefer_superpowers: auto              # auto | "true" | "false"
+  amazonian_skill_scope: personal       # project | personal
+  manifest_path: null                   # null = repo root

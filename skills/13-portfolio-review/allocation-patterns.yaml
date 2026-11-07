@@ -1,0 +1,160 @@
+# Allocation-drift patterns
+#
+# Patterns of cross-bet allocation drift that `portfolio-review` must surface.
+# Each pattern names a recognizable shape, the surface signal that hides it,
+# the evidence that confirms it, and the recommended action.
+#
+# These are NOT the failure modes of the skill itself (those live in
+# SKILL.md). These are the failure modes of the portfolio under review.
+#
+# Patterns are cited in `drift_detected[].pattern` and `bet_recommendations[].rationale`.
+
+version: 1
+
+patterns:
+  halo_allocation:
+    description: |
+      A flagship bet's success is used to justify continued investment in
+      adjacent bets that haven't earned independent justification. The halo
+      from the flagship launders the rest of the portfolio.
+    surface_signal: |
+      "Bets X, Y, Z are part of our [flagship] family / strategic theme."
+      Per-bet evidence for X, Y, Z is thin; flagship evidence is strong.
+    confirming_evidence:
+      - "One bet in the cluster has strong `latest_tenets_review` evidence and others have weak or stale evidence"
+      - "`triggering_evidence` for the halo'd bets cites the flagship rather than the bet's own metrics"
+      - "The halo'd bets have higher allocation than their independent zero-based ranking would justify"
+    second_axis_check: |
+      Run the zero-based hypothetical strictly per-bet. The flagship survives;
+      do the others?
+    recommended_action: |
+      Wind down or sharply de-allocate the halo'd bets unless each survives an
+      independent zero-based check. Surface the halo pattern in `drift_detected`.
+
+  sunk_cost_drift:
+    description: |
+      A bet continues not because the forward-looking case is strong but
+      because the team has accumulated investment (years, dollars, headcount,
+      narrative). The argument for continuing is retrospective, not prospective.
+    surface_signal: |
+      `cumulative_allocation` is high, `age_in_periods` is high, and the
+      rationale for continuing references prior investment ("we've put N years
+      into this") rather than forward-looking expected return.
+    confirming_evidence:
+      - "`latest_tenets_review` is borderline or expired"
+      - "`cumulative_wbr_variance` is negative or flat across multiple periods"
+      - "`triggering_evidence` cites sunk capacity rather than the bet's expected return"
+    second_axis_check: |
+      Strip the cumulative_allocation history. If this bet were proposed today
+      as a candidate alternative with only its forward-looking expected_return,
+      would it be funded?
+    recommended_action: |
+      Wind down or pivot. Sunk cost is not a valid triggering_evidence per
+      this skill's hard rules.
+
+  diversification_theater:
+    description: |
+      Capacity is spread across many small bets, none of which has enough
+      allocation to validate or fail cleanly. The team calls this "portfolio
+      diversification" but the bets are actually starved.
+    surface_signal: |
+      Many bets each with small `period_allocation`; none with enough capacity
+      to reach a validation milestone within a small number of review periods.
+    confirming_evidence:
+      - "Multiple bets have `period_allocation` below the threshold for meaningful progress in `review_period`"
+      - "Multiple bets have `age_in_periods > 4` with no clear validation gate"
+      - "The cumulative cost of the small bets is meaningful even though individual costs feel trivial"
+    second_axis_check: |
+      For each starved bet, ask: what would it cost to actually validate this
+      bet in one review period? If the team cannot afford to do that for any of
+      them, the portfolio is too wide.
+    recommended_action: |
+      Concentrate. Pick a smaller set of bets and fund them to a level where
+      they can actually validate or fail. The bets dropped from the funded set
+      go to the `candidate_alternatives` backlog with an honest `why_not_funded`.
+
+  founder_flagship_protection:
+    description: |
+      The bet originated by the most senior person on the team gets a different
+      evidentiary standard than other bets. Its tenets-review is softer, its
+      goal-grading is more forgiving, and its kill criteria are absent.
+    surface_signal: |
+      The originator of the bet is named in PRFAQ provenance or is the most
+      senior reviewer of the bet's tenets-review.
+    confirming_evidence:
+      - "`latest_tenets_review` for the bet has lower evidentiary density than peer reviews"
+      - "The bet survives drift signals that would have killed other bets"
+      - "Prior portfolio-reviews did not include this bet in `kill_candidates_considered`"
+    second_axis_check: |
+      Run the zero-based hypothetical with bet origins masked. Does the bet
+      still survive at current allocation?
+    recommended_action: |
+      Apply the same evidentiary standard. Include the bet in
+      `kill_candidates_considered` and require explicit zero-based justification
+      for continued allocation. If the originator is the only reviewer, get an
+      independent review.
+
+  quiet_candidate_parking:
+    description: |
+      Candidate alternatives accumulate in the backlog every period without
+      being funded or rejected. The backlog grows; the active portfolio never
+      shifts; nobody has to make the decision.
+    surface_signal: |
+      `candidate_alternatives` contains items that appeared in prior
+      portfolio-review inputs with `recommendation: continue_to_park`.
+    confirming_evidence:
+      - "`prior_portfolio_review.candidate_decisions` lists items still present in the current `candidate_alternatives`"
+      - "The same `why_not_funded` reasons recur unchanged across reviews"
+    second_axis_check: |
+      Force a decision on each parked candidate this period: fund or reject.
+      "Continue to park" is acceptable only if zero-based authoring would not
+      include the candidate AND the candidate has not aged out.
+    recommended_action: |
+      Reject parked candidates that no longer survive zero-based authoring. Do
+      not let them sit indefinitely.
+
+  scope_creep_as_amplification:
+    description: |
+      A bet's `period_allocation` has grown across reviews without an explicit
+      `amplify` decision. The growth happened through informal scope expansion
+      rather than a deliberate reallocation.
+    surface_signal: |
+      `period_allocation` is higher than prior periods; no prior
+      `portfolio-review` output recommends `amplify` for this bet.
+    confirming_evidence:
+      - "`prior_portfolio_review.bet_recommendations` for this bet has `recommendation: continue` while allocation grew"
+      - "The bet's `prfaq_ref.mvp_boundary` has not been re-authored, suggesting scope crept without contract renewal"
+    second_axis_check: |
+      Compare current `period_allocation` against the most recent explicit
+      reallocation decision. The delta requires either a retroactive `amplify`
+      decision (with rationale) or a wind-down to the prior allocation.
+    recommended_action: |
+      Either ratify the growth with an explicit `amplify` recommendation in
+      this period's review (with cited triggering_evidence) or wind the bet
+      back to the prior allocation. Silent growth is drift.
+
+  kill_list_theater:
+    description: |
+      The review produces a wind_down recommendation, but only against bets
+      that the team has no political capital invested in. High-profile bets
+      are never on the kill list regardless of evidence.
+    surface_signal: |
+      `bet_recommendations[].wind_down` exists, but the bets recommended for
+      wind-down are uniformly low-allocation, low-profile, or recently-started.
+    confirming_evidence:
+      - "High-allocation bets with weak `latest_tenets_review` are not in `kill_candidates_considered`"
+      - "The kill recommendations are all bets the team would have killed anyway"
+    second_axis_check: |
+      Force `kill_candidates_considered` to include the bets with the weakest
+      tenets-review evidence regardless of profile or allocation. If a
+      high-profile bet has weaker evidence than a recommended kill, surface
+      the asymmetry.
+    recommended_action: |
+      Surface the asymmetry in `drift_detected`. Force a defensible answer to
+      "why is the weak-evidence bet not on the kill list when the
+      lower-evidence threshold for kills is set lower for other bets?"
+
+notes:
+  - These patterns are not mutually exclusive; a single bet can match multiple patterns.
+  - Pattern citations require evidence. Naming a pattern without citing the bet and the evidence is `drift-flag theater` and the skill's reviewer pass should catch it.
+  - If a pattern recurs across multiple `prior_portfolio_review` outputs, that recurrence is itself evidence the portfolio's governance is failing — not just the allocation.

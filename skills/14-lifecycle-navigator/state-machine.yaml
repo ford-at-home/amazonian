@@ -1,0 +1,171 @@
+# state-machine.yaml
+#
+# Deterministic mapping from governance.yaml manifest state to the next
+# required Amazonian skill. The navigator evaluates positions in order;
+# the first position whose preconditions are satisfied (and whose
+# negative-preconditions are not satisfied) is the current state.
+#
+# Each position declares:
+#   - preconditions: manifest field tests that must all be true
+#   - negative_preconditions: manifest field tests that must all be false
+#   - recommended_skill: the next chain skill (or producing skill for upstream remediation)
+#   - upstream_fields: the manifest fields the recommended skill will read
+#                     (used by the phase-laundering second-axis check)
+#   - rationale: one-line explanation surfaced in the navigator's output
+#
+# Field tests use a tiny expression language:
+#   - exists(field)            true if field is populated and non-null
+#   - empty(field)             true if field is null or [] or ""
+#   - tag(field, T)            true if field's evidence tag is T
+#   - cadence_due(field)       true if a mechanism's cadence has elapsed since last invocation
+#   - count(field, op, n)      true if len(field) op n     (op in <, <=, ==, >=, >)
+
+positions:
+
+  - id: pre-bootstrap
+    preconditions:
+      - empty(bet.bootstrapped_at)
+    recommended_skill: 00-repo-state-import
+    upstream_fields: []
+    rationale: "Manifest is unbootstrapped. Run repo-state-import before any other chain skill."
+
+  - id: pre-discovery
+    preconditions:
+      - exists(bet.bootstrapped_at)
+      - empty(bet.prfaq_path)
+      - count(interviews, ==, 0)
+    recommended_skill: 08-customer-interview-synthesis
+    upstream_fields: [interviews]
+    rationale: "No PRFAQ and no interviews. Customer signal is the first input."
+
+  - id: discovery-complete
+    preconditions:
+      - exists(bet.bootstrapped_at)
+      - empty(bet.prfaq_path)
+      - count(interviews, >=, 1)
+    recommended_skill: 01-working-backwards-prfaq
+    upstream_fields: [interviews, bet.name]
+    rationale: "Interviews exist; PRFAQ is the next constructive artifact."
+
+  - id: prfaq-incomplete
+    preconditions:
+      - exists(bet.prfaq_path)
+      - count(success_metrics, ==, 0)
+    recommended_skill: 01-working-backwards-prfaq
+    upstream_fields: [bet.prfaq_path]
+    rationale: "PRFAQ exists but no success_metrics declared. PRFAQ is incomplete; revise."
+
+  - id: design-pending
+    preconditions:
+      - exists(bet.prfaq_path)
+      - count(success_metrics, >=, 1)
+      - count(live_mechanisms, ==, 0)
+    recommended_skill: 04-mechanism-designer
+    upstream_fields: [success_metrics, bet.prfaq_path]
+    rationale: "PRFAQ and metrics exist but no operating mechanism. Design before operation."
+
+  - id: pre-launch
+    preconditions:
+      - exists(bet.prfaq_path)
+      - count(live_mechanisms, >=, 1)
+      - empty_or_absent(last_launch_readiness_review)
+    recommended_skill: 09-launch-readiness-review
+    upstream_fields: [bet.prfaq_path]
+    rationale: "Mechanism designed; no launch-readiness check on record. Gate the ship."
+    note: "[Unverified] last_launch_readiness_review is not a v1 manifest field; this position will mature when 09 declares a manifest-write contract in a later RFC."
+
+  - id: operating-wbr-due
+    preconditions:
+      - count(live_mechanisms, >=, 1)
+      - cadence_due(live_mechanisms[wbr])
+    recommended_skill: 05-weekly-business-review
+    upstream_fields: [live_mechanisms, success_metrics]
+    rationale: "WBR cadence has elapsed. Inspect."
+
+  - id: incident-driven
+    preconditions:
+      - operator_signal == "incident occurred"   # set by session_intent, not manifest
+    recommended_skill: 06-correction-of-errors
+    upstream_fields: []
+    rationale: "Operator reports an incident. CoE runs incident-driven, not cadence-driven."
+
+  - id: tenets-review-due
+    preconditions:
+      - count(tenets, >=, 1)
+      - period_boundary_crossed_since_last_tenets_review
+    recommended_skill: 10-tenets-review
+    upstream_fields: [tenets, bet.prfaq_path, success_metrics]
+    rationale: "Tenets exist and a period boundary has crossed; re-test the thesis against external context."
+
+  - id: grading-due
+    preconditions:
+      - any(period_goals[*].goals[*], actual_is_set)
+      - period_not_yet_graded
+    recommended_skill: 11-ambitious-goal-grading
+    upstream_fields: [period_goals, prior_gradings, bet.prfaq_path]
+    rationale: "A period has actuals but no grading on file. Grade calibration before next period sets."
+
+  - id: pre-irreversible-action
+    preconditions:
+      - operator_signal == "irreversible action queued"
+    recommended_skill: 12-dissent-before-commit
+    upstream_fields: [dissent_log]
+    rationale: "Operator signaled an irreversible or material action is about to fire. Re-canvass dissent against current state."
+
+  - id: portfolio-window
+    preconditions:
+      - operator_signal == "portfolio review window"
+      - multi_bet_repo                              # multiple governance.yaml files in repo
+    recommended_skill: 13-portfolio-review
+    upstream_fields: []
+    rationale: "Cross-bet review window open. Portfolio-review reads every bet's manifest."
+
+  - id: chain-quiescent
+    preconditions:
+      - no_other_position_matches
+    recommended_skill: null
+    upstream_fields: []
+    rationale: "Chain is at a quiescent state. No next action required right now; revisit on next manifest change or cadence."
+
+# Phase-laundering second-axis check (executed AFTER position selection):
+#
+#   For the selected position's recommended_skill, examine each field listed
+#   in upstream_fields. For each field, resolve its `evidence` tag in the
+#   manifest. If any tag is `assumption` or `open_question`, the navigator
+#   demotes the recommendation:
+#
+#     - Replace recommended_skill with the producing_skill for that field
+#       (see producing_skill_map below)
+#     - Set routing_decision = upstream_remediation
+#     - Surface the upstream_gap in the output schema
+#
+#   If multiple upstream_fields are non-fact and they trace to different
+#   producing skills, the navigator picks the *earliest* producing skill in
+#   the chain (smallest skill number).
+
+producing_skill_map:
+  interviews:                  08-customer-interview-synthesis
+  bet.prfaq_path:              01-working-backwards-prfaq
+  bet.name:                    00-repo-state-import       # operator-stated; re-prompt
+  success_metrics:             01-working-backwards-prfaq
+  live_mechanisms:             04-mechanism-designer
+  tenets:                      00-repo-state-import       # tenets live in the manifest; v1 has no dedicated tenet-authoring skill
+  period_goals:                00-repo-state-import       # v1; v2 may add a goal-authoring skill
+  prior_gradings:              11-ambitious-goal-grading
+  dissent_log:                 12-dissent-before-commit
+
+# Notes on v1 limitations:
+#
+# - Several preconditions reference signals not yet in the manifest schema
+#   (e.g., last_launch_readiness_review, period_not_yet_graded). These
+#   positions degrade to "no match" rather than error in v1; the chain-
+#   quiescent position will be selected. v2 work is to extend the manifest
+#   schema and update those positions accordingly.
+#
+# - operator_signal is set by the navigator's optional `session_intent`
+#   input. It does not persist between sessions.
+#
+# - cadence_due requires reading live_mechanisms[].cadence and comparing
+#   against the last history[] entry that recommended 05-weekly-business-review.
+#   v1 implementation may approximate this with a simpler "any-WBR-recorded-this-week"
+#   check; the state-machine engine can refine.
